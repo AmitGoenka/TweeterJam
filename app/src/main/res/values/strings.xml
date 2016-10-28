@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">TweeterJam</string>
+    <string name="login_label">Connect to Twitter</string>
+    <string name="title_activity_timeline">Home Timeline</string>
+</resources>
