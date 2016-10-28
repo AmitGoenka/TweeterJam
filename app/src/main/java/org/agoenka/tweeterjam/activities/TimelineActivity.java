@@ -26,7 +26,7 @@ public class TimelineActivity extends AppCompatActivity {
 
     private TwitterClient client;
     private List<Tweet> tweets;
-    private TweetsArrayAdapter aTweets;
+    private TweetsArrayAdapter adapter;
     private ListView lvTweets;
 
     @Override
@@ -38,9 +38,9 @@ public class TimelineActivity extends AppCompatActivity {
         // Create the arraylist (data source)
         tweets = new ArrayList<>();
         // Construct the adapter from data source
-        aTweets = new TweetsArrayAdapter(this, tweets);
+        adapter = new TweetsArrayAdapter(this, tweets);
         // Connect adapter to list view
-        lvTweets.setAdapter(aTweets);
+        lvTweets.setAdapter(adapter);
         // Get the client
         client = TweeterJamApplication.getTwitterClient(); // singleton client
         populateTimeline();
@@ -57,8 +57,8 @@ public class TimelineActivity extends AppCompatActivity {
                 // Deserialize JSON
                 // Create Models and Add them to the adapter
                 // Load the model data into list view
-                aTweets.addAll(Tweet.fromJSONArray(json));
-                Log.d("DEBUG", aTweets.toString());
+                adapter.addAll(Tweet.fromJSONArray(json));
+                Log.d("DEBUG", adapter.toString());
             }
 
             // Failure

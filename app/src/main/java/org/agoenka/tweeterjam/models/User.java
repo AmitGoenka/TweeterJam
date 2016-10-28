@@ -11,17 +11,18 @@ import org.json.JSONObject;
 
 public class User {
     // list attributes
-    private String name;
     private long uid;
+    private String name;
     private String screenName;
     private String profileImageUrl;
 
-    public String getName() {
-        return name;
-    }
-
+    @SuppressWarnings("unused")
     public long getUid() {
         return uid;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getScreenName() {
@@ -33,12 +34,12 @@ public class User {
     }
 
     // deserialize the user json => user
-    public static User fromJSON(JSONObject jsonObject) {
+    static User fromJSON(JSONObject jsonObject) {
         User u = new User();
         // Extract and fill the values
         try {
-            u.name = jsonObject.getString("name");
             u.uid = jsonObject.getLong("id");
+            u.name = jsonObject.getString("name");
             u.screenName = jsonObject.getString("screen_name");
             u.profileImageUrl = jsonObject.getString("profile_image_url");
         } catch (JSONException e) {

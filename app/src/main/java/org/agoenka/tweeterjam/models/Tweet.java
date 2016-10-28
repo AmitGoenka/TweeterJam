@@ -12,18 +12,18 @@ import java.util.List;
  * Created At: 10/28/2016
  * Version: ${VERSION}
  */
-//Parse the JSON + store the data, encapsulate state logic or display logic
 public class Tweet {
-    // list out the attributes
     private long uid; // unique tweet id
     private String createdAt;
     private String body;
     private User user; // store embedded user object
 
+    @SuppressWarnings("unused")
     public long getUid() {
         return uid;
     }
 
+    @SuppressWarnings("unused")
     public String getCreatedAt() {
         return createdAt;
     }
@@ -38,7 +38,7 @@ public class Tweet {
 
     // Deserialize the JSON and build Tweet objects
     // Tweet.fromJSON("{ ... }") => <Tweet>
-    public static Tweet fromJSON(JSONObject jsonObject) {
+    private static Tweet fromJSON(JSONObject jsonObject) {
         Tweet tweet = new Tweet();
         //Extract the values from the json, store them
         try {
@@ -67,9 +67,9 @@ public class Tweet {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
         // Return the finished list
         return tweets;
     }
+
 }

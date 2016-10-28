@@ -13,7 +13,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        dataBinding.enabled = false
+        vectorDrawables.useSupportLibrary = true
+        dataBinding.enabled = true
     }
 
     // Related to https://github.com/scribejava/scribejava/issues/480
@@ -53,10 +54,16 @@ dependencies {
     compile "com.android.support:support-v4:${supportLibVersion}"
     compile "com.android.support:design:${supportLibVersion}"
     compile "com.android.support:recyclerview-v7:${supportLibVersion}"
+    compile "com.android.support:support-vector-drawable:${supportLibVersion}"
+    compile "com.android.support:animated-vector-drawable:${supportLibVersion}"
+    compile "com.android.support:customtabs:${supportLibVersion}"
+    compile 'com.codepath.libraries:android-oauth-handler:1.1.0'
     compile 'com.loopj.android:android-async-http:1.4.9'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.codepath.libraries:android-oauth-handler:1.1.0'
+    compile 'org.parceler:parceler:1.1.6'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflowVersion}"
     compile "com.github.Raizlabs.DBFlow:dbflow:${dbflowVersion}"
     apt "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflowVersion}"
+    apt 'org.parceler:parceler:1.1.6'
 }

@@ -3,6 +3,7 @@
           package="org.agoenka.tweeterjam">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
@@ -33,6 +34,7 @@
             android:label="@string/title_activity_timeline"
             android:theme="@style/AppTheme">
         </activity>
+        <meta-data android:name="org.agoenka.tweeterjam.utils.GlideConfiguration" android:value="GlideModule"/>
     </application>
 
 </manifest>
