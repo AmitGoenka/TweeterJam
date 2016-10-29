@@ -30,11 +30,17 @@
                     android:scheme="https"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.TimelineActivity"
+        <activity
+            android:name=".activities.TimelineActivity"
             android:label="@string/title_activity_timeline"
             android:theme="@style/AppTheme">
         </activity>
-        <meta-data android:name="org.agoenka.tweeterjam.utils.GlideConfiguration" android:value="GlideModule"/>
+        <activity android:name=".activities.TweetActivity"
+            android:label="@string/compose_tweet"
+            android:theme="@style/AppTheme"/>
+        <meta-data
+            android:name="org.agoenka.tweeterjam.utils.GlideConfiguration"
+            android:value="GlideModule"/>
     </application>
 
 </manifest>

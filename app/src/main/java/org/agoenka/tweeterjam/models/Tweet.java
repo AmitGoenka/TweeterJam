@@ -6,6 +6,7 @@ import org.agoenka.tweeterjam.utils.DateUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,14 +18,15 @@ import static org.agoenka.tweeterjam.utils.DateUtils.TWITTER_FORMAT;
  * Created At: 10/28/2016
  * Version: ${VERSION}
  */
+@Parcel(analyze = Tweet.class)
 public class Tweet {
-    private long uid; // unique tweet id
-    private String body;
-    private int retweetCount;
-    private String createdAt;
-    private User user; // store embedded user object
+    long uid;
+    String body;
+    int retweetCount;
+    String createdAt;
+    User user;
 
-    public long getUid() {
+    private long getUid() {
         return uid;
     }
 
@@ -37,7 +39,7 @@ public class Tweet {
         return retweetCount;
     }
 
-    public String getCreatedAt() {
+    private String getCreatedAt() {
         return createdAt;
     }
 
@@ -49,9 +51,10 @@ public class Tweet {
         return DateUtils.getDuration(this.getCreatedAt(), TWITTER_FORMAT);
     }
 
-    // Deserialize the JSON and build Tweet objects
+    public Tweet() {}
+
     // Tweet.fromJSON("{ ... }") => <Tweet>
-    private static Tweet fromJSON(JSONObject jsonObject) {
+    public static Tweet fromJSON(JSONObject jsonObject) {
         Tweet tweet = new Tweet();
         //Extract the values from the json, store them
         try {
@@ -97,6 +100,19 @@ public class Tweet {
             Log.d("DEBUG", "The identified min id is not at the bottom of list!");
         }
         return min;
+    }
+
+    public static long getMaxId(List<Tweet> tweets) {
+        long max = 0;
+        for (Tweet tweet: tweets) {
+            if (tweet.getUid() > max) {
+                max = tweet.getUid();
+            }
+        }
+        if (tweets.size() > 0 && max != tweets.get(0).getUid()) {
+            Log.d("DEBUG", "The identified max id is not at the top of list!");
+        }
+        return max;
     }
 
 }

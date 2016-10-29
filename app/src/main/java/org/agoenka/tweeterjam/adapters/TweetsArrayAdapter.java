@@ -1,7 +1,6 @@
 package org.agoenka.tweeterjam.adapters;
 
 import android.content.Context;
-import android.databinding.BindingAdapter;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 import org.agoenka.tweeterjam.R;
 import org.agoenka.tweeterjam.databinding.ItemTweetBinding;
@@ -76,12 +73,6 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         ViewHolder(View root) {
             binding = ItemTweetBinding.bind(root);
         }
-    }
-
-    @BindingAdapter({"bind:profileImageUrl"})
-    public static void loadProfileImage(ImageView view, String url) {
-        view.setImageResource(android.R.color.transparent);
-        Picasso.with(view.getContext()).load(url).into(view);
     }
 
 }

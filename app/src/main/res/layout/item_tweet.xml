@@ -2,7 +2,10 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="tweet" type="org.agoenka.tweeterjam.models.Tweet"/>
+
+        <variable
+            name="tweet"
+            type="org.agoenka.tweeterjam.models.Tweet"/>
     </data>
 
     <RelativeLayout

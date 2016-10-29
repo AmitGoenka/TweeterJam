@@ -1,5 +1,6 @@
 package org.agoenka.tweeterjam.activities;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,12 +21,17 @@ import org.agoenka.tweeterjam.models.User;
 import org.agoenka.tweeterjam.network.TwitterClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
+import static org.agoenka.tweeterjam.activities.TweetActivity.REQUEST_CODE_COMPOSE;
+import static org.agoenka.tweeterjam.activities.TweetActivity.TWEET_KEY;
+import static org.agoenka.tweeterjam.activities.TweetActivity.USER_KEY;
+import static org.agoenka.tweeterjam.network.TwitterClient.PAGE_SIZE;
 import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
 
 public class TimelineActivity extends AppCompatActivity {
@@ -35,19 +41,18 @@ public class TimelineActivity extends AppCompatActivity {
     private User loggedInUser;
     private List<Tweet> mTweets;
     private TweetsArrayAdapter mAdapter;
-
-    private int count = 25;
-    private long minId;
+    private long currMinId = 0;
+    private long currMaxId = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_timeline);
-        client = TweeterJamApplication.getTwitterClient(); // singleton client
+        client = TweeterJamApplication.getTwitterClient();
         setupViews();
 
         getUserCredentials();
-        populateTimeline(minId, 0);
+        populateTimeline(0, 0);
     }
 
     private void setupViews() {
@@ -61,9 +66,8 @@ public class TimelineActivity extends AppCompatActivity {
         binding.lvTweets.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public boolean onLoadMore(int page, int totalItemCount) {
-                long id = Tweet.getMinId(mTweets);
-                if (id > 0) minId = id;
-                populateTimeline(minId - 1, 0);
+                currMinId = Tweet.getMinId(mTweets);
+                populateTimeline(currMinId - 1, 0);
                 return true;
             }
         });
@@ -82,23 +86,48 @@ public class TimelineActivity extends AppCompatActivity {
         // so long the parent activity is specified in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_compose) {
+            Intent intent = new Intent(TimelineActivity.this, TweetActivity.class);
+            intent.putExtra(USER_KEY, Parcels.wrap(loggedInUser));
+            startActivityForResult(intent, REQUEST_CODE_COMPOSE);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_COMPOSE) {
+            Tweet tweet = Parcels.unwrap(data.getParcelableExtra(TWEET_KEY));
+            mAdapter.insert(tweet, 0);
+            mAdapter.notifyDataSetChanged();
+
+            mTweets.remove(tweet);
+            refreshTimeline();
+        }
+    }
+
+    private void refreshTimeline() {
+        currMaxId = Tweet.getMaxId(mTweets);
+        populateTimeline(0, currMaxId);
+    }
+
     // Send an API request to get the timeline json
     // Fill the list view by creating the tweet objects from json
-    private void populateTimeline(long maxId, long sinceId) {
+    private void populateTimeline(final long maxId, final long sinceId) {
         if (isConnected(this)) {
-            client.getHomeTimeline(count, maxId, sinceId, new JsonHttpResponseHandler() {
+            client.getHomeTimeline(PAGE_SIZE, maxId, sinceId, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
                     Log.d("DEBUG", json.toString());
-                    mAdapter.addAll(Tweet.fromJSONArray(json));
-                    Log.d("DEBUG", mAdapter.toString());
+                    List<Tweet> tweets = Tweet.fromJSONArray(json);
+                    if (sinceId > 0) {
+                        mTweets.addAll(0, tweets);
+                    } else {
+                        mAdapter.addAll(tweets);
+                    }
+                    mAdapter.notifyDataSetChanged();
                 }
 
                 @Override

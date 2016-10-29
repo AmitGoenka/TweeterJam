@@ -27,6 +27,7 @@ public class TwitterClient extends OAuthBaseClient {
     private static final String API_KEY = "omUIoDaf47EfRyS4Y4bDs6xPC";
     private static final String API_SECRET = "SfxnKYoNwhGuTYoKPd2iKXB7lfWpWyeUJpI3vrts6DD2sFPBqf";
     private static final String CALLBACK_URL = "https://twitter.agoenka.org"; // Matches with the data element in manifest
+    public static final int PAGE_SIZE = 25;
 
     public TwitterClient(Context context) {
         super(context, API_CLASS, BASE_URL, API_KEY, API_SECRET, CALLBACK_URL);
@@ -49,5 +50,12 @@ public class TwitterClient extends OAuthBaseClient {
     public void getUserCredentials(AsyncHttpResponseHandler handler) {
         String url = getApiUrl("account/verify_credentials.json");
         getClient().get(url, handler);
+    }
+
+    public void postTweet(String status, AsyncHttpResponseHandler handler) {
+        String url = getApiUrl("statuses/update.json");
+        RequestParams params = new RequestParams();
+        params.put("status", status);
+        getClient().post(url, params, handler);
     }
 }
