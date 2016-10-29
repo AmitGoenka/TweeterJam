@@ -34,7 +34,7 @@ public class User {
     }
 
     // deserialize the user json => user
-    static User fromJSON(JSONObject jsonObject) {
+    public static User fromJSON(JSONObject jsonObject) {
         User u = new User();
         // Extract and fill the values
         try {

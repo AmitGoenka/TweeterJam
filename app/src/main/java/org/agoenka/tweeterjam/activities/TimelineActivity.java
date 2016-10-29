@@ -16,6 +16,7 @@ import org.agoenka.tweeterjam.adapters.EndlessScrollListener;
 import org.agoenka.tweeterjam.adapters.TweetsArrayAdapter;
 import org.agoenka.tweeterjam.databinding.ActivityTimelineBinding;
 import org.agoenka.tweeterjam.models.Tweet;
+import org.agoenka.tweeterjam.models.User;
 import org.agoenka.tweeterjam.network.TwitterClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,6 +32,7 @@ public class TimelineActivity extends AppCompatActivity {
 
     private ActivityTimelineBinding binding;
     private TwitterClient client;
+    private User loggedInUser;
     private List<Tweet> mTweets;
     private TweetsArrayAdapter mAdapter;
 
@@ -41,9 +43,10 @@ public class TimelineActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_timeline);
-
-        setupViews();
         client = TweeterJamApplication.getTwitterClient(); // singleton client
+        setupViews();
+
+        getUserCredentials();
         populateTimeline(minId, 0);
     }
 
@@ -91,7 +94,6 @@ public class TimelineActivity extends AppCompatActivity {
     private void populateTimeline(long maxId, long sinceId) {
         if (isConnected(this)) {
             client.getHomeTimeline(count, maxId, sinceId, new JsonHttpResponseHandler() {
-                // Success
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
                     Log.d("DEBUG", json.toString());
@@ -99,12 +101,34 @@ public class TimelineActivity extends AppCompatActivity {
                     Log.d("DEBUG", mAdapter.toString());
                 }
 
-                // Failure
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     Log.d("DEBUG", errorResponse.toString());
                     Log.d("DEBUG", throwable.getLocalizedMessage());
-                    Toast.makeText(TimelineActivity.this, "Error occurred while retrieving tweets.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(TimelineActivity.this, "Unable to retrieve tweets.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    // Fetch the logged in user's credentials
+    private void getUserCredentials() {
+        if (isConnected(this)) {
+            client.getUserCredentials(new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
+                    Log.d("DEBUG", json.toString());
+                    loggedInUser = User.fromJSON(json);
+                    if (getSupportActionBar() != null) {
+                        getSupportActionBar().setTitle(loggedInUser.getScreenName());
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.d("DEBUG", errorResponse.toString());
+                    Log.d("DEBUG", throwable.getLocalizedMessage());
+                    Toast.makeText(TimelineActivity.this, "Unable to retrieve account information.", Toast.LENGTH_SHORT).show();
                 }
             });
         }
