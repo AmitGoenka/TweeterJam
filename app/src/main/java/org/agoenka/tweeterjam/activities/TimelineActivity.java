@@ -52,7 +52,7 @@ public class TimelineActivity extends AppCompatActivity {
         setupViews();
 
         getUserCredentials();
-        populateTimeline(0, 0);
+        populateTimeline(currMinId, currMaxId);
     }
 
     private void setupViews() {
@@ -67,7 +67,7 @@ public class TimelineActivity extends AppCompatActivity {
             @Override
             public boolean onLoadMore(int page, int totalItemCount) {
                 currMinId = Tweet.getMinId(mTweets);
-                populateTimeline(currMinId - 1, 0);
+                populateTimeline(currMinId > 0 ? currMinId - 1 : 0, 0);
                 return true;
             }
         });
