@@ -28,9 +28,9 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
-import static org.agoenka.tweeterjam.activities.TweetActivity.REQUEST_CODE_COMPOSE;
-import static org.agoenka.tweeterjam.activities.TweetActivity.TWEET_KEY;
-import static org.agoenka.tweeterjam.activities.TweetActivity.USER_KEY;
+import static org.agoenka.tweeterjam.activities.ComposeActivity.REQUEST_CODE_COMPOSE;
+import static org.agoenka.tweeterjam.activities.ComposeActivity.TWEET_KEY;
+import static org.agoenka.tweeterjam.activities.ComposeActivity.USER_KEY;
 import static org.agoenka.tweeterjam.network.TwitterClient.PAGE_SIZE;
 import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
 
@@ -87,7 +87,7 @@ public class TimelineActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_compose) {
-            Intent intent = new Intent(TimelineActivity.this, TweetActivity.class);
+            Intent intent = new Intent(TimelineActivity.this, ComposeActivity.class);
             intent.putExtra(USER_KEY, Parcels.wrap(loggedInUser));
             startActivityForResult(intent, REQUEST_CODE_COMPOSE);
             return true;

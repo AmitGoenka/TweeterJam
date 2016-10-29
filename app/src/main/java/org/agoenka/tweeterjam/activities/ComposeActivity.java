@@ -12,7 +12,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.agoenka.tweeterjam.R;
 import org.agoenka.tweeterjam.TweeterJamApplication;
-import org.agoenka.tweeterjam.databinding.ActivityTweetBinding;
+import org.agoenka.tweeterjam.databinding.ActivityComposeBinding;
 import org.agoenka.tweeterjam.models.Tweet;
 import org.agoenka.tweeterjam.models.User;
 import org.agoenka.tweeterjam.network.TwitterClient;
@@ -23,9 +23,9 @@ import cz.msebera.android.httpclient.Header;
 
 import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
 
-public class TweetActivity extends AppCompatActivity {
+public class ComposeActivity extends AppCompatActivity {
 
-    private ActivityTweetBinding binding;
+    private ActivityComposeBinding binding;
     private TwitterClient client;
     private Tweet tweet;
 
@@ -37,7 +37,7 @@ public class TweetActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_tweet);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_compose);
         binding.setHandlers(new Handlers());
         client = TweeterJamApplication.getTwitterClient();
 
@@ -47,7 +47,7 @@ public class TweetActivity extends AppCompatActivity {
 
     public class Handlers {
         public void onCancel(@SuppressWarnings("unused") View view) {
-            Toast.makeText(TweetActivity.this, "Tweet Canceled", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ComposeActivity.this, "Tweet Canceled", Toast.LENGTH_SHORT).show();
             setResult(RESULT_CANCELED);
             finish();
         }
@@ -74,7 +74,7 @@ public class TweetActivity extends AppCompatActivity {
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     Log.d("DEBUG", errorResponse.toString());
                     Log.d("DEBUG", throwable.getLocalizedMessage());
-                    Toast.makeText(TweetActivity.this, "Unable to post tweet at this moment.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ComposeActivity.this, "Unable to post tweet at this moment.", Toast.LENGTH_SHORT).show();
                 }
             });
         }
