@@ -1,5 +1,7 @@
 package org.agoenka.tweeterjam.models;
 
+import android.util.Log;
+
 import org.agoenka.tweeterjam.utils.DateUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -8,7 +10,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.agoenka.tweeterjam.utils.DateUtils.*;
+import static org.agoenka.tweeterjam.utils.DateUtils.TWITTER_FORMAT;
 
 /**
  * Author: agoenka
@@ -22,7 +24,6 @@ public class Tweet {
     private String createdAt;
     private User user; // store embedded user object
 
-    @SuppressWarnings("unused")
     public long getUid() {
         return uid;
     }
@@ -36,7 +37,6 @@ public class Tweet {
         return retweetCount;
     }
 
-    @SuppressWarnings("unused")
     public String getCreatedAt() {
         return createdAt;
     }
@@ -46,7 +46,7 @@ public class Tweet {
     }
 
     public String getDuration() {
-        return DateUtils.getDuration(this.createdAt, TWITTER_FORMAT);
+        return DateUtils.getDuration(this.getCreatedAt(), TWITTER_FORMAT);
     }
 
     // Deserialize the JSON and build Tweet objects
@@ -84,6 +84,19 @@ public class Tweet {
         }
         // Return the finished list
         return tweets;
+    }
+
+    public static long getMinId(List<Tweet> tweets) {
+        long min = 0;
+        for (Tweet tweet: tweets) {
+            if (tweet.getUid() < min || min == 0) {
+                min = tweet.getUid();
+            }
+        }
+        if (tweets.size() > 0 && min != tweets.get(tweets.size() - 1).getUid()) {
+            Log.d("DEBUG", "The identified min id is not at the bottom of list!");
+        }
+        return min;
     }
 
 }

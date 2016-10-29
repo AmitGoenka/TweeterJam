@@ -2,7 +2,6 @@ package org.agoenka.tweeterjam.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 
 import com.codepath.oauth.OAuthLoginActionBarActivity;
@@ -16,12 +15,6 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_login, menu);
-        return super.onCreateOptionsMenu(menu);
     }
 
     // Callback to this method implies that OAuth was authenticated successfully.
@@ -44,4 +37,5 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
     public void loginTwitter(View view) {
         getClient().connect();
     }
+
 }

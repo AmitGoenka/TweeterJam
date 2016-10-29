@@ -1,17 +1,20 @@
 package org.agoenka.tweeterjam.activities;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.agoenka.tweeterjam.R;
 import org.agoenka.tweeterjam.TweeterJamApplication;
+import org.agoenka.tweeterjam.adapters.EndlessScrollListener;
 import org.agoenka.tweeterjam.adapters.TweetsArrayAdapter;
+import org.agoenka.tweeterjam.databinding.ActivityTimelineBinding;
 import org.agoenka.tweeterjam.models.Tweet;
 import org.agoenka.tweeterjam.network.TwitterClient;
 import org.json.JSONArray;
@@ -22,49 +25,43 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
+import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
+
 public class TimelineActivity extends AppCompatActivity {
 
+    private ActivityTimelineBinding binding;
     private TwitterClient client;
-    private List<Tweet> tweets;
-    private TweetsArrayAdapter adapter;
-    private ListView lvTweets;
+    private List<Tweet> mTweets;
+    private TweetsArrayAdapter mAdapter;
+
+    private int count = 25;
+    private long minId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_timeline);
-        // Find the list view
-        lvTweets = (ListView) findViewById(R.id.lvTweets);
-        // Create the arraylist (data source)
-        tweets = new ArrayList<>();
-        // Construct the adapter from data source
-        adapter = new TweetsArrayAdapter(this, tweets);
-        // Connect adapter to list view
-        lvTweets.setAdapter(adapter);
-        // Get the client
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_timeline);
+
+        setupViews();
         client = TweeterJamApplication.getTwitterClient(); // singleton client
-        populateTimeline();
+        populateTimeline(minId, 0);
     }
 
-    // Send an API request to get the timeline json
-    // Fill the list view by creating the tweet objects from json
-    private void populateTimeline() {
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
-            // Success
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
-                Log.d("DEBUG", json.toString());
-                // Deserialize JSON
-                // Create Models and Add them to the adapter
-                // Load the model data into list view
-                adapter.addAll(Tweet.fromJSONArray(json));
-                Log.d("DEBUG", adapter.toString());
-            }
+    private void setupViews() {
+        // Create the arraylist (data source)
+        mTweets = new ArrayList<>();
+        // Construct the mAdapter from data source
+        mAdapter = new TweetsArrayAdapter(this, mTweets);
+        // Connect mAdapter to list view
+        binding.lvTweets.setAdapter(mAdapter);
 
-            // Failure
+        binding.lvTweets.setOnScrollListener(new EndlessScrollListener() {
             @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("DEBUG", errorResponse.toString());
+            public boolean onLoadMore(int page, int totalItemCount) {
+                long id = Tweet.getMinId(mTweets);
+                if (id > 0) minId = id;
+                populateTimeline(minId - 1, 0);
+                return true;
             }
         });
     }
@@ -88,4 +85,29 @@ public class TimelineActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    // Send an API request to get the timeline json
+    // Fill the list view by creating the tweet objects from json
+    private void populateTimeline(long maxId, long sinceId) {
+        if (isConnected(this)) {
+            client.getHomeTimeline(count, maxId, sinceId, new JsonHttpResponseHandler() {
+                // Success
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
+                    Log.d("DEBUG", json.toString());
+                    mAdapter.addAll(Tweet.fromJSONArray(json));
+                    Log.d("DEBUG", mAdapter.toString());
+                }
+
+                // Failure
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.d("DEBUG", errorResponse.toString());
+                    Log.d("DEBUG", throwable.getLocalizedMessage());
+                    Toast.makeText(TimelineActivity.this, "Error occurred while retrieving tweets.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
 }

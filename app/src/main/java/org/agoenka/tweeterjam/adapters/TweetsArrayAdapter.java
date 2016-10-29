@@ -1,6 +1,7 @@
 package org.agoenka.tweeterjam.adapters;
 
 import android.content.Context;
+import android.databinding.BindingAdapter;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +13,16 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import org.agoenka.tweeterjam.R;
+import org.agoenka.tweeterjam.databinding.ItemTweetBinding;
 import org.agoenka.tweeterjam.models.Tweet;
 
 import java.util.List;
+
+import static org.agoenka.tweeterjam.R.id.ivProfileImage;
+import static org.agoenka.tweeterjam.R.id.tvBody;
+import static org.agoenka.tweeterjam.R.id.tvDuration;
+import static org.agoenka.tweeterjam.R.id.tvName;
+import static org.agoenka.tweeterjam.R.id.tvUserName;
 
 /**
  * Author: agoenka
@@ -34,27 +42,46 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         Tweet tweet = getItem(position);
         assert tweet != null;
 
+        ViewHolder holder;
+
         // 2. Find or inflate the template
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_tweet, parent, false);
+            holder = new ViewHolder(convertView);
+            holder.tvName = (TextView) convertView.findViewById(tvName);
+            holder.tvUserName = (TextView) convertView.findViewById(tvUserName);
+            holder.tvDuration = (TextView) convertView.findViewById(tvDuration);
+            holder.tvBody = (TextView) convertView.findViewById(tvBody);
+            holder.ivProfileImage = (ImageView) convertView.findViewById(ivProfileImage);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        // 3. Find the subviews to fill with data in the template
-        TextView tvName = (TextView) convertView.findViewById(R.id.tvName);
-        TextView tvUserName = (TextView) convertView.findViewById(R.id.tvUserName);
-        TextView tvDuration = (TextView) convertView.findViewById(R.id.tvDuration);
-        TextView tvBody = (TextView) convertView.findViewById(R.id.tvBody);
-        ImageView ivProfileImage = (ImageView) convertView.findViewById(R.id.ivProfileImage);
-
         // 4. Populate the data into the subviews
-        tvName.setText(tweet.getUser().getName());
-        tvUserName.setText(tweet.getUser().getScreenName());
-        tvDuration.setText(tweet.getDuration());
-        tvBody.setText(tweet.getBody());
-        ivProfileImage.setImageResource(android.R.color.transparent); // clear out the old image for a recycled view
-        Picasso.with(getContext()).load(tweet.getUser().getProfileImageUrl()).into(ivProfileImage);
+        holder.binding.setTweet(tweet);
 
         // 5. Return the view to be inserted into the list
         return convertView;
     }
+
+    private static class ViewHolder {
+        final ItemTweetBinding binding;
+        TextView tvName;
+        TextView tvUserName;
+        TextView tvDuration;
+        TextView tvBody;
+        ImageView ivProfileImage;
+
+        ViewHolder(View root) {
+            binding = ItemTweetBinding.bind(root);
+        }
+    }
+
+    @BindingAdapter({"bind:profileImageUrl"})
+    public static void loadProfileImage(ImageView view, String url) {
+        view.setImageResource(android.R.color.transparent);
+        Picasso.with(view.getContext()).load(url).into(view);
+    }
+
 }
