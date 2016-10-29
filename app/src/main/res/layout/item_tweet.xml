@@ -12,7 +12,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:descendantFocusability="blocksDescendants">
 
         <ImageView
             android:id="@+id/ivProfileImage"
@@ -68,6 +69,7 @@
             android:layout_toEndOf="@+id/ivProfileImage"
             android:layout_toRightOf="@+id/ivProfileImage"
             android:text="@{tweet.body}"
+            android:autoLink="all"
             tools:text="Tweet Text"/>
 
     </RelativeLayout>
