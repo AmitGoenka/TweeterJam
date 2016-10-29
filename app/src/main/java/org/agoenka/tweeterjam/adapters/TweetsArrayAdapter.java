@@ -40,12 +40,16 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         }
 
         // 3. Find the subviews to fill with data in the template
-        ImageView ivProfileImage = (ImageView) convertView.findViewById(R.id.ivProfileImage);
+        TextView tvName = (TextView) convertView.findViewById(R.id.tvName);
         TextView tvUserName = (TextView) convertView.findViewById(R.id.tvUserName);
+        TextView tvDuration = (TextView) convertView.findViewById(R.id.tvDuration);
         TextView tvBody = (TextView) convertView.findViewById(R.id.tvBody);
+        ImageView ivProfileImage = (ImageView) convertView.findViewById(R.id.ivProfileImage);
 
         // 4. Populate the data into the subviews
+        tvName.setText(tweet.getUser().getName());
         tvUserName.setText(tweet.getUser().getScreenName());
+        tvDuration.setText(tweet.getDuration());
         tvBody.setText(tweet.getBody());
         ivProfileImage.setImageResource(android.R.color.transparent); // clear out the old image for a recycled view
         Picasso.with(getContext()).load(tweet.getUser().getProfileImageUrl()).into(ivProfileImage);

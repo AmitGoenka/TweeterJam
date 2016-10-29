@@ -26,7 +26,7 @@ public class User {
     }
 
     public String getScreenName() {
-        return screenName;
+        return "@" + screenName;
     }
 
     public String getProfileImageUrl() {

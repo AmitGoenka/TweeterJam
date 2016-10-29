@@ -1,11 +1,14 @@
 package org.agoenka.tweeterjam.models;
 
+import org.agoenka.tweeterjam.utils.DateUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.agoenka.tweeterjam.utils.DateUtils.*;
 
 /**
  * Author: agoenka
@@ -14,8 +17,9 @@ import java.util.List;
  */
 public class Tweet {
     private long uid; // unique tweet id
-    private String createdAt;
     private String body;
+    private int retweetCount;
+    private String createdAt;
     private User user; // store embedded user object
 
     @SuppressWarnings("unused")
@@ -23,17 +27,26 @@ public class Tweet {
         return uid;
     }
 
+    public String getBody() {
+        return body;
+    }
+
+    @SuppressWarnings("unused")
+    public int getRetweetCount() {
+        return retweetCount;
+    }
+
     @SuppressWarnings("unused")
     public String getCreatedAt() {
         return createdAt;
     }
 
-    public String getBody() {
-        return body;
-    }
-
     public User getUser() {
         return user;
+    }
+
+    public String getDuration() {
+        return DateUtils.getDuration(this.createdAt, TWITTER_FORMAT);
     }
 
     // Deserialize the JSON and build Tweet objects
@@ -43,8 +56,9 @@ public class Tweet {
         //Extract the values from the json, store them
         try {
             tweet.uid = jsonObject.getLong("id");
-            tweet.createdAt = jsonObject.getString("created_at");
             tweet.body = jsonObject.getString("text");
+            tweet.retweetCount = jsonObject.getInt("retweet_count");
+            tweet.createdAt = jsonObject.getString("created_at");
             tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
         } catch (JSONException e) {
             e.printStackTrace();
