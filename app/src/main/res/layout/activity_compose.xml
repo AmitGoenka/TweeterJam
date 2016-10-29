@@ -36,30 +36,16 @@
             android:text="@string/cancel"
             tools:text="Cancel Button"/>
 
-        <Button
-            android:id="@+id/btnTweet"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@id/btnCancel"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignRight="@id/btnCancel"
-            android:onClick="@{handlers.onTweet}"
-            android:text="@string/tweet"
-            tools:text="Tweet Button"/>
-
         <ImageView
             android:id="@+id/ivProfileImage"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/btnCancel"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
             android:layout_marginBottom="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:contentDescription="@string/profile_image_description"
             app:profileImageUrl="@{user.profileImageUrl}"/>
 
@@ -68,8 +54,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/ivProfileImage"
-            android:layout_toEndOf="@+id/ivProfileImage"
-            android:layout_toRightOf="@+id/ivProfileImage"
+            android:layout_toEndOf="@id/btnCancel"
+            android:layout_toLeftOf="@+id/ivProfileImage"
+            android:layout_toRightOf="@id/btnCancel"
+            android:layout_toStartOf="@+id/ivProfileImage"
+            android:gravity="end"
             android:text="@{user.name}"
             tools:text="Name"/>
 
@@ -77,24 +66,50 @@
             android:id="@+id/tvUserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/tvName"
-            android:layout_alignStart="@+id/tvName"
             android:layout_below="@+id/tvName"
+            android:layout_toEndOf="@id/btnCancel"
+            android:layout_toLeftOf="@+id/ivProfileImage"
+            android:layout_toRightOf="@id/btnCancel"
+            android:layout_toStartOf="@+id/ivProfileImage"
+            android:gravity="end"
             android:text="@{user.screenName}"
             tools:text="User Name"/>
+
+        <Button
+            android:id="@+id/btnTweet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:onClick="@{handlers.onTweet}"
+            android:text="@string/tweet"
+            tools:text="Tweet Button"/>
 
         <EditText
             android:id="@+id/etTweet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/ivProfileImage"
-            android:layout_alignParentBottom="true"
-            android:layout_alignStart="@+id/ivProfileImage"
+            android:layout_above="@id/btnTweet"
             android:layout_below="@+id/ivProfileImage"
+            android:layout_marginBottom="10dp"
             android:ems="10"
             android:gravity="start"
+            android:hint="@string/hint_tweet_compose"
             android:inputType="textMultiLine"
             tools:text="User Tweet"/>
+
+        <TextView
+            android:id="@+id/tvCharCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/btnTweet"
+            android:layout_toStartOf="@+id/btnTweet"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="15dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
+            tools:text="Characters"/>
 
     </RelativeLayout>
 
