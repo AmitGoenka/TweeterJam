@@ -51,8 +51,14 @@ public class TimelineActivity extends AppCompatActivity {
         client = TweeterJamApplication.getTwitterClient();
         setupViews();
 
-        getUserCredentials();
-        populateTimeline(currMinId, currMaxId);
+        if (!isConnected(this)) {
+            mAdapter.addAll(Tweet.get());
+            mAdapter.notifyDataSetChanged();
+        } else {
+            Tweet.clear();
+            getUserCredentials();
+            populateTimeline(currMinId, currMaxId);
+        }
     }
 
     private void setupViews() {
@@ -141,6 +147,7 @@ public class TimelineActivity extends AppCompatActivity {
                         mAdapter.addAll(tweets);
                     }
                     mAdapter.notifyDataSetChanged();
+                    Tweet.save(tweets);
                 }
 
                 @Override

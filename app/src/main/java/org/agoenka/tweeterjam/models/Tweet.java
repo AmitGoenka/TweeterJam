@@ -6,6 +6,8 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.Delete;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.agoenka.tweeterjam.TweeterJamDatabase;
@@ -60,8 +62,7 @@ public class Tweet extends BaseModel {
         return DateUtils.getDuration(this.getCreatedAt(), TWITTER_FORMAT);
     }
 
-    public Tweet() {
-    }
+    public Tweet() {}
 
     // Tweet.fromJSON("{ ... }") => <Tweet>
     public static Tweet fromJSON(JSONObject jsonObject) {
@@ -123,6 +124,29 @@ public class Tweet extends BaseModel {
             Log.d("DEBUG", "The identified max id is not at the top of list!");
         }
         return max;
+    }
+
+    public static List<Tweet> get() {
+        return SQLite.select().from(Tweet.class).orderBy(Tweet_Table.createdAt, false).limit(200).queryList();
+    }
+
+    private static void save(Tweet tweet) {
+        if (tweet != null) {
+            if (tweet.user != null) {
+                tweet.user.save();
+            }
+            tweet.save();
+        }
+    }
+
+    public static void save(List<Tweet> tweets) {
+        for (Tweet tweet : tweets) {
+            save(tweet);
+        }
+    }
+
+    public static void clear() {
+        Delete.tables(Tweet.class, User.class);
     }
 
 }

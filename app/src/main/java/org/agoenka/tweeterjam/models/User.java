@@ -3,6 +3,7 @@ package org.agoenka.tweeterjam.models;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.agoenka.tweeterjam.TweeterJamDatabase;
 import org.json.JSONException;
@@ -16,7 +17,7 @@ import org.parceler.Parcel;
  */
 @Parcel(analyze = User.class)
 @Table(database = TweeterJamDatabase.class)
-public class User {
+public class User extends BaseModel {
 
     @Column @PrimaryKey long uid;
     @Column String name;
@@ -38,6 +39,10 @@ public class User {
 
     public String getProfileImageUrl() {
         return profileImageUrl;
+    }
+
+    public long getUser() {
+        return uid;
     }
 
     public User() {}
