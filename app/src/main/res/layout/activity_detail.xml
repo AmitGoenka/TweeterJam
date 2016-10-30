@@ -86,7 +86,7 @@
             android:text="@{tweet.favoriteCount + ' ' + @string/favorites}"
             tools:text="Favorite Count"/>
 
-        <!--<ImageButton
+        <ImageButton
             android:id="@+id/ibReply"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -96,7 +96,8 @@
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
             android:contentDescription="@string/reply"
-            app:srcCompat="@mipmap/ic_launcher"/>
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_action_reply"/>
 
         <ImageButton
             android:id="@+id/ibRetweet"
@@ -108,7 +109,8 @@
             android:layout_toEndOf="@+id/ibReply"
             android:layout_toRightOf="@+id/ibReply"
             android:contentDescription="@string/retweet"
-            app:srcCompat="@mipmap/ic_launcher"/>
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/twitter_retweet_grey"/>
 
         <ImageButton
             android:id="@+id/ibFavorite"
@@ -120,7 +122,8 @@
             android:layout_toEndOf="@+id/ibRetweet"
             android:layout_toRightOf="@+id/ibRetweet"
             android:contentDescription="@string/favorite"
-            app:srcCompat="@mipmap/ic_launcher"/>
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/ic_action_favorite_grey"/>
 
         <ImageButton
             android:id="@+id/ibShare"
@@ -130,7 +133,8 @@
             android:layout_toEndOf="@+id/ibFavorite"
             android:layout_toRightOf="@+id/ibFavorite"
             android:contentDescription="@string/share"
-            app:srcCompat="@mipmap/ic_launcher"/>-->
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/ic_action_share"/>
 
     </RelativeLayout>
 
