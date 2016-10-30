@@ -1,4 +1,4 @@
-package org.agoenka.tweeterjam.adapters;
+package org.agoenka.tweeterjam.views;
 
 import android.databinding.BindingAdapter;
 import android.widget.ImageView;

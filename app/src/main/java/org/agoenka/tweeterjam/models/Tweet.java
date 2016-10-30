@@ -19,6 +19,7 @@ import org.parceler.Parcel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static org.agoenka.tweeterjam.utils.DateUtils.TWITTER_FORMAT;
 
@@ -32,26 +33,42 @@ import static org.agoenka.tweeterjam.utils.DateUtils.TWITTER_FORMAT;
 public class Tweet extends BaseModel {
 
     @Column @PrimaryKey long uid;
+    @Column String createdAt;
     @Column String body;
     @Column int retweetCount;
-    @Column String createdAt;
+    @Column int favoriteCount;
+    @Column boolean retweeted;
+    @Column boolean favorited;
     @Column @ForeignKey(saveForeignKeyModel = true) User user;
 
     private long getUid() {
         return uid;
     }
 
+    private String getCreatedAt() {
+        return createdAt;
+    }
+
     public String getBody() {
         return body;
     }
 
-    @SuppressWarnings("unused")
-    public int getRetweetCount() {
-        return retweetCount;
+    public String getRetweetCount() {
+        return String.format(Locale.getDefault(), "%d", retweetCount);
     }
 
-    private String getCreatedAt() {
-        return createdAt;
+    public String getFavoriteCount() {
+        return String.format(Locale.getDefault(), "%d", favoriteCount);
+    }
+
+    @SuppressWarnings("unused")
+    public boolean isRetweeted() {
+        return retweeted;
+    }
+
+    @SuppressWarnings("unused")
+    public boolean isFavorited() {
+        return favorited;
     }
 
     public User getUser() {
@@ -70,9 +87,12 @@ public class Tweet extends BaseModel {
         //Extract the values from the json, store them
         try {
             tweet.uid = jsonObject.getLong("id");
+            tweet.createdAt = jsonObject.getString("created_at");
             tweet.body = jsonObject.getString("text");
             tweet.retweetCount = jsonObject.getInt("retweet_count");
-            tweet.createdAt = jsonObject.getString("created_at");
+            tweet.favoriteCount = jsonObject.getInt("favorite_count");
+            tweet.retweeted = jsonObject.getBoolean("retweeted");
+            tweet.favorited = jsonObject.getBoolean("favorited");
             tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
         } catch (JSONException e) {
             e.printStackTrace();

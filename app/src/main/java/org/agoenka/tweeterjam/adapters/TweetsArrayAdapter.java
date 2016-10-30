@@ -12,11 +12,12 @@ import android.widget.TextView;
 import org.agoenka.tweeterjam.R;
 import org.agoenka.tweeterjam.databinding.ItemTweetBinding;
 import org.agoenka.tweeterjam.models.Tweet;
+import org.agoenka.tweeterjam.views.LinkifiedTextView;
 
 import java.util.List;
 
 import static org.agoenka.tweeterjam.R.id.ivProfileImage;
-import static org.agoenka.tweeterjam.R.id.tvBody;
+import static org.agoenka.tweeterjam.R.id.ltvBody;
 import static org.agoenka.tweeterjam.R.id.tvDuration;
 import static org.agoenka.tweeterjam.R.id.tvName;
 import static org.agoenka.tweeterjam.R.id.tvUserName;
@@ -48,7 +49,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             holder.tvName = (TextView) convertView.findViewById(tvName);
             holder.tvUserName = (TextView) convertView.findViewById(tvUserName);
             holder.tvDuration = (TextView) convertView.findViewById(tvDuration);
-            holder.tvBody = (TextView) convertView.findViewById(tvBody);
+            holder.ltvBody = (LinkifiedTextView) convertView.findViewById(ltvBody);
             holder.ivProfileImage = (ImageView) convertView.findViewById(ivProfileImage);
             convertView.setTag(holder);
         } else {
@@ -67,7 +68,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         TextView tvName;
         TextView tvUserName;
         TextView tvDuration;
-        TextView tvBody;
+        LinkifiedTextView ltvBody;
         ImageView ivProfileImage;
 
         ViewHolder(View root) {

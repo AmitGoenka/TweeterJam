@@ -35,9 +35,15 @@
             android:label="@string/title_activity_timeline"
             android:theme="@style/AppTheme">
         </activity>
-        <activity android:name=".activities.ComposeActivity"
+        <activity
+            android:name=".activities.ComposeActivity"
             android:label="@string/compose_tweet"
             android:theme="@style/AppTheme"/>
+        <activity
+            android:name=".activities.DetailActivity"
+            android:label="@string/tweet"
+            android:theme="@style/AppTheme"/>
+
         <meta-data
             android:name="org.agoenka.tweeterjam.utils.GlideConfiguration"
             android:value="GlideModule"/>

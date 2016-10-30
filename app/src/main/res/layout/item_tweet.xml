@@ -2,7 +2,6 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="tweet"
             type="org.agoenka.tweeterjam.models.Tweet"/>
@@ -61,8 +60,8 @@
             android:text="@{tweet.user.screenName}"
             tools:text="My User Name"/>
 
-        <TextView
-            android:id="@+id/tvBody"
+        <org.agoenka.tweeterjam.views.LinkifiedTextView
+            android:id="@+id/ltvBody"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tvName"

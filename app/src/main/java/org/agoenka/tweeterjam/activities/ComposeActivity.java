@@ -26,6 +26,8 @@ import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 
+import static org.agoenka.tweeterjam.activities.TimelineActivity.TWEET_KEY;
+import static org.agoenka.tweeterjam.activities.TimelineActivity.USER_KEY;
 import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
 
 public class ComposeActivity extends AppCompatActivity {
@@ -33,11 +35,6 @@ public class ComposeActivity extends AppCompatActivity {
     private ActivityComposeBinding binding;
     private TwitterClient client;
     private Tweet tweet;
-
-    static int REQUEST_CODE_COMPOSE = 1;
-
-    static final String USER_KEY = "loggedInUser";
-    static final String TWEET_KEY = "tweet";
 
     private static final int MAX_TWEET_LENGTH = 140;
 
