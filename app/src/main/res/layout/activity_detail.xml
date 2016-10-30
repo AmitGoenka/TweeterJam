@@ -2,6 +2,10 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="org.agoenka.tweeterjam.activities.DetailActivity.Handlers"/>
+        <variable
+            name="handlers"
+            type="Handlers"/>
         <variable
             name="tweet"
             type="org.agoenka.tweeterjam.models.Tweet"/>
@@ -97,7 +101,8 @@
             android:layout_marginRight="64dp"
             android:contentDescription="@string/reply"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_action_reply"/>
+            android:src="@drawable/ic_action_reply"
+            android:onClick="@{handlers.onReply}"/>
 
         <ImageButton
             android:id="@+id/ibRetweet"
