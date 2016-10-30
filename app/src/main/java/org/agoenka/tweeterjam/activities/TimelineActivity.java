@@ -71,6 +71,19 @@ public class TimelineActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        // Setup refresh listener which triggers new data loading
+        binding.swipeContainer.setOnRefreshListener(() -> {
+            // once the network request has completed successfully swipeContainer.setRefreshing(false) must be called.
+            refreshTimeline();
+            binding.swipeContainer.setRefreshing(false);
+        });
+
+        // Configure the refreshing colors
+        binding.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
     }
 
     @Override
