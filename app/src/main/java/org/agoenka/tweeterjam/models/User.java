@@ -1,5 +1,10 @@
 package org.agoenka.tweeterjam.models;
 
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+
+import org.agoenka.tweeterjam.TweeterJamDatabase;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcel;
@@ -10,11 +15,13 @@ import org.parceler.Parcel;
  * Version: ${VERSION}
  */
 @Parcel(analyze = User.class)
+@Table(database = TweeterJamDatabase.class)
 public class User {
-    long uid;
-    String name;
-    String screenName;
-    String profileImageUrl;
+
+    @Column @PrimaryKey long uid;
+    @Column String name;
+    @Column String screenName;
+    @Column String profileImageUrl;
 
     @SuppressWarnings("unused")
     public long getUid() {

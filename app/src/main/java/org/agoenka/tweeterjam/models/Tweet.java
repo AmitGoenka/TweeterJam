@@ -2,6 +2,13 @@ package org.agoenka.tweeterjam.models;
 
 import android.util.Log;
 
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+
+import org.agoenka.tweeterjam.TweeterJamDatabase;
 import org.agoenka.tweeterjam.utils.DateUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,12 +26,14 @@ import static org.agoenka.tweeterjam.utils.DateUtils.TWITTER_FORMAT;
  * Version: ${VERSION}
  */
 @Parcel(analyze = Tweet.class)
-public class Tweet {
-    long uid;
-    String body;
-    int retweetCount;
-    String createdAt;
-    User user;
+@Table(database = TweeterJamDatabase.class)
+public class Tweet extends BaseModel {
+
+    @Column @PrimaryKey long uid;
+    @Column String body;
+    @Column int retweetCount;
+    @Column String createdAt;
+    @Column @ForeignKey(saveForeignKeyModel = true) User user;
 
     private long getUid() {
         return uid;
@@ -51,7 +60,8 @@ public class Tweet {
         return DateUtils.getDuration(this.getCreatedAt(), TWITTER_FORMAT);
     }
 
-    public Tweet() {}
+    public Tweet() {
+    }
 
     // Tweet.fromJSON("{ ... }") => <Tweet>
     public static Tweet fromJSON(JSONObject jsonObject) {
@@ -91,7 +101,7 @@ public class Tweet {
 
     public static long getMinId(List<Tweet> tweets) {
         long min = 0;
-        for (Tweet tweet: tweets) {
+        for (Tweet tweet : tweets) {
             if (tweet.getUid() < min || min == 0) {
                 min = tweet.getUid();
             }
@@ -104,7 +114,7 @@ public class Tweet {
 
     public static long getMaxId(List<Tweet> tweets) {
         long max = 0;
-        for (Tweet tweet: tweets) {
+        for (Tweet tweet : tweets) {
             if (tweet.getUid() > max) {
                 max = tweet.getUid();
             }
