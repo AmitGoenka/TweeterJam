@@ -93,8 +93,8 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/tvRetweetCount"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginEnd="64dp"
+            android:layout_marginRight="64dp"
             android:contentDescription="@string/reply"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_action_reply"/>
@@ -104,21 +104,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/ibReply"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginEnd="64dp"
+            android:layout_marginRight="64dp"
             android:layout_toEndOf="@+id/ibReply"
             android:layout_toRightOf="@+id/ibReply"
             android:contentDescription="@string/retweet"
             android:background="@android:color/transparent"
-            app:srcCompat="@drawable/twitter_retweet_grey"/>
+            app:srcCompat="@drawable/twitter_retweet_green"/>
 
         <ImageButton
             android:id="@+id/ibFavorite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/ibRetweet"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginEnd="64dp"
+            android:layout_marginRight="64dp"
             android:layout_toEndOf="@+id/ibRetweet"
             android:layout_toRightOf="@+id/ibRetweet"
             android:contentDescription="@string/favorite"
