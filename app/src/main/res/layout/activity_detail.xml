@@ -110,7 +110,7 @@
             android:layout_toRightOf="@+id/ibReply"
             android:contentDescription="@string/retweet"
             android:background="@android:color/transparent"
-            app:srcCompat="@drawable/twitter_retweet_green"/>
+            app:srcCompat="@drawable/twitter_retweet_grey"/>
 
         <ImageButton
             android:id="@+id/ibFavorite"
