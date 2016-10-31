@@ -28,6 +28,8 @@ public class DetailActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
         binding.setHandlers(new Handlers());
         setSupportActionBar(binding.appbarMain.toolbar);
+        assert getSupportActionBar() != null;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         loggedInUser = Parcels.unwrap(getIntent().getParcelableExtra(LOGGED_IN_USER_KEY));
         Tweet tweet = Parcels.unwrap(getIntent().getParcelableExtra(TWEET_KEY));

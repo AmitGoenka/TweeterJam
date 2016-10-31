@@ -39,7 +39,8 @@
         <activity
             android:name=".activities.DetailActivity"
             android:label="@string/tweet"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".activities.TimelineActivity"/>
         <meta-data
             android:name="org.agoenka.tweeterjam.utils.GlideConfiguration"
             android:value="GlideModule"/>
