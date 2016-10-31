@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,8 +15,9 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.agoenka.tweeterjam.R;
 import org.agoenka.tweeterjam.TweeterJamApplication;
-import org.agoenka.tweeterjam.adapters.EndlessScrollListener;
-import org.agoenka.tweeterjam.adapters.TweetsArrayAdapter;
+import org.agoenka.tweeterjam.adapters.EndlessRecyclerViewScrollListener;
+import org.agoenka.tweeterjam.adapters.ItemClickSupport;
+import org.agoenka.tweeterjam.adapters.TweetsAdapter;
 import org.agoenka.tweeterjam.databinding.ActivityTimelineBinding;
 import org.agoenka.tweeterjam.models.Tweet;
 import org.agoenka.tweeterjam.models.User;
@@ -28,9 +31,9 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
+import static org.agoenka.tweeterjam.activities.ComposeActivity.LOGGED_IN_USER_KEY;
 import static org.agoenka.tweeterjam.activities.ComposeActivity.REQUEST_CODE_COMPOSE;
 import static org.agoenka.tweeterjam.activities.ComposeActivity.TWEET_KEY;
-import static org.agoenka.tweeterjam.activities.ComposeActivity.LOGGED_IN_USER_KEY;
 import static org.agoenka.tweeterjam.network.TwitterClient.PAGE_SIZE;
 import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
 
@@ -40,7 +43,7 @@ public class TimelineActivity extends AppCompatActivity {
     private TwitterClient client;
     private User loggedInUser;
     private List<Tweet> mTweets;
-    private TweetsArrayAdapter mAdapter;
+    private TweetsAdapter mAdapter;
     private long currMinId = 0;
     private long currMaxId = 0;
 
@@ -52,8 +55,8 @@ public class TimelineActivity extends AppCompatActivity {
         setupViews();
 
         if (!isConnected(this)) {
-            mAdapter.addAll(Tweet.get());
-            mAdapter.notifyDataSetChanged();
+            mTweets.addAll(Tweet.get());
+            mAdapter.notifyItemRangeInserted(0, mTweets.size());
         } else {
             Tweet.clear();
             getUserCredentials();
@@ -62,25 +65,24 @@ public class TimelineActivity extends AppCompatActivity {
     }
 
     private void setupViews() {
-        // Create the arraylist (data source)
         mTweets = new ArrayList<>();
-        // Construct the mAdapter from data source
-        mAdapter = new TweetsArrayAdapter(this, mTweets);
-        // Connect mAdapter to list view
-        binding.lvTweets.setAdapter(mAdapter);
+        mAdapter = new TweetsAdapter(this, mTweets);
+        binding.rvTweets.setAdapter(mAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        binding.rvTweets.setLayoutManager(layoutManager);
 
-        binding.lvTweets.setOnScrollListener(new EndlessScrollListener() {
+        binding.rvTweets.addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
-            public boolean onLoadMore(int page, int totalItemCount) {
+            public void onLoadMore(int page, int totalItemCount, RecyclerView view) {
                 currMinId = Tweet.getMinId(mTweets);
                 populateTimeline(currMinId > 0 ? currMinId - 1 : 0, 0);
-                return true;
             }
         });
 
-        binding.lvTweets.setOnItemClickListener((parent, view, position, id) -> {
-            Intent intent = new Intent(this, DetailActivity.class);
-            intent.putExtra(TWEET_KEY, Parcels.wrap(mTweets.get(position)));
+        ItemClickSupport.addTo(binding.rvTweets).setOnItemClickListener((recyclerView, position, v) -> {
+            Tweet tweet = mTweets.get(position);
+            Intent intent = new Intent(TimelineActivity.this, DetailActivity.class);
+            intent.putExtra(TWEET_KEY, Parcels.wrap(tweet));
             intent.putExtra(LOGGED_IN_USER_KEY, Parcels.wrap(loggedInUser));
             startActivity(intent);
         });
@@ -126,8 +128,8 @@ public class TimelineActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_COMPOSE) {
             Tweet tweet = Parcels.unwrap(data.getParcelableExtra(TWEET_KEY));
-            mAdapter.insert(tweet, 0);
-            mAdapter.notifyDataSetChanged();
+            mTweets.add(0, tweet);
+            mAdapter.notifyItemRangeInserted(0, 1);
 
             mTweets.remove(tweet);
             refreshTimeline();
@@ -150,10 +152,12 @@ public class TimelineActivity extends AppCompatActivity {
                     List<Tweet> tweets = Tweet.fromJSONArray(json);
                     if (sinceId > 0) {
                         mTweets.addAll(0, tweets);
+                        mAdapter.notifyItemRangeInserted(0, tweets.size());
                     } else {
-                        mAdapter.addAll(tweets);
+                        int currentSize = mAdapter.getItemCount();
+                        mTweets.addAll(tweets);
+                        mAdapter.notifyItemRangeInserted(currentSize, mTweets.size() - currentSize);
                     }
-                    mAdapter.notifyDataSetChanged();
                     Tweet.save(tweets);
                 }
 
