@@ -28,6 +28,9 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
+import static org.agoenka.tweeterjam.activities.ComposeActivity.REQUEST_CODE_COMPOSE;
+import static org.agoenka.tweeterjam.activities.ComposeActivity.TWEET_KEY;
+import static org.agoenka.tweeterjam.activities.ComposeActivity.LOGGED_IN_USER_KEY;
 import static org.agoenka.tweeterjam.network.TwitterClient.PAGE_SIZE;
 import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
 
@@ -40,11 +43,6 @@ public class TimelineActivity extends AppCompatActivity {
     private TweetsArrayAdapter mAdapter;
     private long currMinId = 0;
     private long currMaxId = 0;
-
-    static int REQUEST_CODE_COMPOSE = 1;
-
-    static final String USER_KEY = "loggedInUser";
-    static final String TWEET_KEY = "tweet";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +81,7 @@ public class TimelineActivity extends AppCompatActivity {
         binding.lvTweets.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = new Intent(this, DetailActivity.class);
             intent.putExtra(TWEET_KEY, Parcels.wrap(mTweets.get(position)));
+            intent.putExtra(LOGGED_IN_USER_KEY, Parcels.wrap(loggedInUser));
             startActivity(intent);
         });
 
@@ -115,7 +114,7 @@ public class TimelineActivity extends AppCompatActivity {
 
         if (id == R.id.action_compose) {
             Intent intent = new Intent(TimelineActivity.this, ComposeActivity.class);
-            intent.putExtra(USER_KEY, Parcels.wrap(loggedInUser));
+            intent.putExtra(LOGGED_IN_USER_KEY, Parcels.wrap(loggedInUser));
             startActivityForResult(intent, REQUEST_CODE_COMPOSE);
             return true;
         }

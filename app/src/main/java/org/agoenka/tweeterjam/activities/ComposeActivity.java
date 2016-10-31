@@ -26,17 +26,22 @@ import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 
-import static org.agoenka.tweeterjam.activities.TimelineActivity.TWEET_KEY;
-import static org.agoenka.tweeterjam.activities.TimelineActivity.USER_KEY;
 import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
 
 public class ComposeActivity extends AppCompatActivity {
 
     private ActivityComposeBinding binding;
     private TwitterClient client;
-    private Tweet tweet;
+    private Tweet replyToTweet;
 
     private static final int MAX_TWEET_LENGTH = 140;
+
+    static int REQUEST_CODE_COMPOSE = 1;
+    static int REQUEST_CODE_REPLY = 1;
+
+    static final String LOGGED_IN_USER_KEY = "loggedInUser";
+    static final String TWEET_KEY = "tweet";
+    static final String IN_REPLY_TO_KEY = "inReplyTo";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +50,17 @@ public class ComposeActivity extends AppCompatActivity {
         binding.setHandlers(new Handlers());
         client = TweeterJamApplication.getTwitterClient();
 
-        User user = Parcels.unwrap(getIntent().getParcelableExtra(USER_KEY));
+        User user = Parcels.unwrap(getIntent().getParcelableExtra(LOGGED_IN_USER_KEY));
         binding.setUser(user);
         setTextChangeListener();
+
+        replyToTweet = Parcels.unwrap(getIntent().getParcelableExtra(IN_REPLY_TO_KEY));
+        if (replyToTweet != null) {
+            binding.etTweet.setText(String.format("%s ", replyToTweet.getUser().getScreenName()));
+            binding.etTweet.setSelection(binding.etTweet.getText().length());
+            binding.tvInReplyTo.setText(String.format("In reply to %s", replyToTweet.getUser().getName()));
+            binding.tvInReplyTo.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setTextChangeListener() {
@@ -88,17 +101,20 @@ public class ComposeActivity extends AppCompatActivity {
         }
 
         public void onTweet(@SuppressWarnings("unused") View view) {
-            postTweet(binding.etTweet.getText().toString());
+            if (replyToTweet != null)
+                postTweet(binding.etTweet.getText().toString(), replyToTweet.getUid());
+            else
+                postTweet(binding.etTweet.getText().toString(), 0);
         }
     }
 
-    private void postTweet(String status) {
+    private void postTweet(String status, long inReplyTo) {
         if (isConnected(this)) {
-            client.postTweet(status, new JsonHttpResponseHandler() {
+            client.postTweet(status, inReplyTo, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     Log.d("DEBUG", response.toString());
-                    tweet = Tweet.fromJSON(response);
+                    Tweet tweet = Tweet.fromJSON(response);
                     Intent data = new Intent();
                     data.putExtra(TWEET_KEY, Parcels.wrap(tweet));
                     setResult(RESULT_OK, data);

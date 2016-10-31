@@ -41,7 +41,7 @@ public class Tweet extends BaseModel {
     @Column boolean favorited;
     @Column @ForeignKey(saveForeignKeyModel = true) User user;
 
-    private long getUid() {
+    public long getUid() {
         return uid;
     }
 
