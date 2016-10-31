@@ -63,20 +63,21 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         }
     }
 
-    public void addAll(List<Tweet> tweets) {
-        int currentSize = getItemCount();
-        mTweets.addAll(tweets);
-        notifyItemRangeInserted(currentSize, mTweets.size() - currentSize);
+    public void addAll(List<Tweet> tweets, boolean refresh) {
+        if (refresh) {
+            mTweets.clear();
+            mTweets.addAll(tweets);
+            notifyDataSetChanged();
+        } else {
+            int currentSize = getItemCount();
+            mTweets.addAll(tweets);
+            notifyItemRangeInserted(currentSize, mTweets.size() - currentSize);
+        }
     }
 
     public void add(int index, Tweet tweet) {
         mTweets.add(index, tweet);
         notifyItemRangeInserted(index, 1);
-    }
-
-    public void clear() {
-        mTweets.clear();
-        notifyDataSetChanged();
     }
 
 }

@@ -54,11 +54,11 @@ public class TimelineActivity extends AppCompatActivity {
         setupViews();
 
         if (!isConnected(this)) {
-            mAdapter.addAll(Tweet.get());
+            mAdapter.addAll(Tweet.get(), true);
         } else {
             Tweet.clear();
             getUserCredentials();
-            populateTimeline(currMinId);
+            populateTimeline(currMinId, true);
         }
     }
 
@@ -73,7 +73,7 @@ public class TimelineActivity extends AppCompatActivity {
             @Override
             public void onLoadMore(int page, int totalItemCount, RecyclerView view) {
                 currMinId = Tweet.getMinId(mTweets);
-                populateTimeline(currMinId > 0 ? currMinId - 1 : 0);
+                populateTimeline(currMinId > 0 ? currMinId - 1 : 0, false);
             }
         });
 
@@ -127,26 +127,24 @@ public class TimelineActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_COMPOSE) {
             Tweet tweet = Parcels.unwrap(data.getParcelableExtra(TWEET_KEY));
             mAdapter.add(0, tweet);
-            binding.rvTweets.scrollToPosition(0);
-            refreshTimeline();
         }
     }
 
     private void refreshTimeline() {
-        mAdapter.clear();
-        populateTimeline(0);
+        mTweets.clear();
+        populateTimeline(0, true);
     }
 
     // Send an API request to get the timeline json
     // Fill the list view by creating the tweet objects from json
-    private void populateTimeline(final long maxId) {
+    private void populateTimeline(final long maxId, final boolean refresh) {
         if (isConnected(this)) {
             client.getHomeTimeline(PAGE_SIZE, maxId, 0, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
                     Log.d("DEBUG", json.toString());
                     List<Tweet> tweets = Tweet.fromJSONArray(json);
-                    mAdapter.addAll(tweets);
+                    mAdapter.addAll(tweets, refresh);
                     Tweet.save(tweets);
                 }
 
