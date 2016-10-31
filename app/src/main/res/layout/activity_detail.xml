@@ -2,145 +2,159 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="org.agoenka.tweeterjam.activities.DetailActivity.Handlers"/>
+
         <variable
             name="handlers"
             type="Handlers"/>
+
         <variable
             name="tweet"
             type="org.agoenka.tweeterjam.models.Tweet"/>
     </data>
 
-    <RelativeLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/activity_detail"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        tools:context="org.agoenka.tweeterjam.activities.DetailActivity">
+    <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:fitsSystemWindows="true"
+                  android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/ivProfileImage"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:contentDescription="@string/profile_image_description"
-            app:profileImageUrl="@{tweet.user.profileImageUrl}"/>
+        <include
+            android:id="@+id/appbar_main"
+            layout="@layout/appbar_main"/>
 
-        <TextView
-            android:id="@+id/tvName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/ivProfileImage"
-            android:layout_toRightOf="@+id/ivProfileImage"
-            android:text="@{tweet.user.name}"
-            tools:text="My Name"/>
-
-        <TextView
-            android:id="@+id/tvUserName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/tvName"
-            android:layout_alignStart="@+id/tvName"
-            android:layout_below="@+id/tvName"
-            android:text="@{tweet.user.screenName}"
-            tools:text="My User Name"/>
-
-        <org.agoenka.tweeterjam.views.LinkifiedTextView
-            android:id="@+id/tvBody"
+        <RelativeLayout
+            android:id="@+id/activity_detail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/ivProfileImage"
-            android:layout_marginBottom="16dp"
-            android:autoLink="all"
-            android:text="@{tweet.body}"
-            tools:text="Tweet Text"/>
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            tools:context="org.agoenka.tweeterjam.activities.DetailActivity">
 
-        <TextView
-            android:id="@+id/tvRetweetCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/tvBody"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:text="@{tweet.retweetCount + ' ' + @string/retweets}"
-            tools:text="Retweet Count"/>
+            <ImageView
+                android:id="@+id/ivProfileImage"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:contentDescription="@string/profile_image_description"
+                app:profileImageUrl="@{tweet.user.profileImageUrl}"/>
 
-        <TextView
-            android:id="@+id/tvFavoriteCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/tvRetweetCount"
-            android:layout_toEndOf="@+id/tvRetweetCount"
-            android:layout_toRightOf="@+id/tvRetweetCount"
-            android:text="@{tweet.favoriteCount + ' ' + @string/favorites}"
-            tools:text="Favorite Count"/>
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/ivProfileImage"
+                android:layout_toRightOf="@+id/ivProfileImage"
+                android:text="@{tweet.user.name}"
+                tools:text="My Name"/>
 
-        <ImageButton
-            android:id="@+id/ibReply"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/tvRetweetCount"
-            android:layout_marginEnd="64dp"
-            android:layout_marginRight="64dp"
-            android:contentDescription="@string/reply"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_action_reply"
-            android:onClick="@{handlers.onReply}"/>
+            <TextView
+                android:id="@+id/tvUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/tvName"
+                android:layout_alignStart="@+id/tvName"
+                android:layout_below="@+id/tvName"
+                android:text="@{tweet.user.screenName}"
+                tools:text="My User Name"/>
 
-        <ImageButton
-            android:id="@+id/ibRetweet"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/ibReply"
-            android:layout_marginEnd="64dp"
-            android:layout_marginRight="64dp"
-            android:layout_toEndOf="@+id/ibReply"
-            android:layout_toRightOf="@+id/ibReply"
-            android:contentDescription="@string/retweet"
-            android:background="@android:color/transparent"
-            app:srcCompat="@drawable/twitter_retweet_grey"/>
+            <org.agoenka.tweeterjam.views.LinkifiedTextView
+                android:id="@+id/tvBody"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/ivProfileImage"
+                android:layout_marginBottom="16dp"
+                android:autoLink="all"
+                android:text="@{tweet.body}"
+                tools:text="Tweet Text"/>
 
-        <ImageButton
-            android:id="@+id/ibFavorite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/ibRetweet"
-            android:layout_marginEnd="64dp"
-            android:layout_marginRight="64dp"
-            android:layout_toEndOf="@+id/ibRetweet"
-            android:layout_toRightOf="@+id/ibRetweet"
-            android:contentDescription="@string/favorite"
-            android:background="@android:color/transparent"
-            app:srcCompat="@drawable/ic_action_favorite_grey"/>
+            <TextView
+                android:id="@+id/tvRetweetCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/tvBody"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:text="@{tweet.retweetCount + ' ' + @string/retweets}"
+                tools:text="Retweet Count"/>
 
-        <ImageButton
-            android:id="@+id/ibShare"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/ibFavorite"
-            android:layout_toEndOf="@+id/ibFavorite"
-            android:layout_toRightOf="@+id/ibFavorite"
-            android:contentDescription="@string/share"
-            android:background="@android:color/transparent"
-            app:srcCompat="@drawable/ic_action_share"/>
+            <TextView
+                android:id="@+id/tvFavoriteCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/tvRetweetCount"
+                android:layout_toEndOf="@+id/tvRetweetCount"
+                android:layout_toRightOf="@+id/tvRetweetCount"
+                android:text="@{tweet.favoriteCount + ' ' + @string/favorites}"
+                tools:text="Favorite Count"/>
 
-    </RelativeLayout>
+            <ImageButton
+                android:id="@+id/ibReply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/tvRetweetCount"
+                android:layout_marginEnd="64dp"
+                android:layout_marginRight="64dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/reply"
+                android:onClick="@{handlers.onReply}"
+                android:src="@drawable/ic_action_reply"/>
+
+            <ImageButton
+                android:id="@+id/ibRetweet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/ibReply"
+                android:layout_marginEnd="64dp"
+                android:layout_marginRight="64dp"
+                android:layout_toEndOf="@+id/ibReply"
+                android:layout_toRightOf="@+id/ibReply"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/retweet"
+                app:srcCompat="@drawable/twitter_retweet_grey"/>
+
+            <ImageButton
+                android:id="@+id/ibFavorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/ibRetweet"
+                android:layout_marginEnd="64dp"
+                android:layout_marginRight="64dp"
+                android:layout_toEndOf="@+id/ibRetweet"
+                android:layout_toRightOf="@+id/ibRetweet"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/favorite"
+                app:srcCompat="@drawable/ic_action_favorite_grey"/>
+
+            <ImageButton
+                android:id="@+id/ibShare"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/ibFavorite"
+                android:layout_toEndOf="@+id/ibFavorite"
+                android:layout_toRightOf="@+id/ibFavorite"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/share"
+                app:srcCompat="@drawable/ic_action_share"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
 </layout>

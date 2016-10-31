@@ -8,7 +8,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -50,6 +49,7 @@ public class TimelineActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_timeline);
+        setSupportActionBar(binding.appbarMain.toolbar);
         client = TweeterJamApplication.getTwitterClient();
         setupViews();
 
@@ -97,6 +97,12 @@ public class TimelineActivity extends AppCompatActivity {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+
+        binding.fabCompose.setOnClickListener(v -> {
+            ComposeTweetFragment composeDialog = ComposeTweetFragment.newInstance("Tweet", loggedInUser, null);
+            composeDialog.setListener(tweet -> mAdapter.add(0, tweet));
+            composeDialog.show(getSupportFragmentManager(), "Compose Tweet");
+        });
     }
 
     @Override
@@ -104,22 +110,6 @@ public class TimelineActivity extends AppCompatActivity {
         // Inflate the menu, this adds items to the action bar if present
         getMenuInflater().inflate(R.menu.menu_timeline, menu);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // The action bar will automatically handle clicks on the Home/Up button,
-        // so long the parent activity is specified in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (id == R.id.action_compose) {
-            ComposeTweetFragment composeDialog = ComposeTweetFragment.newInstance("Tweet", loggedInUser, null);
-            composeDialog.setListener(tweet -> mAdapter.add(0, tweet));
-            composeDialog.show(getSupportFragmentManager(), "Compose Tweet");
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private void refreshTimeline() {

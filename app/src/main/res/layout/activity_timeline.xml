@@ -1,27 +1,44 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout
+    <android.support.design.widget.CoordinatorLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/activity_timeline"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="org.agoenka.tweeterjam.activities.TimelineActivity">
+
+        <include
+            android:id="@+id/appbar_main"
+            layout="@layout/appbar_main"/>
 
         <android.support.v4.widget.SwipeRefreshLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/swipeContainer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvTweets"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:clipToPadding="false"/>
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
-    </RelativeLayout>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabCompose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_action_compose"
+            app:fabSize="normal"
+            app:layout_anchor="@id/rvTweets"
+            app:layout_anchorGravity="bottom|right|end"
+            app:layout_behavior="org.agoenka.tweeterjam.views.ScrollAwareFABBehavior"/>
+
+    </android.support.design.widget.CoordinatorLayout>
 
 </layout>
