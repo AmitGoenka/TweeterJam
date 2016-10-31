@@ -19,6 +19,7 @@ import org.agoenka.tweeterjam.adapters.EndlessRecyclerViewScrollListener;
 import org.agoenka.tweeterjam.adapters.ItemClickSupport;
 import org.agoenka.tweeterjam.adapters.TweetsAdapter;
 import org.agoenka.tweeterjam.databinding.ActivityTimelineBinding;
+import org.agoenka.tweeterjam.fragments.ComposeTweetFragment;
 import org.agoenka.tweeterjam.models.Tweet;
 import org.agoenka.tweeterjam.models.User;
 import org.agoenka.tweeterjam.network.TwitterClient;
@@ -31,9 +32,8 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
-import static org.agoenka.tweeterjam.activities.ComposeActivity.LOGGED_IN_USER_KEY;
-import static org.agoenka.tweeterjam.activities.ComposeActivity.REQUEST_CODE_COMPOSE;
-import static org.agoenka.tweeterjam.activities.ComposeActivity.TWEET_KEY;
+import static org.agoenka.tweeterjam.activities.DetailActivity.TWEET_KEY;
+import static org.agoenka.tweeterjam.fragments.ComposeTweetFragment.LOGGED_IN_USER_KEY;
 import static org.agoenka.tweeterjam.network.TwitterClient.PAGE_SIZE;
 import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
 
@@ -113,21 +113,13 @@ public class TimelineActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_compose) {
-            Intent intent = new Intent(TimelineActivity.this, ComposeActivity.class);
-            intent.putExtra(LOGGED_IN_USER_KEY, Parcels.wrap(loggedInUser));
-            startActivityForResult(intent, REQUEST_CODE_COMPOSE);
+            ComposeTweetFragment composeDialog = ComposeTweetFragment.newInstance("Tweet", loggedInUser, null);
+            composeDialog.setListener(tweet -> mAdapter.add(0, tweet));
+            composeDialog.show(getSupportFragmentManager(), "Compose Tweet");
             return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_COMPOSE) {
-            Tweet tweet = Parcels.unwrap(data.getParcelableExtra(TWEET_KEY));
-            mAdapter.add(0, tweet);
-        }
     }
 
     private void refreshTimeline() {

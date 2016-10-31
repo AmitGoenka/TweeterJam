@@ -3,7 +3,7 @@
 
     <data>
 
-        <import type="org.agoenka.tweeterjam.activities.ComposeActivity.Handlers"/>
+        <import type="org.agoenka.tweeterjam.fragments.ComposeTweetFragment.Handlers"/>
 
         <variable
             name="handlers"
@@ -23,7 +23,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        tools:context="org.agoenka.tweeterjam.activities.ComposeActivity">
+        tools:context="org.agoenka.tweeterjam.fragments.ComposeTweetFragment">
 
         <Button
             android:id="@+id/btnCancel"
@@ -79,14 +79,14 @@
             android:id="@+id/tvInReplyTo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/ivProfileImage"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_below="@+id/ivProfileImage"
             android:layout_marginBottom="5dp"
-            android:gravity="start|center"
             android:drawableLeft="@drawable/ic_reply_to"
-            android:drawableStart="@drawable/ic_reply_to"
             android:drawablePadding="5dp"
+            android:drawableStart="@drawable/ic_reply_to"
+            android:gravity="start|center"
             android:visibility="gone"
             tools:text="In Reply To"/>
 
@@ -118,12 +118,12 @@
             android:id="@+id/tvCharCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/btnTweet"
-            android:layout_toStartOf="@+id/btnTweet"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="15dp"
-            android:layout_marginRight="10dp"
             android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/btnTweet"
+            android:layout_toStartOf="@+id/btnTweet"
             tools:text="Characters"/>
 
     </RelativeLayout>
