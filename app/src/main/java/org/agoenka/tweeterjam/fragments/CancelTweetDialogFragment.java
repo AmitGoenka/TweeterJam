@@ -40,7 +40,7 @@ public class CancelTweetDialogFragment extends DialogFragment {
         final String inReplyToUser = getArguments().getString(KEY_IN_REPLY_TO_USER);
         final long inReplyToTweet = getArguments().getLong(KEY_IN_REPLY_TO_TWEET);
         return new AlertDialog.Builder(getTargetFragment().getContext())
-                .setMessage("Would you like to save this tweet as a draft??")
+                .setMessage("Would you like to save this tweet as a draft?")
                 .setPositiveButton("Yes", (dialog, which) -> {
                     SharedPreferencesUtils.putString(getActivity(), KEY_DRAFT_TWEET, draftTweet);
                     if (inReplyToUser != null)

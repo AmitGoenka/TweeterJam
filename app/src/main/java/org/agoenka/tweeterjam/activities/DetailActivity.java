@@ -38,7 +38,7 @@ public class DetailActivity extends AppCompatActivity {
 
     public class Handlers {
         public void onReply(@SuppressWarnings("unused") View view) {
-            ComposeTweetFragment composeDialog = ComposeTweetFragment.newInstance("Tweet", loggedInUser, binding.getTweet());
+            ComposeTweetFragment composeDialog = ComposeTweetFragment.newInstance(null, loggedInUser, binding.getTweet());
             composeDialog.setListener(tweet -> Toast.makeText(DetailActivity.this, "Replied Successfully!", Toast.LENGTH_SHORT).show());
             composeDialog.show(getSupportFragmentManager(), "Compose Tweet");
         }

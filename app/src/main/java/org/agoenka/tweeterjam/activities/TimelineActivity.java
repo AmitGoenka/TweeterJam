@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -49,9 +50,10 @@ public class TimelineActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_timeline);
+        binding.setHandlers(new Handlers());
         setSupportActionBar(binding.appbarMain.toolbar);
-
         client = TweeterJamApplication.getTwitterClient();
+
         getUserCredentials();
         setupViews();
 
@@ -60,6 +62,23 @@ public class TimelineActivity extends AppCompatActivity {
         } else {
             Tweet.clear();
             populateTimeline(currMinId, true);
+        }
+    }
+
+    private void handleImplicitIntents() {
+        // Get intent, action and MIME type
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if ("text/plain".equals(type)) {
+                String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
+                String url = intent.getStringExtra(Intent.EXTRA_TEXT);
+                ComposeTweetFragment composeDialog = ComposeTweetFragment.newInstance(getTweetText(title, url), loggedInUser, null);
+                composeDialog.setListener(tweet -> mAdapter.add(0, tweet));
+                composeDialog.show(getSupportFragmentManager(), "Compose Tweet");
+            }
         }
     }
 
@@ -98,12 +117,6 @@ public class TimelineActivity extends AppCompatActivity {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-
-        binding.fabCompose.setOnClickListener(v -> {
-            ComposeTweetFragment composeDialog = ComposeTweetFragment.newInstance("Tweet", loggedInUser, null);
-            composeDialog.setListener(tweet -> mAdapter.add(0, tweet));
-            composeDialog.show(getSupportFragmentManager(), "Compose Tweet");
-        });
     }
 
     @Override
@@ -111,6 +124,29 @@ public class TimelineActivity extends AppCompatActivity {
         // Inflate the menu, this adds items to the action bar if present
         getMenuInflater().inflate(R.menu.menu_timeline, menu);
         return true;
+    }
+
+    public class Handlers {
+        public void onCompose(@SuppressWarnings("unused") View view) {
+            ComposeTweetFragment composeDialog = ComposeTweetFragment.newInstance(null, loggedInUser, null);
+            composeDialog.setListener(tweet -> mAdapter.add(0, tweet));
+            composeDialog.show(getSupportFragmentManager(), "Compose Tweet");
+        }
+    }
+
+    private String getTweetText(String title, String url) {
+        StringBuilder sb = new StringBuilder();
+        if (title != null) {
+            sb.append(title);
+        }
+        if (url != null) {
+            if (title != null) {
+                sb.append("\n").append(url);
+            } else {
+                sb.append(url);
+            }
+        }
+        return sb.toString();
     }
 
     private void refreshTimeline() {
@@ -152,6 +188,7 @@ public class TimelineActivity extends AppCompatActivity {
                     if (getSupportActionBar() != null) {
                         getSupportActionBar().setTitle(loggedInUser.getScreenName());
                     }
+                    handleImplicitIntents();
                 }
 
                 @Override

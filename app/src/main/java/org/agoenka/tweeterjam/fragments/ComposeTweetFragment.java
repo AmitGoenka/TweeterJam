@@ -44,7 +44,7 @@ public class ComposeTweetFragment extends DialogFragment {
     private Tweet replyToTweet;
     private long replyToTweetUid;
 
-    private static final String KEY_TITLE = "title";
+    private static final String KEY_TEXT = "text";
     public static final String KEY_LOGGED_IN_USER = "loggedInUser";
     private static final String KEY_IN_REPLY_TO = "inReplyTo";
 
@@ -60,10 +60,11 @@ public class ComposeTweetFragment extends DialogFragment {
         this.listener = listener;
     }
 
-    public static ComposeTweetFragment newInstance(String title, User loggedInUser, Tweet inReplyTo) {
+    public static ComposeTweetFragment newInstance(String text, User loggedInUser, Tweet inReplyTo) {
         ComposeTweetFragment fragment = new ComposeTweetFragment();
         Bundle args = new Bundle();
-        args.putString(KEY_TITLE, title);
+        if (text != null)
+            args.putString(KEY_TEXT, text);
         if (loggedInUser != null)
             args.putParcelable(KEY_LOGGED_IN_USER, Parcels.wrap(loggedInUser));
         if (inReplyTo != null)
@@ -85,29 +86,52 @@ public class ComposeTweetFragment extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         setTextChangeListener();
-
-        replyToTweet = Parcels.unwrap(getArguments().getParcelable(KEY_IN_REPLY_TO));
-        if (replyToTweet != null) {
-            replyToTweetUid = replyToTweet.getUid();
-            setupEditTweetView(String.format("%s ", replyToTweet.getUser().getScreenName()));
-            setupReplyToView(replyToTweet.getUser().getName());
-            SharedPreferencesUtils.clear(getActivity(), KEY_DRAFT_TWEET, KEY_IN_REPLY_TO_USER, KEY_IN_REPLY_TO_TWEET);
-        } else {
-            String draftTweet = SharedPreferencesUtils.getString(getActivity(), KEY_DRAFT_TWEET);
-            if (draftTweet != null) {
-                setupEditTweetView(draftTweet);
-
-                final String inReplyToUser = SharedPreferencesUtils.getString(getActivity(), KEY_IN_REPLY_TO_USER);
-                final long inReplyToTweet = SharedPreferencesUtils.getLong(getActivity(), KEY_IN_REPLY_TO_TWEET);
-
-                if (inReplyToTweet > 0 && inReplyToUser != null) {
-                    setupReplyToView(inReplyToUser);
-                    replyToTweetUid = inReplyToTweet;
-                }
-            }
-        }
-
         client = TweeterJamApplication.getTwitterClient();
+
+        String text = getArguments().getString(KEY_TEXT);
+        replyToTweet = Parcels.unwrap(getArguments().getParcelable(KEY_IN_REPLY_TO));
+        String draftTweet = SharedPreferencesUtils.getString(getActivity(), KEY_DRAFT_TWEET);
+
+        if (text != null)
+            handleImplicit(text);
+        else if (replyToTweet != null)
+            handleReplyTo();
+        else if (draftTweet != null)
+            handleDraft(draftTweet);
+    }
+
+    private void handleImplicit(String text) {
+        setupEditTweetView(text);
+        SharedPreferencesUtils.clear(getActivity(), KEY_DRAFT_TWEET, KEY_IN_REPLY_TO_USER, KEY_IN_REPLY_TO_TWEET);
+    }
+
+    private void handleReplyTo() {
+        replyToTweetUid = replyToTweet.getUid();
+        setupEditTweetView(String.format("%s ", replyToTweet.getUser().getScreenName()));
+        setupReplyToView(replyToTweet.getUser().getName());
+        SharedPreferencesUtils.clear(getActivity(), KEY_DRAFT_TWEET, KEY_IN_REPLY_TO_USER, KEY_IN_REPLY_TO_TWEET);
+    }
+
+    private void handleDraft(String draftTweet) {
+        setupEditTweetView(draftTweet);
+
+        final String inReplyToUser = SharedPreferencesUtils.getString(getActivity(), KEY_IN_REPLY_TO_USER);
+        final long inReplyToTweet = SharedPreferencesUtils.getLong(getActivity(), KEY_IN_REPLY_TO_TWEET);
+
+        if (inReplyToTweet > 0 && inReplyToUser != null) {
+            setupReplyToView(inReplyToUser);
+            replyToTweetUid = inReplyToTweet;
+        }
+    }
+
+    private void setupEditTweetView(String text) {
+        binding.etTweet.setText(text);
+        binding.etTweet.setSelection(binding.etTweet.getText().length());
+    }
+
+    private void setupReplyToView(String name) {
+        binding.tvInReplyTo.setText(String.format("In reply to %s", name));
+        binding.tvInReplyTo.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -154,16 +178,6 @@ public class ComposeTweetFragment extends DialogFragment {
                 }
             }
         });
-    }
-
-    private void setupEditTweetView(String text) {
-        binding.etTweet.setText(text);
-        binding.etTweet.setSelection(binding.etTweet.getText().length());
-    }
-
-    private void setupReplyToView(String name) {
-        binding.tvInReplyTo.setText(String.format("In reply to %s", name));
-        binding.tvInReplyTo.setVisibility(View.VISIBLE);
     }
 
     public class Handlers {

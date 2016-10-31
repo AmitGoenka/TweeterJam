@@ -1,6 +1,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <import type="org.agoenka.tweeterjam.activities.TimelineActivity.Handlers"/>
+        <variable
+            name="handlers"
+            type="Handlers"/>
+    </data>
+
     <android.support.design.widget.CoordinatorLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/activity_timeline"
@@ -37,7 +44,8 @@
             app:fabSize="normal"
             app:layout_anchor="@id/rvTweets"
             app:layout_anchorGravity="bottom|right|end"
-            app:layout_behavior="org.agoenka.tweeterjam.views.ScrollAwareFABBehavior"/>
+            app:layout_behavior="org.agoenka.tweeterjam.views.ScrollAwareFABBehavior"
+            android:onClick="@{handlers.onCompose}"/>
 
     </android.support.design.widget.CoordinatorLayout>
 
