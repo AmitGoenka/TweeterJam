@@ -20,7 +20,7 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
     // Total number of items in the dataset after the last load
     private int previousTotalItemCount = 0;
     // RecyclerView OnScrollListener needs the layout manager for current scroll position information
-    private RecyclerView.LayoutManager mLayoutManager;
+    private final RecyclerView.LayoutManager mLayoutManager;
 
     // Defines the process for actually loading more data based on page
     public abstract void onLoadMore(int page, int totalItemCount, RecyclerView view);

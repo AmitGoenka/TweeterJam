@@ -30,9 +30,9 @@ public class ItemClickSupport {
     private final RecyclerView mRecyclerView;
     private OnItemClickListener mOnItemClickListener;
     private OnItemLongClickListener mOnItemLongClickListener;
-    private View.OnClickListener mOnClickListener = getViewOnClickListener();
-    private View.OnLongClickListener mOnLongClickListener = getViewOnLongClickListener();
-    private RecyclerView.OnChildAttachStateChangeListener mAttachListener = getOnChildAttachStateChangeListener();
+    private final View.OnClickListener mOnClickListener = getViewOnClickListener();
+    private final View.OnLongClickListener mOnLongClickListener = getViewOnLongClickListener();
+    private final RecyclerView.OnChildAttachStateChangeListener mAttachListener = getOnChildAttachStateChangeListener();
 
     private ItemClickSupport(RecyclerView recyclerView) {
         mRecyclerView = recyclerView;

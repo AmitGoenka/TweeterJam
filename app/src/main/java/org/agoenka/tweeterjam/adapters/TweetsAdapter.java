@@ -19,8 +19,8 @@ import java.util.List;
  */
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder> {
 
-    private List<Tweet> mTweets;
-    private Context mContext;
+    private final List<Tweet> mTweets;
+    private final Context mContext;
 
     public TweetsAdapter(Context context, List<Tweet> tweets) {
         mTweets = tweets;

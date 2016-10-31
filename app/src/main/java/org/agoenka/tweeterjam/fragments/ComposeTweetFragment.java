@@ -1,6 +1,7 @@
 package org.agoenka.tweeterjam.fragments;
 
 import android.databinding.DataBindingUtil;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -8,9 +9,11 @@ import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -38,7 +41,7 @@ public class ComposeTweetFragment extends DialogFragment {
 
     private static final String KEY_TITLE = "title";
     public static final String LOGGED_IN_USER_KEY = "loggedInUser";
-    public static final String IN_REPLY_TO_KEY = "inReplyTo";
+    private static final String IN_REPLY_TO_KEY = "inReplyTo";
 
     private static final int MAX_TWEET_LENGTH = 140;
 
@@ -89,6 +92,22 @@ public class ComposeTweetFragment extends DialogFragment {
         client = TweeterJamApplication.getTwitterClient();
     }
 
+    @Override
+    public void onResume() {
+        // Store access variables for window and blank point
+        Point size = new Point();
+        Window window = getDialog().getWindow();
+        assert window != null;
+
+        // Store dimensions of the screen in `size`
+        window.getWindowManager().getDefaultDisplay().getSize(size);
+        // Set the width of the dialog proportional to 75% of the screen width
+        window.setLayout(size.x, (int)(size.y * 0.75));
+        window.setGravity(Gravity.CENTER);
+        // Call super onResume after sizing
+        super.onResume();
+    }
+
     private void setTextChangeListener() {
         final int startColor = binding.tvCharCount.getCurrentTextColor();
         binding.tvCharCount.setText(String.format(Locale.getDefault(), "%d", MAX_TWEET_LENGTH));
@@ -121,7 +140,8 @@ public class ComposeTweetFragment extends DialogFragment {
 
     public class Handlers {
         public void onCancel(@SuppressWarnings("unused") View view) {
-            Toast.makeText(getContext(), "Tweet Canceled", Toast.LENGTH_SHORT).show();
+            if (binding.etTweet.getText().length() > 0)
+                Toast.makeText(getContext(), "Tweet Canceled", Toast.LENGTH_SHORT).show();
             dismiss();
         }
 

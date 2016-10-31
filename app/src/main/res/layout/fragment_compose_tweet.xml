@@ -17,12 +17,12 @@
     <RelativeLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/activity_compose"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="32dp"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:paddingTop="32dp"
         tools:context="org.agoenka.tweeterjam.fragments.ComposeTweetFragment">
 
         <Button
@@ -108,7 +108,6 @@
             android:layout_above="@id/btnTweet"
             android:layout_below="@+id/tvInReplyTo"
             android:layout_marginBottom="10dp"
-            android:ems="10"
             android:gravity="start"
             android:hint="@string/hint_tweet_compose"
             android:inputType="textMultiLine"
@@ -118,12 +117,12 @@
             android:id="@+id/tvCharCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="15dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_alignBaseline="@+id/btnTweet"
+            android:layout_alignBottom="@+id/btnTweet"
             android:layout_toLeftOf="@+id/btnTweet"
             android:layout_toStartOf="@+id/btnTweet"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             tools:text="Characters"/>
 
     </RelativeLayout>
