@@ -50,14 +50,15 @@ public class TimelineActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_timeline);
         setSupportActionBar(binding.appbarMain.toolbar);
+
         client = TweeterJamApplication.getTwitterClient();
+        getUserCredentials();
         setupViews();
 
         if (!isConnected(this)) {
             mAdapter.addAll(Tweet.get(), true);
         } else {
             Tweet.clear();
-            getUserCredentials();
             populateTimeline(currMinId, true);
         }
     }
