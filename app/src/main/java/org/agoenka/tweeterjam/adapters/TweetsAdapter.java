@@ -27,6 +27,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         mContext = context;
     }
 
+    @SuppressWarnings("unused")
     private Context getContext() {
         return mContext;
     }
@@ -60,6 +61,22 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             super(itemView);
             binding = ItemTweetBinding.bind(itemView);
         }
+    }
+
+    public void addAll(List<Tweet> tweets) {
+        int currentSize = getItemCount();
+        mTweets.addAll(tweets);
+        notifyItemRangeInserted(currentSize, mTweets.size() - currentSize);
+    }
+
+    public void add(int index, Tweet tweet) {
+        mTweets.add(index, tweet);
+        notifyItemRangeInserted(index, 1);
+    }
+
+    public void clear() {
+        mTweets.clear();
+        notifyDataSetChanged();
     }
 
 }

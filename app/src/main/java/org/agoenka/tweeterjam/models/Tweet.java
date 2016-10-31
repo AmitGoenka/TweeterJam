@@ -133,19 +133,6 @@ public class Tweet extends BaseModel {
         return min;
     }
 
-    public static long getMaxId(List<Tweet> tweets) {
-        long max = 0;
-        for (Tweet tweet : tweets) {
-            if (tweet.getUid() > max) {
-                max = tweet.getUid();
-            }
-        }
-        if (tweets.size() > 0 && max != tweets.get(0).getUid()) {
-            Log.d("DEBUG", "The identified max id is not at the top of list!");
-        }
-        return max;
-    }
-
     public static List<Tweet> get() {
         return SQLite.select().from(Tweet.class).orderBy(Tweet_Table.createdAt, false).limit(200).queryList();
     }

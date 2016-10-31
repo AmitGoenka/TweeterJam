@@ -45,7 +45,6 @@ public class TimelineActivity extends AppCompatActivity {
     private List<Tweet> mTweets;
     private TweetsAdapter mAdapter;
     private long currMinId = 0;
-    private long currMaxId = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +54,11 @@ public class TimelineActivity extends AppCompatActivity {
         setupViews();
 
         if (!isConnected(this)) {
-            mTweets.addAll(Tweet.get());
-            mAdapter.notifyItemRangeInserted(0, mTweets.size());
+            mAdapter.addAll(Tweet.get());
         } else {
             Tweet.clear();
             getUserCredentials();
-            populateTimeline(currMinId, currMaxId);
+            populateTimeline(currMinId);
         }
     }
 
@@ -75,7 +73,7 @@ public class TimelineActivity extends AppCompatActivity {
             @Override
             public void onLoadMore(int page, int totalItemCount, RecyclerView view) {
                 currMinId = Tweet.getMinId(mTweets);
-                populateTimeline(currMinId > 0 ? currMinId - 1 : 0, 0);
+                populateTimeline(currMinId > 0 ? currMinId - 1 : 0);
             }
         });
 
@@ -128,36 +126,27 @@ public class TimelineActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_COMPOSE) {
             Tweet tweet = Parcels.unwrap(data.getParcelableExtra(TWEET_KEY));
-            mTweets.add(0, tweet);
-            mAdapter.notifyItemRangeInserted(0, 1);
-
-            mTweets.remove(tweet);
+            mAdapter.add(0, tweet);
+            binding.rvTweets.scrollToPosition(0);
             refreshTimeline();
         }
     }
 
     private void refreshTimeline() {
-        currMaxId = Tweet.getMaxId(mTweets);
-        populateTimeline(0, currMaxId);
+        mAdapter.clear();
+        populateTimeline(0);
     }
 
     // Send an API request to get the timeline json
     // Fill the list view by creating the tweet objects from json
-    private void populateTimeline(final long maxId, final long sinceId) {
+    private void populateTimeline(final long maxId) {
         if (isConnected(this)) {
-            client.getHomeTimeline(PAGE_SIZE, maxId, sinceId, new JsonHttpResponseHandler() {
+            client.getHomeTimeline(PAGE_SIZE, maxId, 0, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
                     Log.d("DEBUG", json.toString());
                     List<Tweet> tweets = Tweet.fromJSONArray(json);
-                    if (sinceId > 0) {
-                        mTweets.addAll(0, tweets);
-                        mAdapter.notifyItemRangeInserted(0, tweets.size());
-                    } else {
-                        int currentSize = mAdapter.getItemCount();
-                        mTweets.addAll(tweets);
-                        mAdapter.notifyItemRangeInserted(currentSize, mTweets.size() - currentSize);
-                    }
+                    mAdapter.addAll(tweets);
                     Tweet.save(tweets);
                 }
 
