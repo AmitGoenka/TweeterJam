@@ -31,8 +31,8 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
-import static org.agoenka.tweeterjam.activities.DetailActivity.TWEET_KEY;
-import static org.agoenka.tweeterjam.fragments.ComposeTweetFragment.LOGGED_IN_USER_KEY;
+import static org.agoenka.tweeterjam.activities.DetailActivity.KEY_TWEET;
+import static org.agoenka.tweeterjam.fragments.ComposeTweetFragment.KEY_LOGGED_IN_USER;
 import static org.agoenka.tweeterjam.network.TwitterClient.PAGE_SIZE;
 import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
 
@@ -81,8 +81,8 @@ public class TimelineActivity extends AppCompatActivity {
         ItemClickSupport.addTo(binding.rvTweets).setOnItemClickListener((recyclerView, position, v) -> {
             Tweet tweet = mTweets.get(position);
             Intent intent = new Intent(TimelineActivity.this, DetailActivity.class);
-            intent.putExtra(TWEET_KEY, Parcels.wrap(tweet));
-            intent.putExtra(LOGGED_IN_USER_KEY, Parcels.wrap(loggedInUser));
+            intent.putExtra(KEY_TWEET, Parcels.wrap(tweet));
+            intent.putExtra(KEY_LOGGED_IN_USER, Parcels.wrap(loggedInUser));
             startActivity(intent);
         });
 

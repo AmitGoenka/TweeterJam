@@ -24,6 +24,7 @@ import org.agoenka.tweeterjam.databinding.FragmentComposeTweetBinding;
 import org.agoenka.tweeterjam.models.Tweet;
 import org.agoenka.tweeterjam.models.User;
 import org.agoenka.tweeterjam.network.TwitterClient;
+import org.agoenka.tweeterjam.utils.SharedPreferencesUtils;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
@@ -32,16 +33,20 @@ import java.util.Locale;
 import cz.msebera.android.httpclient.Header;
 
 import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
+import static org.agoenka.tweeterjam.utils.SharedPreferencesUtils.KEY_DRAFT_TWEET;
+import static org.agoenka.tweeterjam.utils.SharedPreferencesUtils.KEY_IN_REPLY_TO_TWEET;
+import static org.agoenka.tweeterjam.utils.SharedPreferencesUtils.KEY_IN_REPLY_TO_USER;
 
 public class ComposeTweetFragment extends DialogFragment {
 
     private FragmentComposeTweetBinding binding;
     private TwitterClient client;
     private Tweet replyToTweet;
+    private long replyToTweetUid;
 
     private static final String KEY_TITLE = "title";
-    public static final String LOGGED_IN_USER_KEY = "loggedInUser";
-    private static final String IN_REPLY_TO_KEY = "inReplyTo";
+    public static final String KEY_LOGGED_IN_USER = "loggedInUser";
+    private static final String KEY_IN_REPLY_TO = "inReplyTo";
 
     private static final int MAX_TWEET_LENGTH = 140;
 
@@ -60,9 +65,9 @@ public class ComposeTweetFragment extends DialogFragment {
         Bundle args = new Bundle();
         args.putString(KEY_TITLE, title);
         if (loggedInUser != null)
-            args.putParcelable(LOGGED_IN_USER_KEY, Parcels.wrap(loggedInUser));
+            args.putParcelable(KEY_LOGGED_IN_USER, Parcels.wrap(loggedInUser));
         if (inReplyTo != null)
-            args.putParcelable(IN_REPLY_TO_KEY, Parcels.wrap(inReplyTo));
+            args.putParcelable(KEY_IN_REPLY_TO, Parcels.wrap(inReplyTo));
         fragment.setArguments(args);
         return fragment;
     }
@@ -70,7 +75,7 @@ public class ComposeTweetFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        User user = Parcels.unwrap(getArguments().getParcelable(LOGGED_IN_USER_KEY));
+        User user = Parcels.unwrap(getArguments().getParcelable(KEY_LOGGED_IN_USER));
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_compose_tweet, container, false);
         binding.setHandlers(new Handlers());
         binding.setUser(user);
@@ -79,14 +84,27 @@ public class ComposeTweetFragment extends DialogFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        replyToTweet = Parcels.unwrap(getArguments().getParcelable(IN_REPLY_TO_KEY));
         setTextChangeListener();
 
+        replyToTweet = Parcels.unwrap(getArguments().getParcelable(KEY_IN_REPLY_TO));
         if (replyToTweet != null) {
-            binding.etTweet.setText(String.format("%s ", replyToTweet.getUser().getScreenName()));
-            binding.etTweet.setSelection(binding.etTweet.getText().length());
-            binding.tvInReplyTo.setText(String.format("In reply to %s", replyToTweet.getUser().getName()));
-            binding.tvInReplyTo.setVisibility(View.VISIBLE);
+            replyToTweetUid = replyToTweet.getUid();
+            setupEditTweetView(String.format("%s ", replyToTweet.getUser().getScreenName()));
+            setupReplyToView(replyToTweet.getUser().getName());
+            SharedPreferencesUtils.clear(getActivity(), KEY_DRAFT_TWEET, KEY_IN_REPLY_TO_USER, KEY_IN_REPLY_TO_TWEET);
+        } else {
+            String draftTweet = SharedPreferencesUtils.getString(getActivity(), KEY_DRAFT_TWEET);
+            if (draftTweet != null) {
+                setupEditTweetView(draftTweet);
+
+                final String inReplyToUser = SharedPreferencesUtils.getString(getActivity(), KEY_IN_REPLY_TO_USER);
+                final long inReplyToTweet = SharedPreferencesUtils.getLong(getActivity(), KEY_IN_REPLY_TO_TWEET);
+
+                if (inReplyToTweet > 0 && inReplyToUser != null) {
+                    setupReplyToView(inReplyToUser);
+                    replyToTweetUid = inReplyToTweet;
+                }
+            }
         }
 
         client = TweeterJamApplication.getTwitterClient();
@@ -102,7 +120,7 @@ public class ComposeTweetFragment extends DialogFragment {
         // Store dimensions of the screen in `size`
         window.getWindowManager().getDefaultDisplay().getSize(size);
         // Set the width of the dialog proportional to 75% of the screen width
-        window.setLayout(size.x, (int)(size.y * 0.75));
+        window.setLayout(size.x, (int) (size.y * 0.75));
         window.setGravity(Gravity.CENTER);
         // Call super onResume after sizing
         super.onResume();
@@ -138,10 +156,26 @@ public class ComposeTweetFragment extends DialogFragment {
         });
     }
 
+    private void setupEditTweetView(String text) {
+        binding.etTweet.setText(text);
+        binding.etTweet.setSelection(binding.etTweet.getText().length());
+    }
+
+    private void setupReplyToView(String name) {
+        binding.tvInReplyTo.setText(String.format("In reply to %s", name));
+        binding.tvInReplyTo.setVisibility(View.VISIBLE);
+    }
+
     public class Handlers {
         public void onCancel(@SuppressWarnings("unused") View view) {
-            if (binding.etTweet.getText().length() > 0)
-                Toast.makeText(getContext(), "Tweet Canceled", Toast.LENGTH_SHORT).show();
+            if (binding.etTweet.getText().length() > 0) {
+                CancelTweetDialogFragment cancelDialog = CancelTweetDialogFragment.newInstance(
+                        binding.etTweet.getText().toString(),
+                        replyToTweet != null ? replyToTweet.getUser().getName() : null,
+                        replyToTweet != null ? replyToTweet.getUid() : replyToTweetUid);
+                cancelDialog.setTargetFragment(ComposeTweetFragment.this, 100);
+                cancelDialog.show(getFragmentManager(), "Cancel Tweet");
+            }
             dismiss();
         }
 
@@ -149,7 +183,7 @@ public class ComposeTweetFragment extends DialogFragment {
             if (replyToTweet != null)
                 postTweet(binding.etTweet.getText().toString(), replyToTweet.getUid());
             else
-                postTweet(binding.etTweet.getText().toString(), 0);
+                postTweet(binding.etTweet.getText().toString(), replyToTweetUid);
         }
     }
 
@@ -162,6 +196,7 @@ public class ComposeTweetFragment extends DialogFragment {
                     Tweet tweet = Tweet.fromJSON(response);
                     if (listener != null)
                         listener.onTweet(tweet);
+                    SharedPreferencesUtils.clear(getActivity(), KEY_DRAFT_TWEET, KEY_IN_REPLY_TO_USER, KEY_IN_REPLY_TO_TWEET);
                     dismiss();
                 }
 

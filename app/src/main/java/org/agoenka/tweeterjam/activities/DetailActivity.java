@@ -13,14 +13,14 @@ import org.agoenka.tweeterjam.models.Tweet;
 import org.agoenka.tweeterjam.models.User;
 import org.parceler.Parcels;
 
-import static org.agoenka.tweeterjam.fragments.ComposeTweetFragment.LOGGED_IN_USER_KEY;
+import static org.agoenka.tweeterjam.fragments.ComposeTweetFragment.KEY_LOGGED_IN_USER;
 
 public class DetailActivity extends AppCompatActivity {
 
     private ActivityDetailBinding binding;
     private User loggedInUser;
 
-    static final String TWEET_KEY = "tweet";
+    static final String KEY_TWEET = "tweet";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +31,8 @@ public class DetailActivity extends AppCompatActivity {
         assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        loggedInUser = Parcels.unwrap(getIntent().getParcelableExtra(LOGGED_IN_USER_KEY));
-        Tweet tweet = Parcels.unwrap(getIntent().getParcelableExtra(TWEET_KEY));
+        loggedInUser = Parcels.unwrap(getIntent().getParcelableExtra(KEY_LOGGED_IN_USER));
+        Tweet tweet = Parcels.unwrap(getIntent().getParcelableExtra(KEY_TWEET));
         binding.setTweet(tweet);
     }
 
