@@ -3,6 +3,7 @@ package org.agoenka.tweeterjam.activities;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -83,7 +84,7 @@ public class DetailActivity extends AppCompatActivity {
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     Log.d("DEBUG", response.toString());
                     binding.getTweet().setRetweeted(true);
-                    Toast.makeText(DetailActivity.this, "Retweet successful", Toast.LENGTH_SHORT).show();
+                    binding.ibRetweet.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_action_retweet_green));
                 }
 
                 @Override
@@ -103,7 +104,7 @@ public class DetailActivity extends AppCompatActivity {
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     Log.d("DEBUG", response.toString());
                     binding.getTweet().setFavorited(true);
-                    Toast.makeText(DetailActivity.this, "Favorite created", Toast.LENGTH_SHORT).show();
+                    binding.ibFavorite.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_action_favorite_green));
                 }
 
                 @Override
