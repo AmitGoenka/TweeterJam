@@ -70,12 +70,10 @@ public class Tweet extends BaseModel {
         return String.format(Locale.getDefault(), "%d", favoriteCount);
     }
 
-    @SuppressWarnings("unused")
     public boolean isRetweeted() {
         return retweeted;
     }
 
-    @SuppressWarnings("unused")
     public boolean isFavorited() {
         return favorited;
     }
@@ -100,6 +98,14 @@ public class Tweet extends BaseModel {
 
     public String getDuration() {
         return DateUtils.getDuration(this.getCreatedAt(), TWITTER_FORMAT);
+    }
+
+    public void setRetweeted(boolean retweeted) {
+        this.retweeted = retweeted;
+    }
+
+    public void setFavorited(boolean favorited) {
+        this.favorited = favorited;
     }
 
     public Tweet() {}

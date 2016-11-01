@@ -170,7 +170,7 @@ public class ComposeTweetFragment extends DialogFragment {
                 int len = MAX_TWEET_LENGTH - s.length();
                 binding.tvCharCount.setText(String.format(Locale.getDefault(), "%d", len));
                 if (len < 0) {
-                    binding.tvCharCount.setTextColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
+                    binding.tvCharCount.setTextColor(ContextCompat.getColor(getContext(), R.color.colorAlertText));
                     binding.btnTweet.setEnabled(false);
                 } else if (!binding.btnTweet.isEnabled()) {
                     binding.tvCharCount.setTextColor(startColor);

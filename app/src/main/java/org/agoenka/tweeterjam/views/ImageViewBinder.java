@@ -37,6 +37,7 @@ public class ImageViewBinder {
         if (!TextUtils.isEmpty(url)) {
             Glide.with(view.getContext())
                     .load(url)
+                    .bitmapTransform(new RoundedCornersTransformation(view.getContext(), 10, 10))
                     .into(view);
             view.setVisibility(View.VISIBLE);
         } else {
