@@ -9,13 +9,14 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/colorPrimary"
     tools:context="org.agoenka.tweeterjam.activities.LoginActivity">
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_margin="20dp"
+        android:layout_margin="@dimen/login_button_margin"
         android:onClick="loginTwitter"
         android:text="@string/login_label"/>
 

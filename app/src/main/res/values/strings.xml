@@ -4,7 +4,6 @@
     <string name="profile_image_description">Profile Image for the User</string>
     <string name="image_description">Media Image</string>
     <string name="compose">Compose</string>
-    <string name="compose_tweet">Compose Tweet</string>
     <string name="cancel">Cancel</string>
     <string name="tweet">Tweet</string>
     <string name="hint_tweet_compose">What\'s happening?</string>
@@ -14,5 +13,4 @@
     <string name="favorite">Favorite</string>
     <string name="favorites">Favorites</string>
     <string name="share">Share</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
