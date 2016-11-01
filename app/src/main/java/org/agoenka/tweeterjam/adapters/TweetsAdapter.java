@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+
 import org.agoenka.tweeterjam.R;
 import org.agoenka.tweeterjam.databinding.ItemTweetBinding;
 import org.agoenka.tweeterjam.models.Tweet;
@@ -53,6 +55,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     @Override
     public void onViewRecycled(ViewHolder holder) {
         super.onViewRecycled(holder);
+        Glide.clear(holder.binding.ivImage);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

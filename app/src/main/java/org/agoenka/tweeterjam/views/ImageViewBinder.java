@@ -1,9 +1,11 @@
 package org.agoenka.tweeterjam.views;
 
 import android.databinding.BindingAdapter;
+import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 /**
  * Author: agoenka
@@ -20,7 +22,23 @@ public class ImageViewBinder {
     @BindingAdapter({"bind:profileImageUrl"})
     public static void loadProfileImage(ImageView view, String url) {
         view.setImageResource(android.R.color.transparent);
-        Picasso.with(view.getContext()).load(url).into(view);
+        Glide.with(view.getContext())
+                .load(url)
+                .fitCenter()
+                .into(view);
+    }
+
+    @BindingAdapter({"bind:mediaImageUrl"})
+    public static void loadMediaImage(ImageView view, String url) {
+        view.setImageResource(android.R.color.transparent);
+        if (!TextUtils.isEmpty(url)) {
+            Glide.with(view.getContext())
+                    .load(url)
+                    .into(view);
+            view.setVisibility(View.VISIBLE);
+        } else {
+            view.setVisibility(View.GONE);
+        }
     }
 
 }

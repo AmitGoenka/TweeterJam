@@ -2,6 +2,7 @@
     <string name="app_name">TweeterJam</string>
     <string name="login_label">Connect to Twitter</string>
     <string name="profile_image_description">Profile Image for the User</string>
+    <string name="image_description">Media Image</string>
     <string name="compose">Compose</string>
     <string name="compose_tweet">Compose Tweet</string>
     <string name="cancel">Cancel</string>

@@ -1,5 +1,7 @@
 package org.agoenka.tweeterjam.models;
 
+import android.text.TextUtils;
+
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -38,6 +40,8 @@ public class User extends BaseModel {
     }
 
     public String getProfileImageUrl() {
+        if (!TextUtils.isEmpty(profileImageUrl) && profileImageUrl.contains("_normal"))
+            return profileImageUrl.replace("_normal", "_bigger");
         return profileImageUrl;
     }
 

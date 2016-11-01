@@ -39,6 +39,9 @@ public class Tweet extends BaseModel {
     @Column int favoriteCount;
     @Column boolean retweeted;
     @Column boolean favorited;
+    @Column String imageUrl;
+    @Column String videoContentType;
+    @Column String videoUrl;
     @Column @ForeignKey(saveForeignKeyModel = true) User user;
 
     public long getUid() {
@@ -71,6 +74,21 @@ public class Tweet extends BaseModel {
         return favorited;
     }
 
+    @SuppressWarnings("unused")
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    @SuppressWarnings("unused")
+    public String getVideoContentType() {
+        return videoContentType;
+    }
+
+    @SuppressWarnings("unused")
+    public String getVideoUrl() {
+        return videoUrl;
+    }
+
     public User getUser() {
         return user;
     }
@@ -94,11 +112,55 @@ public class Tweet extends BaseModel {
             tweet.retweeted = jsonObject.getBoolean("retweeted");
             tweet.favorited = jsonObject.getBoolean("favorited");
             tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
+
+            setImageData(jsonObject, tweet);
+            setVideoData(jsonObject, tweet);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
         // Return the tweet object
         return tweet;
+    }
+
+    private static void setImageData(JSONObject jsonObject, Tweet tweet) {
+        try {
+            JSONArray entitiesMedia = jsonObject.getJSONObject("entities").getJSONArray("media");
+            if (entitiesMedia != null) {
+                for (int i = 0; i < entitiesMedia.length(); i++) {
+                    String type = entitiesMedia.getJSONObject(i).getString("type");
+                    if ("photo".equalsIgnoreCase(type)) {
+                        tweet.imageUrl = entitiesMedia.getJSONObject(i).getString("media_url");
+                        break;
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void setVideoData(JSONObject jsonObject, Tweet tweet) {
+        try {
+            JSONArray extendedEntitiesMedia = jsonObject.getJSONObject("extended_entities").getJSONArray("media");
+            if (extendedEntitiesMedia != null) {
+                for (int i = 0; i < extendedEntitiesMedia.length(); i++) {
+                    String type = extendedEntitiesMedia.getJSONObject(i).getString("type");
+                    if ("video".equalsIgnoreCase(type)) {
+                        JSONObject videoInfo = extendedEntitiesMedia.getJSONObject(i).getJSONObject("video_info");
+                        if (videoInfo != null) {
+                            JSONArray variants = videoInfo.getJSONArray("variants");
+                            if (variants != null) {
+                                tweet.videoContentType = variants.getJSONObject(0).getString("content_type");
+                                tweet.videoUrl = variants.getJSONObject(0).getString("url");
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     // Tweet.fromJSONArray([ { ... }, { ... } ] => List<Tweet>)
