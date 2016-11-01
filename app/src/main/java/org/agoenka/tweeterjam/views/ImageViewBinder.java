@@ -7,6 +7,8 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+
 /**
  * Author: agoenka
  * Created At: 10/29/2016
@@ -25,6 +27,7 @@ public class ImageViewBinder {
         Glide.with(view.getContext())
                 .load(url)
                 .fitCenter()
+                .bitmapTransform(new RoundedCornersTransformation(view.getContext(), 5, 5))
                 .into(view);
     }
 

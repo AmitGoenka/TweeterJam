@@ -44,6 +44,10 @@ The following **bonus** features are implemented:
 * [x] Enable your app to [receive implicit intents](http://guides.codepath.com/android/Using-Intents-to-Create-Flows#receiving-implicit-intents) from other apps.  When a link is shared from a web browser, it should pre-fill the text and title of the web page when composing a tweet.
 * [x] When a user leaves the compose view without publishing and there is existing text, prompt to save or delete the draft.  The draft can be resumed from the compose view.
 
+The following **additional** features are implemented:
+
+* [x] Added rounded corner transformation on profile images with [Glide transformations](https://github.com/wasabeef/glide-transformations)!
+
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
