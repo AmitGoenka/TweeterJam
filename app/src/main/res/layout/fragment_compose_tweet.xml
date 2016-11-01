@@ -25,7 +25,7 @@
         android:paddingTop="32dp"
         tools:context="org.agoenka.tweeterjam.fragments.ComposeTweetFragment">
 
-        <Button
+        <ImageButton
             android:id="@+id/btnCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -33,7 +33,9 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:onClick="@{handlers.onCancel}"
-            android:text="@string/cancel"
+            android:src="@drawable/ic_action_clear"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/cancel"
             tools:text="Cancel Button"/>
 
         <ImageView

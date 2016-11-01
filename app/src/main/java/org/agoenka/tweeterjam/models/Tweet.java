@@ -1,5 +1,7 @@
 package org.agoenka.tweeterjam.models;
 
+import android.os.Build;
+import android.text.Html;
 import android.util.Log;
 
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -53,7 +55,11 @@ public class Tweet extends BaseModel {
     }
 
     public String getBody() {
-        return body;
+        if (Build.VERSION.SDK_INT >= 24) {
+            return Html.fromHtml(body, Html.FROM_HTML_MODE_COMPACT).toString();
+        } else {
+            return Html.fromHtml(body).toString();
+        }
     }
 
     public String getRetweetCount() {
@@ -74,7 +80,6 @@ public class Tweet extends BaseModel {
         return favorited;
     }
 
-    @SuppressWarnings("unused")
     public String getImageUrl() {
         return imageUrl;
     }

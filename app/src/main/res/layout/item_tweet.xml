@@ -34,7 +34,9 @@
             android:layout_alignParentTop="true"
             android:layout_toEndOf="@+id/ivProfileImage"
             android:layout_toRightOf="@+id/ivProfileImage"
+            android:layout_marginBottom="5dp"
             android:text="@{tweet.user.name}"
+            android:textStyle="bold"
             tools:text="My Name"/>
 
         <TextView

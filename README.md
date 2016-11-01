@@ -47,6 +47,7 @@ The following **bonus** features are implemented:
 The following **additional** features are implemented:
 
 * [x] Added rounded corner transformation on profile images with [Glide transformations](https://github.com/wasabeef/glide-transformations)!
+* [x] Added Html formatting for the text of the tweet for better readability.
 
 ## Video Walkthrough
 
