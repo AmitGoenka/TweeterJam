@@ -55,6 +55,7 @@
                 android:layout_toEndOf="@+id/ivProfileImage"
                 android:layout_toRightOf="@+id/ivProfileImage"
                 android:text="@{tweet.user.name}"
+                android:textStyle="bold"
                 tools:text="My Name"/>
 
             <TextView
@@ -100,9 +101,11 @@
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/ivImage"
                 android:layout_marginBottom="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginRight="32dp"
                 android:text="@{tweet.retweetCount + ' ' + @string/retweets}"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"
                 tools:text="Retweet Count"/>
 
             <TextView
@@ -113,6 +116,8 @@
                 android:layout_toEndOf="@+id/tvRetweetCount"
                 android:layout_toRightOf="@+id/tvRetweetCount"
                 android:text="@{tweet.favoriteCount + ' ' + @string/favorites}"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"
                 tools:text="Favorite Count"/>
 
             <ImageButton
