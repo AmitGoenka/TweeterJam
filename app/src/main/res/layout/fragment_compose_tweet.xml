@@ -102,7 +102,7 @@
             android:layout_alignParentRight="true"
             android:onClick="@{handlers.onTweet}"
             android:text="@string/tweet"
-            android:background="@color/colorAccent"
+            android:background="@drawable/btn_tweet_states"
             android:textColor="@android:color/white"
             tools:text="Tweet Button"/>
 

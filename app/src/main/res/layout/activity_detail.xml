@@ -105,6 +105,7 @@
                 android:layout_marginRight="@dimen/tweet_stats_horizontal_margin"
                 android:text="@{tweet.retweetCount + ' ' + @string/retweets}"
                 android:textStyle="bold"
+                android:textAllCaps="true"
                 android:textColor="@color/colorSecondaryText"
                 tools:text="Retweet Count"/>
 
@@ -117,6 +118,7 @@
                 android:layout_toRightOf="@+id/tvRetweetCount"
                 android:text="@{tweet.favoriteCount + ' ' + @string/favorites}"
                 android:textStyle="bold"
+                android:textAllCaps="true"
                 android:textColor="@color/colorSecondaryText"
                 tools:text="Favorite Count"/>
 
