@@ -78,7 +78,6 @@ public class Tweet extends BaseModel {
         return entity;
     }
 
-    @SuppressWarnings("unused")
     public ExtendedEntity getExtendedEntity() {
         return extendedEntity;
     }

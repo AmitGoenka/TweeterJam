@@ -32,9 +32,15 @@ public class ExtendedEntitiesDeserializer implements JsonDeserializer<ExtendedEn
                             if (videoInfoElement != null) {
                                 JsonElement variantsElement = videoInfoElement.getAsJsonObject().get("variants");
                                 if (variantsElement != null) {
-                                    JsonObject variantsObject = variantsElement.getAsJsonArray().get(0).getAsJsonObject();
-                                    extendedEntity.videoContentType = variantsObject.get("content_type").getAsString();
-                                    extendedEntity.videoUrl = variantsObject.get("url").getAsString();
+                                    for (int j = 0; j < variantsElement.getAsJsonArray().size(); j++) {
+                                        JsonObject variantsObject = variantsElement.getAsJsonArray().get(j).getAsJsonObject();
+                                        String contentType = variantsObject.get("content_type").getAsString();
+                                        if ("video/mp4".equalsIgnoreCase(contentType)) {
+                                            extendedEntity.videoContentType = contentType;
+                                            extendedEntity.videoUrl = variantsObject.get("url").getAsString();
+                                            break;
+                                        }
+                                    }
                                 }
                             }
                         }

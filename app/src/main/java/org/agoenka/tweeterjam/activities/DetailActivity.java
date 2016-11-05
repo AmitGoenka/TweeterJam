@@ -23,9 +23,12 @@ import org.parceler.Parcels;
 
 import cz.msebera.android.httpclient.Header;
 
+import static android.text.TextUtils.isEmpty;
 import static com.raizlabs.android.dbflow.config.FlowManager.getContext;
 import static org.agoenka.tweeterjam.fragments.ComposeTweetFragment.KEY_LOGGED_IN_USER;
 import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
+import static org.agoenka.tweeterjam.views.ImageViewBinder.loadMediaImage;
+import static org.agoenka.tweeterjam.views.VideoViewBinder.loadVideo;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -48,6 +51,12 @@ public class DetailActivity extends AppCompatActivity {
         loggedInUser = Parcels.unwrap(getIntent().getParcelableExtra(KEY_LOGGED_IN_USER));
         Tweet tweet = Parcels.unwrap(getIntent().getParcelableExtra(KEY_TWEET));
         binding.setTweet(tweet);
+
+        if (binding.getTweet().getExtendedEntity() != null && !isEmpty(binding.getTweet().getExtendedEntity().getVideoUrl())) {
+            loadVideo(DetailActivity.this, binding.vvVideoUrl, binding.getTweet().getExtendedEntity().getVideoUrl());
+        } else {
+            loadMediaImage(binding.ivImage, binding.getTweet().getEntity().getMediaUrl());
+        }
     }
 
     public class Handlers {

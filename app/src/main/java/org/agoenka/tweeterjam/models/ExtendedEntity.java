@@ -20,7 +20,6 @@ public class ExtendedEntity extends BaseModel {
     @Column @PrimaryKey String videoUrl;
     @Column String videoContentType;
 
-    @SuppressWarnings("unused")
     public String getVideoUrl() {
         return videoUrl;
     }
@@ -30,6 +29,7 @@ public class ExtendedEntity extends BaseModel {
         return videoContentType;
     }
 
+    @SuppressWarnings("unused")
     public String getExtendedEntity() {
         return videoUrl;
     }
