@@ -1,10 +1,14 @@
 package org.agoenka.tweeterjam.views;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 
+import com.malmstein.fenster.controller.MediaFensterPlayerController;
+import com.malmstein.fenster.controller.SimpleMediaFensterPlayerController;
+import com.malmstein.fenster.view.FensterVideoView;
 import com.yqritc.scalablevideoview.ScalableVideoView;
 
 import java.io.IOException;
@@ -21,7 +25,7 @@ public class VideoViewBinder {
         //no instance
     }
 
-    public static void loadVideo(Context context, ScalableVideoView view, String url) {
+    public static void loadScalableVideo(Context context, ScalableVideoView view, String url) {
         try {
             view.setVisibility(View.VISIBLE);
             view.setDataSource(context, Uri.parse(url));
@@ -32,30 +36,27 @@ public class VideoViewBinder {
         }
     }
 
-    public static void loadVideoWithProgress(Context context, ScalableVideoView view, String url) {
-        try {
-            view.setVisibility(View.VISIBLE);
+    public static void loadFensterVideo(Window window, ViewGroup layout, FensterVideoView view, SimpleMediaFensterPlayerController controller, String url) {
+        layout.setVisibility(View.VISIBLE);
+        controller.setVisibilityListener(value -> {
+            int newVis = View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
 
-            ProgressDialog pDialog = new ProgressDialog(context);
-            pDialog.setMessage("Buffering...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();
+            if (!value) {
+                newVis |= View.SYSTEM_UI_FLAG_LOW_PROFILE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+            }
 
-            view.setDataSource(context, Uri.parse(url));
-            view.setLooping(true);
-            view.prepareAsync(mp -> {
-                pDialog.dismiss();
-                view.start();
-            });
-            view.setOnCompletionListener(mp -> {
-                if (pDialog.isShowing()) {
-                    pDialog.dismiss();
+            final View decorView = window.getDecorView();
+            decorView.setSystemUiVisibility(newVis);
+            decorView.setOnSystemUiVisibilityChangeListener(visibility -> {
+                if ((visibility & View.SYSTEM_UI_FLAG_LOW_PROFILE) == 0) {
+                    controller.show();
                 }
             });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        });
+        view.setMediaController(controller);
+        view.setOnPlayStateListener(controller);
+        view.setVideo(url, MediaFensterPlayerController.DEFAULT_VIDEO_START);
+        view.start();
     }
 
 }

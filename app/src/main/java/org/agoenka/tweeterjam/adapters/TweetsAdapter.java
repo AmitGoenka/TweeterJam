@@ -15,7 +15,7 @@ import org.agoenka.tweeterjam.models.Tweet;
 import java.util.List;
 
 import static org.agoenka.tweeterjam.views.ImageViewBinder.loadMediaImage;
-import static org.agoenka.tweeterjam.views.VideoViewBinder.loadVideo;
+import static org.agoenka.tweeterjam.views.VideoViewBinder.loadScalableVideo;
 
 /**
  * Author: agoenka
@@ -54,7 +54,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         holder.binding.executePendingBindings();
 
         if (tweet.hasVideo()) {
-            loadVideo(getContext(), holder.binding.vvVideo, tweet.getExtendedEntity().getVideoUrl());
+            loadScalableVideo(getContext(), holder.binding.vvVideo, tweet.getExtendedEntity().getVideoUrl());
         } else {
             loadMediaImage(holder.binding.ivImage, tweet.getEntity().getMediaUrl());
         }

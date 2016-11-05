@@ -95,16 +95,31 @@
                     android:contentDescription="@string/image_description"
                     android:visibility="gone"/>
 
-                <com.yqritc.scalablevideoview.ScalableVideoView
-                    android:id="@+id/vvVideo"
-                    android:layout_width="@dimen/media_image_width"
-                    android:layout_height="@dimen/media_image_height"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
+                <RelativeLayout
+                    android:id="@+id/flVideo"
+                    android:layout_width="@dimen/media_video_width"
+                    android:layout_height="@dimen/media_video_height"
                     android:layout_below="@id/ivImage"
                     android:layout_marginBottom="@dimen/activity_vertical_margin"
-                    app:scalableType="fitCenter"
-                    android:visibility="gone"/>
+                    android:visibility="gone">
+
+                    <com.malmstein.fenster.view.FensterVideoView
+                        android:id="@+id/vvFensterVideo"
+                        android:layout_width="@dimen/media_video_width"
+                        android:layout_height="@dimen/media_video_height"
+                        android:keepScreenOn="true"
+                        app:scaleType="crop"/>
+
+                    <com.malmstein.fenster.controller.SimpleMediaFensterPlayerController
+                        android:id="@+id/vvFensterController"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignRight="@id/vvFensterVideo"
+                        android:layout_alignEnd="@id/vvFensterVideo"
+                        android:animateLayoutChanges="true"/>
+                    
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/tvRetweetCount"
@@ -112,7 +127,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
-                    android:layout_below="@+id/vvVideo"
+                    android:layout_below="@+id/flVideo"
                     android:layout_marginBottom="@dimen/tweet_stats_vertical_margin"
                     android:layout_marginEnd="@dimen/tweet_stats_horizontal_margin"
                     android:layout_marginRight="@dimen/tweet_stats_horizontal_margin"

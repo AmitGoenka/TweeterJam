@@ -25,9 +25,12 @@ import cz.msebera.android.httpclient.Header;
 
 import static com.raizlabs.android.dbflow.config.FlowManager.getContext;
 import static org.agoenka.tweeterjam.fragments.ComposeTweetFragment.KEY_LOGGED_IN_USER;
+import static org.agoenka.tweeterjam.utils.AppUtils.getPermissionIntent;
+import static org.agoenka.tweeterjam.utils.AppUtils.hasWritePermission;
+import static org.agoenka.tweeterjam.utils.AppUtils.missingWritePermission;
 import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
 import static org.agoenka.tweeterjam.views.ImageViewBinder.loadMediaImage;
-import static org.agoenka.tweeterjam.views.VideoViewBinder.loadVideoWithProgress;
+import static org.agoenka.tweeterjam.views.VideoViewBinder.loadFensterVideo;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -35,27 +38,57 @@ public class DetailActivity extends AppCompatActivity {
     private TwitterClient client;
     private User loggedInUser;
 
+    private Intent startingIntent;
+    boolean isPermissionSet = false;
+    private static final int WRITE_SETTINGS_PERMISSION = 1;
+
     static final String KEY_TWEET = "tweet";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Tweet tweet = Parcels.unwrap(getIntent().getParcelableExtra(KEY_TWEET));
+        client = TweeterJamApplication.getTwitterClient();
+
+        if (tweet.hasVideo()) {
+            startingIntent = getIntent();
+            if (missingWritePermission(this)) {
+                startActivityForResult(getPermissionIntent(this), WRITE_SETTINGS_PERMISSION);
+            } else {
+                isPermissionSet = true;
+                bindViews(tweet);
+                loadFensterVideo(getWindow(),
+                        binding.flVideo,
+                        binding.vvFensterVideo,
+                        binding.vvFensterController,
+                        tweet.getExtendedEntity().getVideoUrl());
+            }
+        } else {
+            bindViews(tweet);
+            loadMediaImage(binding.ivImage, binding.getTweet().getEntity().getMediaUrl());
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == WRITE_SETTINGS_PERMISSION && hasWritePermission(this)) {
+            isPermissionSet = true;
+            finish();
+            startActivity(startingIntent);
+        }
+    }
+
+    private void bindViews(Tweet tweet) {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
         binding.setHandlers(new Handlers());
+        binding.setTweet(tweet);
+
         setSupportActionBar(binding.appbarMain.toolbar);
         assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        client = TweeterJamApplication.getTwitterClient();
         loggedInUser = Parcels.unwrap(getIntent().getParcelableExtra(KEY_LOGGED_IN_USER));
-        Tweet tweet = Parcels.unwrap(getIntent().getParcelableExtra(KEY_TWEET));
-        binding.setTweet(tweet);
-
-        if (binding.getTweet().hasVideo()) {
-            loadVideoWithProgress(DetailActivity.this, binding.vvVideo, binding.getTweet().getExtendedEntity().getVideoUrl());
-        } else {
-            loadMediaImage(binding.ivImage, binding.getTweet().getEntity().getMediaUrl());
-        }
     }
 
     public class Handlers {
