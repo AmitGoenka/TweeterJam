@@ -84,7 +84,7 @@
             android:contentDescription="@string/image_description"
             android:adjustViewBounds="true"
             android:visibility="gone"
-            app:mediaImageUrl="@{tweet.imageUrl}"/>
+            app:mediaImageUrl="@{tweet.entity.mediaUrl}"/>
 
     </RelativeLayout>
 

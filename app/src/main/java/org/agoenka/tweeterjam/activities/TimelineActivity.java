@@ -10,7 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
+import com.google.gson.reflect.TypeToken;
+import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.agoenka.tweeterjam.R;
 import org.agoenka.tweeterjam.TweeterJamApplication;
@@ -22,8 +23,6 @@ import org.agoenka.tweeterjam.fragments.ComposeTweetFragment;
 import org.agoenka.tweeterjam.models.Tweet;
 import org.agoenka.tweeterjam.models.User;
 import org.agoenka.tweeterjam.network.TwitterClient;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
@@ -35,6 +34,7 @@ import static org.agoenka.tweeterjam.activities.DetailActivity.KEY_TWEET;
 import static org.agoenka.tweeterjam.fragments.ComposeTweetFragment.KEY_LOGGED_IN_USER;
 import static org.agoenka.tweeterjam.network.TwitterClient.PAGE_SIZE;
 import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
+import static org.agoenka.tweeterjam.utils.GsonUtils.getGson;
 
 public class TimelineActivity extends AppCompatActivity {
 
@@ -150,18 +150,18 @@ public class TimelineActivity extends AppCompatActivity {
     // Fill the list view by creating the tweet objects from json
     private void populateTimeline(final long maxId, final boolean refresh) {
         if (isConnected(this)) {
-            client.getHomeTimeline(PAGE_SIZE, maxId, 0, new JsonHttpResponseHandler() {
+            client.getHomeTimeline(PAGE_SIZE, maxId, 0, new TextHttpResponseHandler() {
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
-                    Log.d("DEBUG", json.toString());
-                    List<Tweet> tweets = Tweet.fromJSONArray(json);
+                public void onSuccess(int statusCode, Header[] headers, String json) {
+                    Log.d("DEBUG", json);
+                    List<Tweet> tweets = getGson().fromJson(json, new TypeToken<List<Tweet>>(){}.getType());
                     mAdapter.addAll(tweets, refresh);
                     Tweet.save(tweets);
                 }
 
                 @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    Log.d("DEBUG", errorResponse.toString());
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Log.d("DEBUG", responseString);
                     Log.d("DEBUG", throwable.getLocalizedMessage());
                     Toast.makeText(TimelineActivity.this, "Unable to retrieve tweets.", Toast.LENGTH_SHORT).show();
                 }
@@ -172,11 +172,11 @@ public class TimelineActivity extends AppCompatActivity {
     // Fetch the logged in user's credentials
     private void getUserCredentials() {
         if (isConnected(this)) {
-            client.getUserCredentials(new JsonHttpResponseHandler() {
+            client.getUserCredentials(new TextHttpResponseHandler() {
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
-                    Log.d("DEBUG", json.toString());
-                    loggedInUser = User.fromJSON(json);
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    Log.d("DEBUG", responseString);
+                    loggedInUser = getGson().fromJson(responseString, User.class);
                     if (getSupportActionBar() != null) {
                         getSupportActionBar().setTitle(loggedInUser.getScreenName());
                     }
@@ -184,8 +184,8 @@ public class TimelineActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    Log.d("DEBUG", errorResponse.toString());
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Log.d("DEBUG", responseString);
                     Log.d("DEBUG", throwable.getLocalizedMessage());
                     Toast.makeText(TimelineActivity.this, "Unable to retrieve account information.", Toast.LENGTH_SHORT).show();
                 }

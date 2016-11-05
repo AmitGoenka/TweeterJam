@@ -2,14 +2,13 @@ package org.agoenka.tweeterjam.models;
 
 import android.text.TextUtils;
 
+import com.google.gson.annotations.SerializedName;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.agoenka.tweeterjam.TweeterJamDatabase;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.parceler.Parcel;
 
 /**
@@ -21,15 +20,10 @@ import org.parceler.Parcel;
 @Table(database = TweeterJamDatabase.class)
 public class User extends BaseModel {
 
-    @Column @PrimaryKey long uid;
+    @SerializedName("id") @Column @PrimaryKey long uid;
     @Column String name;
     @Column String screenName;
     @Column String profileImageUrl;
-
-    @SuppressWarnings("unused")
-    public long getUid() {
-        return uid;
-    }
 
     public String getName() {
         return name;
@@ -50,21 +44,5 @@ public class User extends BaseModel {
     }
 
     public User() {}
-
-    // deserialize the user json => user
-    public static User fromJSON(JSONObject jsonObject) {
-        User u = new User();
-        // Extract and fill the values
-        try {
-            u.uid = jsonObject.getLong("id");
-            u.name = jsonObject.getString("name");
-            u.screenName = jsonObject.getString("screen_name");
-            u.profileImageUrl = jsonObject.getString("profile_image_url");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        // Return a user
-        return u;
-    }
 
 }

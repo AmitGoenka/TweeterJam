@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Toast;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.agoenka.tweeterjam.R;
 import org.agoenka.tweeterjam.TweeterJamApplication;
@@ -25,7 +25,6 @@ import org.agoenka.tweeterjam.models.Tweet;
 import org.agoenka.tweeterjam.models.User;
 import org.agoenka.tweeterjam.network.TwitterClient;
 import org.agoenka.tweeterjam.utils.SharedPreferencesUtils;
-import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.Locale;
@@ -33,6 +32,7 @@ import java.util.Locale;
 import cz.msebera.android.httpclient.Header;
 
 import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
+import static org.agoenka.tweeterjam.utils.GsonUtils.getGson;
 import static org.agoenka.tweeterjam.utils.SharedPreferencesUtils.KEY_DRAFT_TWEET;
 import static org.agoenka.tweeterjam.utils.SharedPreferencesUtils.KEY_IN_REPLY_TO_TWEET;
 import static org.agoenka.tweeterjam.utils.SharedPreferencesUtils.KEY_IN_REPLY_TO_USER;
@@ -203,11 +203,11 @@ public class ComposeTweetFragment extends DialogFragment {
 
     private void postTweet(String status, long inReplyTo) {
         if (isConnected(getContext())) {
-            client.postTweet(status, inReplyTo, new JsonHttpResponseHandler() {
+            client.postTweet(status, inReplyTo, new TextHttpResponseHandler() {
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    Log.d("DEBUG", response.toString());
-                    Tweet tweet = Tweet.fromJSON(response);
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    Log.d("DEBUG", responseString);
+                    Tweet tweet = getGson().fromJson(responseString, Tweet.class);
                     if (listener != null)
                         listener.onTweet(tweet);
                     SharedPreferencesUtils.clear(getActivity(), KEY_DRAFT_TWEET, KEY_IN_REPLY_TO_USER, KEY_IN_REPLY_TO_TWEET);
@@ -215,8 +215,8 @@ public class ComposeTweetFragment extends DialogFragment {
                 }
 
                 @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    Log.d("DEBUG", errorResponse.toString());
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    Log.d("DEBUG", responseString);
                     Log.d("DEBUG", throwable.getLocalizedMessage());
                     Toast.makeText(getContext(), "Unable to post tweet at this moment.", Toast.LENGTH_SHORT).show();
                 }
