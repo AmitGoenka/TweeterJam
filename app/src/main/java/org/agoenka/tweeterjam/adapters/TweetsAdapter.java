@@ -14,6 +14,9 @@ import org.agoenka.tweeterjam.models.Tweet;
 
 import java.util.List;
 
+import static org.agoenka.tweeterjam.views.ImageViewBinder.loadMediaImage;
+import static org.agoenka.tweeterjam.views.VideoViewBinder.loadVideo;
+
 /**
  * Author: agoenka
  * Created At: 10/28/2016
@@ -29,7 +32,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         mContext = context;
     }
 
-    @SuppressWarnings("unused")
     private Context getContext() {
         return mContext;
     }
@@ -50,12 +52,20 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         Tweet tweet = mTweets.get(position);
         holder.binding.setTweet(tweet);
         holder.binding.executePendingBindings();
+
+        if (tweet.hasVideo()) {
+            loadVideo(getContext(), holder.binding.vvVideo, tweet.getExtendedEntity().getVideoUrl());
+        } else {
+            loadMediaImage(holder.binding.ivImage, tweet.getEntity().getMediaUrl());
+        }
     }
 
     @Override
     public void onViewRecycled(ViewHolder holder) {
         super.onViewRecycled(holder);
         Glide.clear(holder.binding.ivImage);
+        holder.binding.ivImage.setVisibility(View.GONE);
+        holder.binding.vvVideo.setVisibility(View.GONE);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

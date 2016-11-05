@@ -4,8 +4,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.view.View;
-import android.widget.MediaController;
-import android.widget.VideoView;
+
+import com.yqritc.scalablevideoview.ScalableVideoView;
+
+import java.io.IOException;
 
 /**
  * Author: agoenka
@@ -19,30 +21,41 @@ public class VideoViewBinder {
         //no instance
     }
 
-    public static void loadVideo(Context context, VideoView view, String url) {
-        view.setVideoURI(null);
-        view.setVisibility(View.VISIBLE);
-
-        ProgressDialog pDialog = new ProgressDialog(context);
-        pDialog.setMessage("Buffering...");
-        pDialog.setIndeterminate(false);
-        pDialog.setCancelable(false);
-        pDialog.show();
-
-        MediaController mediaController = new MediaController(context);
-        mediaController.setAnchorView(view);
-
-        view.setMediaController(mediaController);
-        view.setVideoURI(Uri.parse(url));
-        view.requestFocus();
-        view.setOnPreparedListener(mp -> {
-            pDialog.dismiss();
-            view.start();
-        });
-        view.setOnCompletionListener(mp -> {
-            if (pDialog.isShowing()) {
-                pDialog.dismiss();
-            }
-        });
+    public static void loadVideo(Context context, ScalableVideoView view, String url) {
+        try {
+            view.setVisibility(View.VISIBLE);
+            view.setDataSource(context, Uri.parse(url));
+            view.setLooping(true);
+            view.prepareAsync(mp -> view.start());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
+    public static void loadVideoWithProgress(Context context, ScalableVideoView view, String url) {
+        try {
+            view.setVisibility(View.VISIBLE);
+
+            ProgressDialog pDialog = new ProgressDialog(context);
+            pDialog.setMessage("Buffering...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+
+            view.setDataSource(context, Uri.parse(url));
+            view.setLooping(true);
+            view.prepareAsync(mp -> {
+                pDialog.dismiss();
+                view.start();
+            });
+            view.setOnCompletionListener(mp -> {
+                if (pDialog.isShowing()) {
+                    pDialog.dismiss();
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

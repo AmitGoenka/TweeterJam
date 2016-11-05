@@ -2,6 +2,7 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="tweet"
             type="org.agoenka.tweeterjam.models.Tweet"/>
@@ -11,9 +12,9 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/item_layout_padding"
         android:background="?android:attr/selectableItemBackground"
-        android:descendantFocusability="blocksDescendants">
+        android:descendantFocusability="blocksDescendants"
+        android:padding="@dimen/item_layout_padding">
 
         <ImageView
             android:id="@+id/ivProfileImage"
@@ -32,9 +33,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:layout_marginBottom="@dimen/name_vertical_margin"
             android:layout_toEndOf="@+id/ivProfileImage"
             android:layout_toRightOf="@+id/ivProfileImage"
-            android:layout_marginBottom="@dimen/name_vertical_margin"
             android:text="@{tweet.user.name}"
             android:textStyle="bold"
             tools:text="My Name"/>
@@ -68,11 +69,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tvName"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:layout_toEndOf="@+id/ivProfileImage"
             android:layout_toRightOf="@+id/ivProfileImage"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:text="@{tweet.body}"
             android:autoLink="all"
+            android:text="@{tweet.body}"
             tools:text="Tweet Text"/>
 
         <ImageView
@@ -82,10 +83,19 @@
             android:layout_below="@+id/ltvBody"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:contentDescription="@string/image_description"
             android:adjustViewBounds="true"
-            android:visibility="gone"
-            app:mediaImageUrl="@{tweet.entity.mediaUrl}"/>
+            android:contentDescription="@string/image_description"
+            android:visibility="gone"/>
+
+        <com.yqritc.scalablevideoview.ScalableVideoView
+            android:id="@+id/vvVideo"
+            android:layout_width="@dimen/media_image_width"
+            android:layout_height="@dimen/media_image_height"
+            android:layout_below="@id/ivImage"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            app:scalableType="fitCenter"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 

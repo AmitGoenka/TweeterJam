@@ -88,21 +88,22 @@
                     android:id="@+id/ivImage"
                     android:layout_width="@dimen/media_image_width"
                     android:layout_height="@dimen/media_image_height"
-                    android:layout_centerHorizontal="true"
                     android:layout_below="@+id/tvBody"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginBottom="@dimen/activity_vertical_margin"
-                    android:contentDescription="@string/image_description"
                     android:adjustViewBounds="true"
+                    android:contentDescription="@string/image_description"
                     android:visibility="gone"/>
 
-                <VideoView
-                    android:id="@+id/vvVideoUrl"
+                <com.yqritc.scalablevideoview.ScalableVideoView
+                    android:id="@+id/vvVideo"
                     android:layout_width="@dimen/media_image_width"
                     android:layout_height="@dimen/media_image_height"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_below="@id/ivImage"
                     android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    app:scalableType="fitCenter"
                     android:visibility="gone"/>
 
                 <TextView
@@ -111,14 +112,14 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
-                    android:layout_below="@+id/vvVideoUrl"
+                    android:layout_below="@+id/vvVideo"
                     android:layout_marginBottom="@dimen/tweet_stats_vertical_margin"
                     android:layout_marginEnd="@dimen/tweet_stats_horizontal_margin"
                     android:layout_marginRight="@dimen/tweet_stats_horizontal_margin"
                     android:text="@{tweet.retweetCount + ' ' + @string/retweets}"
-                    android:textStyle="bold"
                     android:textAllCaps="true"
                     android:textColor="@color/colorSecondaryText"
+                    android:textStyle="bold"
                     tools:text="Retweet Count"/>
 
                 <TextView
@@ -129,9 +130,9 @@
                     android:layout_toEndOf="@+id/tvRetweetCount"
                     android:layout_toRightOf="@+id/tvRetweetCount"
                     android:text="@{tweet.favoriteCount + ' ' + @string/favorites}"
-                    android:textStyle="bold"
                     android:textAllCaps="true"
                     android:textColor="@color/colorSecondaryText"
+                    android:textStyle="bold"
                     tools:text="Favorite Count"/>
 
                 <ImageButton

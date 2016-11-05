@@ -2,6 +2,7 @@ package org.agoenka.tweeterjam.models;
 
 import android.os.Build;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
@@ -96,6 +97,10 @@ public class Tweet extends BaseModel {
 
     public void setFavorited(boolean favorited) {
         this.favorited = favorited;
+    }
+
+    public boolean hasVideo() {
+        return extendedEntity != null && !TextUtils.isEmpty(extendedEntity.getVideoUrl());
     }
 
     public Tweet() {}
