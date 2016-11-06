@@ -1,15 +1,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="user"
-            type="org.agoenka.tweeterjam.models.User"/>
-    </data>
-
     <RelativeLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/activity_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,98 +12,21 @@
             android:id="@+id/appbar_main"
             layout="@layout/appbar_main"/>
 
-        <RelativeLayout
-            android:id="@+id/rlUserHeader"
+        <FrameLayout
+            android:id="@+id/flProfileContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@id/appbar_main"
-            android:paddingBottom="@dimen/profile_detail_vertical_margin"
-            android:paddingLeft="@dimen/profile_detail_horizontal_margin"
-            android:paddingRight="@dimen/profile_detail_horizontal_margin"
-            android:paddingTop="@dimen/profile_detail_vertical_margin">
-
-            <ImageView
-                android:id="@+id/ivProfileImage"
-                android:layout_width="@dimen/profile_detail_image_width"
-                android:layout_height="@dimen/profile_detail_image_height"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:contentDescription="@string/profile_image_description"
-                app:profileImageUrl="@{user.profileImageUrl}"
-                tools:src="@android:drawable/screen_background_light_transparent"/>
-
-            <TextView
-                android:id="@+id/tvName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginBottom="@dimen/name_vertical_margin"
-                android:layout_toEndOf="@+id/ivProfileImage"
-                android:layout_toRightOf="@+id/ivProfileImage"
-                android:text="@{user.name}"
-                android:textSize="@dimen/text_size_profile_name"
-                android:textStyle="bold"
-                tools:text="User Name"/>
-
-            <TextView
-                android:id="@+id/tvTagline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/tvName"
-                android:layout_alignStart="@+id/tvName"
-                android:layout_below="@+id/tvName"
-                android:text="@{user.tagline}"
-                android:textSize="@dimen/text_size_tagline"
-                tools:text="Tagline"/>
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/llCounts"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/rlUserHeader"
-            android:orientation="horizontal"
-            android:paddingBottom="@dimen/user_counts_vertical_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin">
-
-            <TextView
-                android:id="@+id/tvFollowers"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{user.followersCount + ' ' + @string/followers}"
-                android:textAllCaps="true"
-                android:textColor="@color/colorSecondaryText"
-                android:textStyle="bold"
-                tools:text="5 Followers"/>
-
-            <TextView
-                android:id="@+id/tvFollowing"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/user_counts_horizontal_margin"
-                android:layout_marginStart="@dimen/user_counts_horizontal_margin"
-                android:text="@{user.friendsCount + ' ' + @string/following}"
-                android:textAllCaps="true"
-                android:textColor="@color/colorSecondaryText"
-                android:textStyle="bold"
-                tools:text="5 Following"/>
-
-        </LinearLayout>
+            android:layout_below="@id/appbar_main"/>
 
         <FrameLayout
-            android:id="@+id/flContainer"
+            android:id="@+id/flTimelineContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/llCounts"/>
+            android:layout_below="@+id/flProfileContainer"/>
 
     </RelativeLayout>
 

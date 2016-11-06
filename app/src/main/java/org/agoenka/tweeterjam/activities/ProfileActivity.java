@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import org.agoenka.tweeterjam.R;
 import org.agoenka.tweeterjam.databinding.ActivityProfileBinding;
 import org.agoenka.tweeterjam.fragments.TweetsListFragment;
+import org.agoenka.tweeterjam.fragments.ProfileFragment;
 import org.agoenka.tweeterjam.fragments.UserTimelineFragment;
 import org.agoenka.tweeterjam.models.Tweet;
 import org.agoenka.tweeterjam.models.User;
@@ -31,17 +32,9 @@ public class ProfileActivity extends AppCompatActivity implements TweetsListFrag
         bindViews();
 
         if (savedInstanceState == null) {
+            loadUserProfile();
             loadUserTimeline();
         }
-    }
-
-    private void loadUserTimeline() {
-        // Create the user timeline fragment
-        UserTimelineFragment timelineFragment = UserTimelineFragment.newInstance(user.getScreenName());
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.flContainer, timelineFragment)
-                .commit();
     }
 
     private void bindViews() {
@@ -49,11 +42,28 @@ public class ProfileActivity extends AppCompatActivity implements TweetsListFrag
 
         if (user == null)
             user = loggedInUser;
-        binding.setUser(user);
 
         setSupportActionBar(binding.appbarMain.toolbar);
         assert getSupportActionBar() != null;
         getSupportActionBar().setTitle(user.getScreenName());
+    }
+
+    private void loadUserProfile() {
+        // Create the user timeline fragment
+        ProfileFragment profileFragment = ProfileFragment.newInstance(user);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.flProfileContainer, profileFragment)
+                .commit();
+    }
+
+    private void loadUserTimeline() {
+        // Create the user timeline fragment
+        UserTimelineFragment timelineFragment = UserTimelineFragment.newInstance(user.getScreenName());
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.flTimelineContainer, timelineFragment)
+                .commit();
     }
 
     @Override
