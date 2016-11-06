@@ -3,6 +3,7 @@ package org.agoenka.tweeterjam.activities;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.agoenka.tweeterjam.R;
 import org.agoenka.tweeterjam.TweeterJamApplication;
+import org.agoenka.tweeterjam.adapters.TweetsPagerAdapter;
 import org.agoenka.tweeterjam.databinding.ActivityTimelineBinding;
 import org.agoenka.tweeterjam.fragments.ComposeTweetFragment;
 import org.agoenka.tweeterjam.fragments.TweetsListFragment;
@@ -30,23 +32,29 @@ import static org.agoenka.tweeterjam.utils.GsonUtils.getGson;
 
 public class TimelineActivity extends AppCompatActivity implements TweetsListFragment.OnItemSelectedListener {
 
-    private TweetsListFragment fragmentTweetsList;
+    private ActivityTimelineBinding binding;
     private TwitterClient client;
+    private TweetsPagerAdapter pagerAdapter;
     public User loggedInUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityTimelineBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_timeline);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_timeline);
         binding.setHandlers(new Handlers());
-        setSupportActionBar(binding.appbarMain.toolbar);
-
-        if (savedInstanceState == null) {
-            fragmentTweetsList = (TweetsListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_timeline);
-        }
-
         client = TweeterJamApplication.getTwitterClient();
+
+        setupViews();
         getUserCredentials();
+    }
+
+    private void setupViews() {
+        setSupportActionBar(binding.appbarMain.toolbar);
+        pagerAdapter = new TweetsPagerAdapter(getSupportFragmentManager());
+        // Set the viewpager adapter for the pager
+        binding.vpTimeline.setAdapter(pagerAdapter);
+        // Attach the tabs to the pager
+        binding.appbarMain.tlTimeline.setupWithViewPager(binding.vpTimeline);
     }
 
     private void handleImplicitIntents() {
@@ -80,7 +88,12 @@ public class TimelineActivity extends AppCompatActivity implements TweetsListFra
 
     private void compose(String text, Tweet inReplyTo) {
         ComposeTweetFragment composeDialog = ComposeTweetFragment.newInstance(text, loggedInUser, inReplyTo);
-        composeDialog.setListener(tweet -> fragmentTweetsList.add(0, tweet));
+        composeDialog.setListener(tweet -> {
+            Fragment fragment = pagerAdapter.getRegisteredFragment(0);
+            if (fragment != null) {
+                ((TweetsListFragment) fragment).add(0, tweet);
+            }
+        });
         composeDialog.show(getSupportFragmentManager(), "Compose Tweet");
     }
 
