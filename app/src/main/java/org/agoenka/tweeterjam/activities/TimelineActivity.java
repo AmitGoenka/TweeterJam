@@ -92,6 +92,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetsListFra
             Fragment fragment = pagerAdapter.getRegisteredFragment(0);
             if (fragment != null) {
                 ((TweetsListFragment) fragment).add(0, tweet);
+                binding.vpTimeline.setCurrentItem(0, true);
             }
         });
         composeDialog.show(getSupportFragmentManager(), "Compose Tweet");
