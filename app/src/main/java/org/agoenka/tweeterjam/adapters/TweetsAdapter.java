@@ -92,5 +92,4 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         mTweets.add(index, tweet);
         notifyItemRangeInserted(index, 1);
     }
-
 }

@@ -11,6 +11,8 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 import org.agoenka.tweeterjam.TweeterJamDatabase;
 import org.parceler.Parcel;
 
+import java.util.Locale;
+
 /**
  * Author: agoenka
  * Created At: 10/28/2016
@@ -24,6 +26,9 @@ public class User extends BaseModel {
     @Column String name;
     @Column String screenName;
     @Column String profileImageUrl;
+    @SerializedName("description") @Column String tagline;
+    @Column int followersCount;
+    @Column int friendsCount;
 
     public String getName() {
         return name;
@@ -34,9 +39,21 @@ public class User extends BaseModel {
     }
 
     public String getProfileImageUrl() {
-        if (!TextUtils.isEmpty(profileImageUrl) && profileImageUrl.contains("_normal"))
-            return profileImageUrl.replace("_normal", "_bigger");
-        return profileImageUrl;
+        return !TextUtils.isEmpty(profileImageUrl) && profileImageUrl.contains("_normal")
+                ? profileImageUrl.replace("_normal", "_bigger")
+                : profileImageUrl;
+    }
+
+    public String getTagline() {
+        return tagline;
+    }
+
+    public String getFollowersCount() {
+        return String.format(Locale.getDefault(), "%d", followersCount);
+    }
+
+    public String getFriendsCount() {
+        return String.format(Locale.getDefault(), "%d", friendsCount);
     }
 
     public long getUser() {

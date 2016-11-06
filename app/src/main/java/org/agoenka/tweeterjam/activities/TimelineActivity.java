@@ -26,9 +26,9 @@ import org.parceler.Parcels;
 
 import cz.msebera.android.httpclient.Header;
 
-import static org.agoenka.tweeterjam.activities.DetailActivity.KEY_TWEET;
-import static org.agoenka.tweeterjam.fragments.ComposeTweetFragment.KEY_LOGGED_IN_USER;
 import static org.agoenka.tweeterjam.models.Tweet.getTweetText;
+import static org.agoenka.tweeterjam.utils.AppUtils.KEY_LOGGED_IN_USER;
+import static org.agoenka.tweeterjam.utils.AppUtils.KEY_TWEET;
 import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
 import static org.agoenka.tweeterjam.utils.GsonUtils.getGson;
 
@@ -47,7 +47,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetsListFra
         client = TweeterJamApplication.getTwitterClient();
 
         setupViews();
-        getUserCredentials();
+        getUserInfo();
     }
 
     private void setupViews() {
@@ -80,14 +80,9 @@ public class TimelineActivity extends AppCompatActivity implements TweetsListFra
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
     public void onProfileView(MenuItem item) {
-        // Launch the profile view
         Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra(KEY_LOGGED_IN_USER, Parcels.wrap(loggedInUser));
         startActivity(intent);
     }
 
@@ -118,7 +113,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetsListFra
     }
 
     // Fetch the logged in user's credentials
-    private void getUserCredentials() {
+    private void getUserInfo() {
         if (isConnected(this)) {
             client.getUserCredentials(new TextHttpResponseHandler() {
                 @Override

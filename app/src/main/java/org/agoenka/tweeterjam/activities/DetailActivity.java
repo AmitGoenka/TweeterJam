@@ -24,7 +24,8 @@ import org.parceler.Parcels;
 import cz.msebera.android.httpclient.Header;
 
 import static com.raizlabs.android.dbflow.config.FlowManager.getContext;
-import static org.agoenka.tweeterjam.fragments.ComposeTweetFragment.KEY_LOGGED_IN_USER;
+import static org.agoenka.tweeterjam.utils.AppUtils.KEY_LOGGED_IN_USER;
+import static org.agoenka.tweeterjam.utils.AppUtils.KEY_TWEET;
 import static org.agoenka.tweeterjam.utils.AppUtils.getPermissionIntent;
 import static org.agoenka.tweeterjam.utils.AppUtils.hasWritePermission;
 import static org.agoenka.tweeterjam.utils.AppUtils.missingWritePermission;
@@ -41,8 +42,6 @@ public class DetailActivity extends AppCompatActivity {
     private Intent startingIntent;
     boolean isPermissionSet = false;
     private static final int WRITE_SETTINGS_PERMISSION = 1;
-
-    public static final String KEY_TWEET = "tweet";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,8 +84,6 @@ public class DetailActivity extends AppCompatActivity {
         binding.setTweet(tweet);
 
         setSupportActionBar(binding.appbarMain.toolbar);
-        assert getSupportActionBar() != null;
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         loggedInUser = Parcels.unwrap(getIntent().getParcelableExtra(KEY_LOGGED_IN_USER));
     }

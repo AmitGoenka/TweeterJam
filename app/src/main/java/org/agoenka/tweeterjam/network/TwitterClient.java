@@ -1,6 +1,7 @@
 package org.agoenka.tweeterjam.network;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -48,6 +49,32 @@ public class TwitterClient extends OAuthBaseClient {
         getClient().get(url, params, handler);
     }
 
+    public void getMentionsTimeline(int count, long maxId, TextHttpResponseHandler handler) {
+        String url = getApiUrl("statuses/mentions_timeline.json");
+        // Specify the params
+        RequestParams params = new RequestParams();
+        if (count > 0)
+            params.put("count", count);
+        if (maxId > 0)
+            params.put("max_id", maxId);
+        // Execute the request
+        getClient().get(url, params, handler);
+    }
+
+    public void getUserTimeline(String screenName, int count, long maxId, TextHttpResponseHandler handler) {
+        String url = getApiUrl("statuses/user_timeline.json");
+        // Specify the params
+        RequestParams params = new RequestParams();
+        if (count > 0)
+            params.put("count", count);
+        if (maxId > 0)
+            params.put("max_id", maxId);
+        if (!TextUtils.isEmpty(screenName))
+            params.put("screen_name", screenName);
+        // Execute the request
+        getClient().get(url, params, handler);
+    }
+
     public void getUserCredentials(AsyncHttpResponseHandler handler) {
         String url = getApiUrl("account/verify_credentials.json");
         getClient().get(url, handler);
@@ -73,17 +100,5 @@ public class TwitterClient extends OAuthBaseClient {
         RequestParams params = new RequestParams();
         params.put("id", id);
         getClient().post(url, params, handler);
-    }
-
-    public void getMentionsTimeline(int count, long maxId, TextHttpResponseHandler handler) {
-        String url = getApiUrl("statuses/mentions_timeline.json");
-        // Specify the params
-        RequestParams params = new RequestParams();
-        if (count > 0)
-            params.put("count", count);
-        if (maxId > 0)
-            params.put("max_id", maxId);
-        // Execute the request
-        getClient().get(url, params, handler);
     }
 }

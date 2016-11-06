@@ -21,6 +21,8 @@ import org.agoenka.tweeterjam.models.Tweet;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
+
 /**
  * Author: agoenka
  * Created At: 11/5/2016
@@ -55,6 +57,15 @@ public abstract class TweetsListFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_tweets_list, container, false);
         binding.rvTweets.setAdapter(mAdapter);
         setupViews();
+
+        if (!isConnected(getContext())) {
+            List<Tweet> tweets = loadStaticTimeline(0);
+            addAll(tweets, true);
+        } else {
+            clearStaticTimeline();
+            populateTimeline(0, true);
+        }
+
         return binding.getRoot();
     }
 
@@ -95,6 +106,12 @@ public abstract class TweetsListFragment extends Fragment {
         ItemClickSupport.addTo(binding.rvTweets).setOnItemClickListener((recyclerView, position, v) -> listener.onItemSelected(mTweets.get(position)));
     }
 
+    abstract void populateTimeline(final long maxId, final boolean refresh);
+
+    abstract List<Tweet> loadStaticTimeline(final long maxId);
+
+    abstract void clearStaticTimeline();
+
     private void refreshTimeline() {
         mTweets.clear();
         populateTimeline(0, true);
@@ -107,6 +124,4 @@ public abstract class TweetsListFragment extends Fragment {
     public void add(int index, Tweet tweet) {
         mAdapter.add(index, tweet);
     }
-
-    abstract void populateTimeline(final long maxId, final boolean refresh);
 }

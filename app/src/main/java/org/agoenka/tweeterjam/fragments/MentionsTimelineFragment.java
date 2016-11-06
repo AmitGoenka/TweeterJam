@@ -3,9 +3,6 @@ package org.agoenka.tweeterjam.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
@@ -38,21 +35,9 @@ public class MentionsTimelineFragment extends TweetsListFragment {
         client = TweeterJamApplication.getTwitterClient();
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-        if (!isConnected(getContext())) {
-            addAll(Tweet.get(), true);
-        } else {
-            Tweet.clear();
-            populateTimeline(0, true);
-        }
-        return view;
-    }
-
     // Send an API request to get the timeline json
     // Fill the list view by creating the tweet objects from json
+    @Override
     public void populateTimeline(final long maxId, final boolean refresh) {
         if (isConnected(getContext())) {
             client.getMentionsTimeline(PAGE_SIZE, maxId, new TextHttpResponseHandler() {
@@ -72,5 +57,15 @@ public class MentionsTimelineFragment extends TweetsListFragment {
                 }
             });
         }
+    }
+
+    @Override
+    List<Tweet> loadStaticTimeline(long maxId) {
+        return Tweet.get();
+    }
+
+    @Override
+    void clearStaticTimeline() {
+        Tweet.clear();
     }
 }

@@ -17,15 +17,17 @@ import java.util.List;
 import cz.msebera.android.httpclient.Header;
 
 import static org.agoenka.tweeterjam.network.TwitterClient.PAGE_SIZE;
+import static org.agoenka.tweeterjam.utils.AppUtils.KEY_SCREEN_NAME;
 import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
 import static org.agoenka.tweeterjam.utils.GsonUtils.getGson;
 
 /**
  * Author: agoenka
- * Created At: 11/5/2016
+ * Created At: 11/6/2016
  * Version: ${VERSION}
  */
-public class HomeTimelineFragment extends TweetsListFragment {
+
+public class UserTimelineFragment extends TweetsListFragment {
 
     private TwitterClient client;
 
@@ -35,12 +37,19 @@ public class HomeTimelineFragment extends TweetsListFragment {
         client = TweeterJamApplication.getTwitterClient();
     }
 
-    // Send an API request to get the timeline json
-    // Fill the list view by creating the tweet objects from json
+    public static UserTimelineFragment newInstance(String screenName) {
+        UserTimelineFragment userFragment = new UserTimelineFragment();
+        Bundle args = new Bundle();
+        args.putString(KEY_SCREEN_NAME, screenName);
+        userFragment.setArguments(args);
+        return userFragment;
+    }
+
     @Override
     public void populateTimeline(final long maxId, final boolean refresh) {
+        String screenName = getArguments().getString(KEY_SCREEN_NAME);
         if (isConnected(getContext())) {
-            client.getHomeTimeline(PAGE_SIZE, maxId, 0, new TextHttpResponseHandler() {
+            client.getUserTimeline(screenName, PAGE_SIZE, maxId, new TextHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String json) {
                     Log.d("DEBUG", json);

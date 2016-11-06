@@ -19,6 +19,12 @@ public class AppUtils {
         //no instance
     }
 
+    public static final String KEY_TEXT = "text";
+    public static final String KEY_LOGGED_IN_USER = "loggedInUser";
+    public static final String KEY_IN_REPLY_TO = "inReplyTo";
+    public static final String KEY_TWEET = "tweet";
+    public static final String KEY_SCREEN_NAME = "screen_name";
+
     public static boolean missingWritePermission(Context context) {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.System.canWrite(context);
     }

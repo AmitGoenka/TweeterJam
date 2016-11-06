@@ -31,6 +31,9 @@ import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 
+import static org.agoenka.tweeterjam.utils.AppUtils.KEY_IN_REPLY_TO;
+import static org.agoenka.tweeterjam.utils.AppUtils.KEY_LOGGED_IN_USER;
+import static org.agoenka.tweeterjam.utils.AppUtils.KEY_TEXT;
 import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
 import static org.agoenka.tweeterjam.utils.GsonUtils.getGson;
 import static org.agoenka.tweeterjam.utils.SharedPreferencesUtils.KEY_DRAFT_TWEET;
@@ -43,10 +46,6 @@ public class ComposeTweetFragment extends DialogFragment {
     private TwitterClient client;
     private Tweet replyToTweet;
     private long replyToTweetUid;
-
-    private static final String KEY_TEXT = "text";
-    public static final String KEY_LOGGED_IN_USER = "loggedInUser";
-    private static final String KEY_IN_REPLY_TO = "inReplyTo";
 
     private static final int MAX_TWEET_LENGTH = 140;
 

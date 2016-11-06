@@ -46,7 +46,6 @@
         <activity
             android:name=".activities.DetailActivity"
             android:label="@string/tweet"
-            android:parentActivityName=".activities.TimelineActivity"
             android:theme="@style/AppTheme"/>
         <activity
             android:name=".activities.ProfileActivity"

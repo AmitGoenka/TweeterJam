@@ -1,17 +1,19 @@
 <resources>
     <string name="app_name">TweeterJam</string>
     <string name="login_label">Connect to Twitter</string>
+    <string name="hint_tweet_compose">What\'s happening?</string>
     <string name="profile_image_description">Profile Image for the User</string>
     <string name="image_description">Media Image</string>
+    <string name="profile">Profile</string>
     <string name="compose">Compose</string>
     <string name="cancel">Cancel</string>
     <string name="tweet">Tweet</string>
-    <string name="hint_tweet_compose">What\'s happening?</string>
+    <string name="share">Share</string>
     <string name="reply">Reply</string>
     <string name="retweet">Retweet</string>
     <string name="retweets">Retweets</string>
     <string name="favorite">Favorite</string>
     <string name="favorites">Favorites</string>
-    <string name="share">Share</string>
-    <string name="profile">Profile</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
 </resources>
