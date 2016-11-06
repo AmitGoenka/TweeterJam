@@ -17,6 +17,7 @@ import org.agoenka.tweeterjam.adapters.ItemClickSupport;
 import org.agoenka.tweeterjam.adapters.TweetsAdapter;
 import org.agoenka.tweeterjam.databinding.FragmentTweetsListBinding;
 import org.agoenka.tweeterjam.models.Tweet;
+import org.agoenka.tweeterjam.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,18 +29,21 @@ import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
  * Created At: 11/5/2016
  * Version: ${VERSION}
  */
-
 public abstract class TweetsListFragment extends Fragment {
 
     private FragmentTweetsListBinding binding;
     private List<Tweet> mTweets;
     private TweetsAdapter mAdapter;
+    private OnProfileSelectedListener profileSelectedListener;
     private OnItemSelectedListener itemSelectedListener;
     private EndlessRecyclerViewScrollListener scrollListener;
     private long currMinId = 0;
 
+    public interface OnProfileSelectedListener {
+        void onProfileSelected(User user);
+    }
+
     public interface OnItemSelectedListener {
-        // This can be any number of events to be sent to the activity
         void onItemSelected(Tweet tweet);
     }
 
@@ -74,15 +78,18 @@ public abstract class TweetsListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnItemSelectedListener)
+        if(context instanceof OnProfileSelectedListener)
+            profileSelectedListener = (OnProfileSelectedListener) context;
+        if(context instanceof OnItemSelectedListener)
             itemSelectedListener = (OnItemSelectedListener) context;
-        else
-            throw new ClassCastException(context.toString() + " must implement TweetsListFragment.OnItemSelectedListener");
     }
 
     private void setupViews() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         binding.rvTweets.setLayoutManager(layoutManager);
+
+        ItemClickSupport.addTo(binding.rvTweets).setOnItemClickListener((recyclerView, position, v) -> itemSelectedListener.onItemSelected(mTweets.get(position)));
+        mAdapter.setProfileListener(v -> profileSelectedListener.onProfileSelected((User) v.getTag()));
 
         scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
@@ -106,8 +113,6 @@ public abstract class TweetsListFragment extends Fragment {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-
-        ItemClickSupport.addTo(binding.rvTweets).setOnItemClickListener((recyclerView, position, v) -> itemSelectedListener.onItemSelected(mTweets.get(position)));
     }
 
     abstract void populateTimeline(final long maxId, final boolean refresh);

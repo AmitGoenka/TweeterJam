@@ -17,7 +17,7 @@ import static org.agoenka.tweeterjam.utils.AppUtils.KEY_LOGGED_IN_USER;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_TWEET;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_USER;
 
-public class ProfileActivity extends AppCompatActivity implements TweetsListFragment.OnItemSelectedListener {
+public class ProfileActivity extends AppCompatActivity implements TweetsListFragment.OnProfileSelectedListener, TweetsListFragment.OnItemSelectedListener {
 
     private User loggedInUser;
     private User user;
@@ -58,9 +58,14 @@ public class ProfileActivity extends AppCompatActivity implements TweetsListFrag
 
     @Override
     public void onItemSelected(Tweet tweet) {
-        Intent intent = new Intent(ProfileActivity.this, DetailActivity.class);
+        Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra(KEY_TWEET, Parcels.wrap(tweet));
         intent.putExtra(KEY_LOGGED_IN_USER, Parcels.wrap(loggedInUser));
         startActivity(intent);
+    }
+
+    @Override
+    public void onProfileSelected(User user) {
+        // Do Nothing since the user does not need to navigate to the same profile again.
     }
 }

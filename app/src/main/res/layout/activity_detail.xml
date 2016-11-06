@@ -49,6 +49,7 @@
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:contentDescription="@string/profile_image_description"
+                android:onClick="@{handlers.onProfile}"
                 app:profileImageUrl="@{tweet.user.profileImageUrl}"/>
 
             <TextView

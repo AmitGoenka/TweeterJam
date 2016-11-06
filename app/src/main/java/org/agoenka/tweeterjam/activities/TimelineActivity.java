@@ -29,10 +29,11 @@ import cz.msebera.android.httpclient.Header;
 import static org.agoenka.tweeterjam.models.Tweet.getTweetText;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_LOGGED_IN_USER;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_TWEET;
+import static org.agoenka.tweeterjam.utils.AppUtils.KEY_USER;
 import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
 import static org.agoenka.tweeterjam.utils.GsonUtils.getGson;
 
-public class TimelineActivity extends AppCompatActivity implements TweetsListFragment.OnItemSelectedListener {
+public class TimelineActivity extends AppCompatActivity implements TweetsListFragment.OnProfileSelectedListener, TweetsListFragment.OnItemSelectedListener {
 
     private ActivityTimelineBinding binding;
     private TwitterClient client;
@@ -80,24 +81,32 @@ public class TimelineActivity extends AppCompatActivity implements TweetsListFra
         return true;
     }
 
+    public class Handlers {
+        public void onCompose(@SuppressWarnings("unused") View view) {
+            compose(null, null);
+        }
+    }
+
     public void onProfileView(MenuItem item) {
+        onProfileSelected(null);
+    }
+
+    @Override
+    public void onProfileSelected(User user) {
         Intent intent = new Intent(this, ProfileActivity.class);
         intent.putExtra(KEY_LOGGED_IN_USER, Parcels.wrap(loggedInUser));
+        if (user != null) {
+            intent.putExtra(KEY_USER, Parcels.wrap(user));
+        }
         startActivity(intent);
     }
 
     @Override
     public void onItemSelected(Tweet tweet) {
-        Intent intent = new Intent(TimelineActivity.this, DetailActivity.class);
+        Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra(KEY_TWEET, Parcels.wrap(tweet));
         intent.putExtra(KEY_LOGGED_IN_USER, Parcels.wrap(loggedInUser));
         startActivity(intent);
-    }
-
-    public class Handlers {
-        public void onCompose(@SuppressWarnings("unused") View view) {
-            compose(null, null);
-        }
     }
 
     private void compose(String text, Tweet inReplyTo) {

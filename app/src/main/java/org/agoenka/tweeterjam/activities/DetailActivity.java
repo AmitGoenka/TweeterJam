@@ -26,6 +26,7 @@ import cz.msebera.android.httpclient.Header;
 import static com.raizlabs.android.dbflow.config.FlowManager.getContext;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_LOGGED_IN_USER;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_TWEET;
+import static org.agoenka.tweeterjam.utils.AppUtils.KEY_USER;
 import static org.agoenka.tweeterjam.utils.AppUtils.getPermissionIntent;
 import static org.agoenka.tweeterjam.utils.AppUtils.hasWritePermission;
 import static org.agoenka.tweeterjam.utils.AppUtils.missingWritePermission;
@@ -89,6 +90,14 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public class Handlers {
+
+        public void onProfile(@SuppressWarnings("unused") View view) {
+            Intent intent = new Intent(DetailActivity.this, ProfileActivity.class);
+            intent.putExtra(KEY_LOGGED_IN_USER, Parcels.wrap(loggedInUser));
+            intent.putExtra(KEY_USER, Parcels.wrap(binding.getTweet().getUser()));
+            startActivity(intent);
+        }
+
         public void onReply(@SuppressWarnings("unused") View view) {
             ComposeTweetFragment composeDialog = ComposeTweetFragment.newInstance(null, loggedInUser, binding.getTweet());
             composeDialog.setListener(tweet -> Toast.makeText(DetailActivity.this, "Replied Successfully!", Toast.LENGTH_SHORT).show());

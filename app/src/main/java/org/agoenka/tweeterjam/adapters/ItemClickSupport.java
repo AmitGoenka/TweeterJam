@@ -25,7 +25,6 @@ import org.agoenka.tweeterjam.R;
  * Created At: 10/23/2016
  * Version: ${VERSION}
  */
-
 public class ItemClickSupport {
     private final RecyclerView mRecyclerView;
     private OnItemClickListener mOnItemClickListener;
