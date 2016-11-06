@@ -118,6 +118,21 @@ public class Tweet extends BaseModel {
         return min;
     }
 
+    public static String getTweetText(String title, String url) {
+        StringBuilder sb = new StringBuilder();
+        if (title != null) {
+            sb.append(title);
+        }
+        if (url != null) {
+            if (title != null) {
+                sb.append("\n").append(url);
+            } else {
+                sb.append(url);
+            }
+        }
+        return sb.toString();
+    }
+
     public static List<Tweet> get() {
         return SQLite.select().from(Tweet.class).orderBy(Tweet_Table.createdAt, false).limit(200).queryList();
     }
@@ -146,5 +161,4 @@ public class Tweet extends BaseModel {
     public static void clear() {
         Delete.tables(Tweet.class, User.class, Entity.class, ExtendedEntity.class);
     }
-
 }

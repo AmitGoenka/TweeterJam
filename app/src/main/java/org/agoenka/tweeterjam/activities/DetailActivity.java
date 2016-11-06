@@ -42,7 +42,7 @@ public class DetailActivity extends AppCompatActivity {
     boolean isPermissionSet = false;
     private static final int WRITE_SETTINGS_PERMISSION = 1;
 
-    static final String KEY_TWEET = "tweet";
+    public static final String KEY_TWEET = "tweet";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
