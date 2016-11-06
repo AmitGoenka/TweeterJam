@@ -69,7 +69,6 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
     }
 
     // Call this method whenever performing new searches
-    @SuppressWarnings("unused")
     public void resetState() {
         this.currentPage = 0;
         this.previousTotalItemCount = 0;
@@ -101,5 +100,4 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
         }
         return maxSize;
     }
-
 }

@@ -34,8 +34,9 @@ public abstract class TweetsListFragment extends Fragment {
     private FragmentTweetsListBinding binding;
     private List<Tweet> mTweets;
     private TweetsAdapter mAdapter;
+    private OnItemSelectedListener itemSelectedListener;
+    private EndlessRecyclerViewScrollListener scrollListener;
     private long currMinId = 0;
-    private OnItemSelectedListener listener;
 
     public interface OnItemSelectedListener {
         // This can be any number of events to be sent to the activity
@@ -74,7 +75,7 @@ public abstract class TweetsListFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnItemSelectedListener)
-            listener = (OnItemSelectedListener) context;
+            itemSelectedListener = (OnItemSelectedListener) context;
         else
             throw new ClassCastException(context.toString() + " must implement TweetsListFragment.OnItemSelectedListener");
     }
@@ -82,28 +83,31 @@ public abstract class TweetsListFragment extends Fragment {
     private void setupViews() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         binding.rvTweets.setLayoutManager(layoutManager);
-        binding.rvTweets.addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
+
+        scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemCount, RecyclerView view) {
                 currMinId = Tweet.getMinId(mTweets);
                 populateTimeline(currMinId > 0 ? currMinId - 1 : 0, false);
             }
-        });
+        };
+        binding.rvTweets.addOnScrollListener(scrollListener);
 
         // Setup refresh listener which triggers new data loading
         binding.swipeContainer.setOnRefreshListener(() -> {
             // once the network request has completed successfully swipeContainer.setRefreshing(false) must be called.
-            refreshTimeline();
+            mTweets.clear();
+            scrollListener.resetState();
+            populateTimeline(0, true);
             binding.swipeContainer.setRefreshing(false);
         });
-
         // Configure the refreshing colors
         binding.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        ItemClickSupport.addTo(binding.rvTweets).setOnItemClickListener((recyclerView, position, v) -> listener.onItemSelected(mTweets.get(position)));
+        ItemClickSupport.addTo(binding.rvTweets).setOnItemClickListener((recyclerView, position, v) -> itemSelectedListener.onItemSelected(mTweets.get(position)));
     }
 
     abstract void populateTimeline(final long maxId, final boolean refresh);
@@ -111,11 +115,6 @@ public abstract class TweetsListFragment extends Fragment {
     abstract List<Tweet> loadStaticTimeline(final long maxId);
 
     abstract void clearStaticTimeline();
-
-    private void refreshTimeline() {
-        mTweets.clear();
-        populateTimeline(0, true);
-    }
 
     public void addAll(List<Tweet> tweets, boolean refresh) {
         mAdapter.addAll(tweets, refresh);
