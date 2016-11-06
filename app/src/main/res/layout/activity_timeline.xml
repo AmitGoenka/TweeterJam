@@ -19,7 +19,7 @@
 
         <include
             android:id="@+id/appbar_main"
-            layout="@layout/appbar_main"/>
+            layout="@layout/appbar_tabs_main"/>
 
         <android.support.v4.view.ViewPager
             android:id="@+id/vpTimeline"
