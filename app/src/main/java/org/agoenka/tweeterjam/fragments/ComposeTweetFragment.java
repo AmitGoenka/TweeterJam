@@ -46,14 +46,13 @@ public class ComposeTweetFragment extends DialogFragment {
     private TwitterClient client;
     private Tweet replyToTweet;
     private long replyToTweetUid;
+    private ComposeTweetFragmentListener listener;
 
     private static final int MAX_TWEET_LENGTH = 140;
 
     public interface ComposeTweetFragmentListener {
         void onTweet(Tweet tweet);
     }
-
-    private ComposeTweetFragmentListener listener;
 
     public void setListener(ComposeTweetFragmentListener listener) {
         this.listener = listener;

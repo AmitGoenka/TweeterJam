@@ -1,6 +1,6 @@
 package org.agoenka.tweeterjam.fragments;
 
-import android.content.Intent;
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,7 +16,6 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.agoenka.tweeterjam.R;
 import org.agoenka.tweeterjam.TweeterJamApplication;
-import org.agoenka.tweeterjam.activities.ProfileActivity;
 import org.agoenka.tweeterjam.databinding.FragmentTweetBinding;
 import org.agoenka.tweeterjam.models.Tweet;
 import org.agoenka.tweeterjam.models.User;
@@ -26,9 +25,7 @@ import org.parceler.Parcels;
 
 import cz.msebera.android.httpclient.Header;
 
-import static org.agoenka.tweeterjam.utils.AppUtils.KEY_LOGGED_IN_USER;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_TWEET;
-import static org.agoenka.tweeterjam.utils.AppUtils.KEY_USER;
 import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
 import static org.agoenka.tweeterjam.views.ImageViewBinder.loadMediaImage;
 import static org.agoenka.tweeterjam.views.VideoViewBinder.loadFensterVideo;
@@ -42,8 +39,31 @@ import static org.agoenka.tweeterjam.views.VideoViewBinder.loadFensterVideo;
 public class DetailFragment extends Fragment {
 
     private FragmentTweetBinding binding;
-    private User mLoggedInUser;
     private TwitterClient client;
+
+    private OnProfileSelectedListener profileListener;
+    private OnShareListener shareListener;
+    private OnReplyListener replyListener;
+
+    public interface OnProfileSelectedListener {
+        void onProfileSelected(User user);
+    }
+
+    public interface OnShareListener {
+        void onShare(Tweet tweet);
+    }
+
+    public interface OnReplyListener {
+        void onReply(Tweet tweet);
+    }
+
+    public static DetailFragment newInstance(Tweet tweet) {
+        DetailFragment detailFragment = new DetailFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(KEY_TWEET, Parcels.wrap(tweet));
+        detailFragment.setArguments(args);
+        return detailFragment;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,7 +75,6 @@ public class DetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Tweet tweet = Parcels.unwrap(getArguments().getParcelable(KEY_TWEET));
-        mLoggedInUser = Parcels.unwrap(getArguments().getParcelable(KEY_LOGGED_IN_USER));
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_tweet, container, false);
         binding.setHandlers(new Handlers());
@@ -74,28 +93,30 @@ public class DetailFragment extends Fragment {
         return binding.getRoot();
     }
 
-    public static DetailFragment newInstance(Tweet tweet, User loggedInUser) {
-        DetailFragment detailFragment = new DetailFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(KEY_TWEET, Parcels.wrap(tweet));
-        args.putParcelable(KEY_LOGGED_IN_USER, Parcels.wrap(loggedInUser));
-        detailFragment.setArguments(args);
-        return detailFragment;
+    // Store the listener (activity) that will have events fired once the fragment is attached
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof OnProfileSelectedListener)
+            profileListener = (OnProfileSelectedListener) context;
+        if(context instanceof OnShareListener)
+            shareListener = (OnShareListener) context;
+        if(context instanceof OnReplyListener)
+            replyListener = (OnReplyListener) context;
     }
 
     public class Handlers {
 
         public void onProfile(@SuppressWarnings("unused") View view) {
-            Intent intent = new Intent(getContext(), ProfileActivity.class);
-            intent.putExtra(KEY_LOGGED_IN_USER, Parcels.wrap(mLoggedInUser));
-            intent.putExtra(KEY_USER, Parcels.wrap(binding.getTweet().getUser()));
-            startActivity(intent);
+            profileListener.onProfileSelected(binding.getTweet().getUser());
         }
 
         public void onReply(@SuppressWarnings("unused") View view) {
-            ComposeTweetFragment composeDialog = ComposeTweetFragment.newInstance(null, mLoggedInUser, binding.getTweet());
-            composeDialog.setListener(tweet -> Toast.makeText(getContext(), "Replied Successfully!", Toast.LENGTH_SHORT).show());
-            composeDialog.show(getFragmentManager(), "Compose Tweet");
+            replyListener.onReply(binding.getTweet());
+        }
+
+        public void onShare(@SuppressWarnings("unused") View view) {
+            shareListener.onShare(binding.getTweet());
         }
 
         public void onRetweet(@SuppressWarnings("unused") View view) {
@@ -108,13 +129,6 @@ public class DetailFragment extends Fragment {
             if (!binding.getTweet().isFavorited()) {
                 favorite(binding.getTweet().getUid());
             }
-        }
-
-        public void onShare(@SuppressWarnings("unused") View view) {
-            Intent shareIntent = new Intent(Intent.ACTION_SEND);
-            shareIntent.setType("text/plain");
-            shareIntent.putExtra(Intent.EXTRA_TEXT, binding.getTweet().getBody());
-            startActivity(Intent.createChooser(shareIntent, "Share using"));
         }
     }
 

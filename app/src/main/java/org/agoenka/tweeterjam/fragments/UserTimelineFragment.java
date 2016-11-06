@@ -31,18 +31,18 @@ public class UserTimelineFragment extends TweetsListFragment {
 
     private TwitterClient client;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        client = TweeterJamApplication.getTwitterClient();
-    }
-
     public static UserTimelineFragment newInstance(String screenName) {
         UserTimelineFragment userFragment = new UserTimelineFragment();
         Bundle args = new Bundle();
         args.putString(KEY_SCREEN_NAME, screenName);
         userFragment.setArguments(args);
         return userFragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        client = TweeterJamApplication.getTwitterClient();
     }
 
     @Override

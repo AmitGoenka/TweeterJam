@@ -22,6 +22,14 @@ import static org.agoenka.tweeterjam.utils.AppUtils.KEY_USER;
  */
 public class ProfileFragment extends Fragment {
 
+    public static ProfileFragment newInstance(User user) {
+        ProfileFragment profileFragment = new ProfileFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(KEY_USER, Parcels.wrap(user));
+        profileFragment.setArguments(args);
+        return profileFragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -29,13 +37,5 @@ public class ProfileFragment extends Fragment {
         FragmentProfileBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
         binding.setUser(user);
         return binding.getRoot();
-    }
-
-    public static ProfileFragment newInstance(User user) {
-        ProfileFragment profileFragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(KEY_USER, Parcels.wrap(user));
-        profileFragment.setArguments(args);
-        return profileFragment;
     }
 }
