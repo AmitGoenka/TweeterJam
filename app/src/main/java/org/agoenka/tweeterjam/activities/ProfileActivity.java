@@ -16,28 +16,32 @@ import org.parceler.Parcels;
 
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_LOGGED_IN_USER;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_TWEET;
+import static org.agoenka.tweeterjam.utils.AppUtils.KEY_USER;
 
 public class ProfileActivity extends AppCompatActivity implements TweetsListFragment.OnItemSelectedListener {
 
     private User loggedInUser;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Get the screen name from the activity that launches this
         loggedInUser = Parcels.unwrap(getIntent().getParcelableExtra(KEY_LOGGED_IN_USER));
+        user = Parcels.unwrap(getIntent().getParcelableExtra(KEY_USER));
+        if (user == null)
+            user = loggedInUser;
 
         ActivityProfileBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_profile);
-        binding.setUser(loggedInUser);
+        binding.setUser(user);
 
         setSupportActionBar(binding.appbarMain.toolbar);
         assert getSupportActionBar() != null;
-        getSupportActionBar().setTitle(loggedInUser.getScreenName());
+        getSupportActionBar().setTitle(user.getScreenName());
 
         if (savedInstanceState == null) {
             // Create the user timeline fragment
-            UserTimelineFragment userTimelineFragment = UserTimelineFragment.newInstance(loggedInUser.getScreenName());
+            UserTimelineFragment userTimelineFragment = UserTimelineFragment.newInstance(user.getScreenName());
             // Display user fragment within this activity(dynamically)
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.flContainer, userTimelineFragment);

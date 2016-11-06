@@ -57,7 +57,7 @@ public class DetailActivity extends AppCompatActivity {
                 isPermissionSet = true;
                 bindViews(tweet);
                 loadFensterVideo(getWindow(),
-                        binding.flVideo,
+                        binding.rlVideo,
                         binding.vvFensterVideo,
                         binding.vvFensterController,
                         tweet.getExtendedEntity().getVideoUrl());
