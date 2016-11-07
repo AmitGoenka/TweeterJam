@@ -66,6 +66,10 @@ public class User extends BaseModel {
         return String.format(Locale.getDefault(), "%d", friendsCount);
     }
 
+    public void setFollowing(boolean following) {
+        this.following = following;
+    }
+
     public long getUser() {
         return uid;
     }

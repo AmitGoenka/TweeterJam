@@ -144,4 +144,14 @@ public class TwitterClient extends OAuthBaseClient {
         // Execute the request
         getClient().post(url, params, handler);
     }
+
+    public void removeFriend(String screenName, AsyncHttpResponseHandler handler) {
+        String url = getApiUrl("friendships/destroy.json");
+        // Specify the params
+        RequestParams params = new RequestParams();
+        if (!TextUtils.isEmpty(screenName))
+            params.put("screen_name", screenName);
+        // Execute the request
+        getClient().post(url, params, handler);
+    }
 }

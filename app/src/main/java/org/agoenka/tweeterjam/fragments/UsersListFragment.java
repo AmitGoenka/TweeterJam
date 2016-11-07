@@ -92,7 +92,10 @@ public class UsersListFragment extends Fragment {
         mAdapter.setProfileListener(mProfileListener);
         mAdapter.setFollowListener((user, position) -> {
             if (position != RecyclerView.NO_POSITION) {
-                onFollow(user, position);
+                if(user.isFollowing() || user.isFollowRequestSent())
+                    unfriend(user, position);
+                else
+                    friend(user, position);
             }
         });
 
@@ -109,27 +112,6 @@ public class UsersListFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void onFollow(final User user, final int position) {
-        if(isConnected(getContext())) {
-            client.createFriend(user.getScreenName(), new TextHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                    Log.d("DEBUG", responseString);
-                    User updatedUser = getGson().fromJson(responseString, User.class);
-                    if (updatedUser != null) {
-                        mAdapter.update(updatedUser, position);
-                    }
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                    handleFailure(responseString, throwable);
-                    Toast.makeText(getContext(), "Unable to follow the user at this moment.", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
-
     private void loadUsers() {
         switch (mode) {
             case KEY_FOLLOWERS:
@@ -139,6 +121,31 @@ public class UsersListFragment extends Fragment {
                 getFriends();
                 break;
         }
+    }
+
+    private void loadUsers(String json) {
+        Log.d("DEBUG", json);
+        Users users = getGson().fromJson(json, Users.class);
+        if (users != null && !isEmpty(users.getUsers())) {
+            nextCursor = users.getNextCursor();
+            mAdapter.addAll(users.getUsers());
+        }
+    }
+
+    private void updateUser(String json, int position, boolean unfriend) {
+        Log.d("DEBUG", json);
+        User updatedUser = getGson().fromJson(json, User.class);
+        if (updatedUser != null) {
+            if (unfriend) {
+                updatedUser.setFollowing(false);
+            }
+            mAdapter.update(updatedUser, position);
+        }
+    }
+
+    private void handleFailure(String response, Throwable t) {
+        Log.d("DEBUG", response);
+        Log.d("DEBUG", t.getLocalizedMessage());
     }
 
     private void getFollowers() {
@@ -175,17 +182,37 @@ public class UsersListFragment extends Fragment {
         }
     }
 
-    private void loadUsers(String json) {
-        Log.d("DEBUG", json);
-        Users users = getGson().fromJson(json, Users.class);
-        if (users != null && !isEmpty(users.getUsers())) {
-            nextCursor = users.getNextCursor();
-            mAdapter.addAll(users.getUsers());
+    private void friend(final User user, final int position) {
+        if(isConnected(getContext())) {
+            client.createFriend(user.getScreenName(), new TextHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    updateUser(responseString, position, false);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    handleFailure(responseString, throwable);
+                    Toast.makeText(getContext(), "Unable to follow the user at this moment.", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
-    private void handleFailure(String response, Throwable t) {
-        Log.d("DEBUG", response);
-        Log.d("DEBUG", t.getLocalizedMessage());
+    private void unfriend(final User user, final int position) {
+        if(isConnected(getContext())) {
+            client.removeFriend(user.getScreenName(), new TextHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    updateUser(responseString, position, true);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    handleFailure(responseString, throwable);
+                    Toast.makeText(getContext(), "Unable to follow the user at this moment.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 }
