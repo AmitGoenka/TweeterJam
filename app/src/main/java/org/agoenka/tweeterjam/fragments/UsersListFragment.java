@@ -29,8 +29,8 @@ import java.util.ArrayList;
 import cz.msebera.android.httpclient.Header;
 
 import static org.agoenka.tweeterjam.network.TwitterClient.PAGE_SIZE;
-import static org.agoenka.tweeterjam.utils.AppUtils.KEY_FOLLOWERS;
-import static org.agoenka.tweeterjam.utils.AppUtils.KEY_FOLLOWING;
+import static org.agoenka.tweeterjam.utils.AppUtils.FOLLOWERS;
+import static org.agoenka.tweeterjam.utils.AppUtils.FOLLOWING;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_MODE;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_USER;
 import static org.agoenka.tweeterjam.utils.AppUtils.isEmpty;
@@ -124,11 +124,11 @@ public class UsersListFragment extends Fragment {
 
     private void loadUsers() {
         switch (mode) {
-            case KEY_FOLLOWERS:
+            case FOLLOWERS:
                 if (mLoadingListener != null) mLoadingListener.onLoad(true);
                 getFollowers();
                 break;
-            case KEY_FOLLOWING:
+            case FOLLOWING:
                 if (mLoadingListener != null) mLoadingListener.onLoad(true);
                 getFriends();
                 break;

@@ -28,8 +28,12 @@ public class AppUtils {
     public static final String KEY_IN_REPLY_TO = "inReplyTo";
     public static final String KEY_SCREEN_NAME = "screen_name";
     public static final String KEY_MODE = "MODE";
-    public static final String KEY_FOLLOWERS = "FOLLOWERS";
-    public static final String KEY_FOLLOWING = "FOLLOWING";
+    public static final String FOLLOWERS = "FOLLOWERS";
+    public static final String FOLLOWING = "FOLLOWING";
+    public static final int ACTION_RETWEET = 1;
+    public static final int ACTION_UNRETWEET = 2;
+    public static final int ACTION_FAVORITE = 3;
+    public static final int ACTION_UNFAVORITE = 4;
 
     public static boolean missingWritePermission(Context context) {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.System.canWrite(context);

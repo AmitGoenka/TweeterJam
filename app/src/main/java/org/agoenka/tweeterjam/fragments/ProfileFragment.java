@@ -21,8 +21,8 @@ import org.parceler.Parcels;
 
 import cz.msebera.android.httpclient.Header;
 
-import static org.agoenka.tweeterjam.utils.AppUtils.KEY_FOLLOWERS;
-import static org.agoenka.tweeterjam.utils.AppUtils.KEY_FOLLOWING;
+import static org.agoenka.tweeterjam.utils.AppUtils.FOLLOWERS;
+import static org.agoenka.tweeterjam.utils.AppUtils.FOLLOWING;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_USER;
 import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
 import static org.agoenka.tweeterjam.utils.GsonUtils.getGson;
@@ -74,11 +74,11 @@ public class ProfileFragment extends Fragment {
 
     public class Handlers {
         public void onFollowers(@SuppressWarnings("unused") View view) {
-            getUsersListListener.onGetUsersList(mUser, KEY_FOLLOWERS);
+            getUsersListListener.onGetUsersList(mUser, FOLLOWERS);
         }
 
         public void onFollowing(@SuppressWarnings("unused") View view) {
-            getUsersListListener.onGetUsersList(mUser, KEY_FOLLOWING);
+            getUsersListListener.onGetUsersList(mUser, FOLLOWING);
         }
 
         public void onFollow(@SuppressWarnings("unused") View view) {

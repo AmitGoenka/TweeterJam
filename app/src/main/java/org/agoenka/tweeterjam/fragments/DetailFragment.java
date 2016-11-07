@@ -5,14 +5,13 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.agoenka.tweeterjam.R;
 import org.agoenka.tweeterjam.TweeterJamApplication;
@@ -20,11 +19,14 @@ import org.agoenka.tweeterjam.databinding.FragmentTweetBinding;
 import org.agoenka.tweeterjam.models.Tweet;
 import org.agoenka.tweeterjam.models.User;
 import org.agoenka.tweeterjam.network.TwitterClient;
-import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import cz.msebera.android.httpclient.Header;
 
+import static org.agoenka.tweeterjam.utils.AppUtils.ACTION_FAVORITE;
+import static org.agoenka.tweeterjam.utils.AppUtils.ACTION_RETWEET;
+import static org.agoenka.tweeterjam.utils.AppUtils.ACTION_UNFAVORITE;
+import static org.agoenka.tweeterjam.utils.AppUtils.ACTION_UNRETWEET;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_TWEET;
 import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
 import static org.agoenka.tweeterjam.views.ImageViewBinder.loadMediaImage;
@@ -97,11 +99,11 @@ public class DetailFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof OnProfileSelectedListener)
+        if (context instanceof OnProfileSelectedListener)
             profileListener = (OnProfileSelectedListener) context;
-        if(context instanceof OnShareListener)
+        if (context instanceof OnShareListener)
             shareListener = (OnShareListener) context;
-        if(context instanceof OnReplyListener)
+        if (context instanceof OnReplyListener)
             replyListener = (OnReplyListener) context;
     }
 
@@ -111,42 +113,87 @@ public class DetailFragment extends Fragment {
             profileListener.onProfileSelected(binding.getTweet().getUser());
         }
 
-        public void onReply(@SuppressWarnings("unused") View view) {
-            replyListener.onReply(binding.getTweet());
-        }
-
         public void onShare(@SuppressWarnings("unused") View view) {
             shareListener.onShare(binding.getTweet());
         }
 
         public void onRetweet(@SuppressWarnings("unused") View view) {
-            if (!binding.getTweet().isRetweeted()) {
+            if (binding.getTweet().isRetweeted())
+                unretweet(binding.getTweet().getUid());
+            else
                 retweet(binding.getTweet().getUid());
-            }
         }
 
         public void onFavorite(@SuppressWarnings("unused") View view) {
-            if (!binding.getTweet().isFavorited()) {
+            if (binding.getTweet().isFavorited())
+                unfavorite(binding.getTweet().getUid());
+            else
                 favorite(binding.getTweet().getUid());
-            }
         }
+
+        public void onReply(@SuppressWarnings("unused") View view) {
+            replyListener.onReply(binding.getTweet());
+        }
+    }
+
+    private void updateTweet(String json, int action) {
+        Log.d("DEBUG", json);
+        Tweet tweet = binding.getTweet();
+        switch (action) {
+            case ACTION_RETWEET:
+                tweet.setRetweeted(true);
+                tweet.incRetweetCount(1);
+                break;
+            case ACTION_UNRETWEET:
+                tweet.setRetweeted(false);
+                tweet.incRetweetCount(-1);
+                break;
+            case ACTION_FAVORITE:
+                tweet.setFavorited(true);
+                tweet.incFavoriteCount(1);
+                break;
+            case ACTION_UNFAVORITE:
+                tweet.setFavorited(false);
+                tweet.incFavoriteCount(-1);
+                break;
+        }
+        binding.setTweet(tweet);
+    }
+
+    private void handleFailure(String response, Throwable t) {
+        Log.d("DEBUG", response);
+        Log.d("DEBUG", t.getLocalizedMessage());
     }
 
     private void retweet(long uid) {
         if (isConnected(getContext())) {
-            client.postRetweet(uid, new JsonHttpResponseHandler() {
+            client.retweet(uid, new TextHttpResponseHandler() {
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    Log.d("DEBUG", response.toString());
-                    binding.getTweet().setRetweeted(true);
-                    binding.ibRetweet.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_action_retweet_green));
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    updateTweet(responseString, ACTION_RETWEET);
                 }
 
                 @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    Log.d("DEBUG", errorResponse.toString());
-                    Log.d("DEBUG", throwable.getLocalizedMessage());
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    handleFailure(responseString, throwable);
                     Toast.makeText(getContext(), "Unable to retweet at this moment.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void unretweet(long uid) {
+        if (isConnected(getContext())) {
+            client.unretweet(uid, new TextHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    updateTweet(responseString, ACTION_UNRETWEET);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    handleFailure(responseString, throwable);
+                    Toast.makeText(getContext(), "Unable to unretweet at this moment.", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -154,19 +201,33 @@ public class DetailFragment extends Fragment {
 
     private void favorite(long uid) {
         if (isConnected(getContext())) {
-            client.createFavorite(uid, new JsonHttpResponseHandler() {
+            client.favorite(uid, new TextHttpResponseHandler() {
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    Log.d("DEBUG", response.toString());
-                    binding.getTweet().setFavorited(true);
-                    binding.ibFavorite.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_action_favorite_green));
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    updateTweet(responseString, ACTION_FAVORITE);
                 }
 
                 @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    Log.d("DEBUG", errorResponse.toString());
-                    Log.d("DEBUG", throwable.getLocalizedMessage());
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    handleFailure(responseString, throwable);
                     Toast.makeText(getContext(), "Unable to favorite at this moment.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void unfavorite(long uid) {
+        if (isConnected(getContext())) {
+            client.unfavorite(uid, new TextHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                    updateTweet(responseString, ACTION_UNFAVORITE);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    handleFailure(responseString, throwable);
+                    Toast.makeText(getContext(), "Unable to unfavorite at this moment.", Toast.LENGTH_SHORT).show();
                 }
             });
         }

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.codepath.oauth.OAuthBaseClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 
@@ -35,7 +34,7 @@ public class TwitterClient extends OAuthBaseClient {
         super(context, API_CLASS, BASE_URL, API_KEY, API_SECRET, CALLBACK_URL);
     }
 
-    public void getHomeTimeline(long maxId, long sinceId, int count, AsyncHttpResponseHandler handler) {
+    public void getHomeTimeline(long maxId, long sinceId, int count, TextHttpResponseHandler handler) {
         String url = getApiUrl("statuses/home_timeline.json");
         // Specify the params
         RequestParams params = new RequestParams();
@@ -75,12 +74,12 @@ public class TwitterClient extends OAuthBaseClient {
         getClient().get(url, params, handler);
     }
 
-    public void getUserCredentials(AsyncHttpResponseHandler handler) {
+    public void getUserCredentials(TextHttpResponseHandler handler) {
         String url = getApiUrl("account/verify_credentials.json");
         getClient().get(url, handler);
     }
 
-    public void postTweet(String status, long inReplyTo, AsyncHttpResponseHandler handler) {
+    public void postTweet(String status, long inReplyTo, TextHttpResponseHandler handler) {
         String url = getApiUrl("statuses/update.json");
         RequestParams params = new RequestParams();
         params.put("status", status);
@@ -90,19 +89,31 @@ public class TwitterClient extends OAuthBaseClient {
         getClient().post(url, params, handler);
     }
 
-    public void postRetweet(long id, AsyncHttpResponseHandler handler) {
+    public void retweet(long id, TextHttpResponseHandler handler) {
         String url = getApiUrl("statuses/retweet/" + id + ".json");
         getClient().post(url, handler);
     }
 
-    public void createFavorite(long id, AsyncHttpResponseHandler handler) {
+    public void unretweet(long id, TextHttpResponseHandler handler) {
+        String url = getApiUrl("statuses/unretweet/" + id + ".json");
+        getClient().post(url, handler);
+    }
+
+    public void favorite(long id, TextHttpResponseHandler handler) {
         String url = getApiUrl("favorites/create.json");
         RequestParams params = new RequestParams();
         params.put("id", id);
         getClient().post(url, params, handler);
     }
 
-    public void getFollowers(String screenName, long cursor, int count, AsyncHttpResponseHandler handler) {
+    public void unfavorite(long id, TextHttpResponseHandler handler) {
+        String url = getApiUrl("favorites/destroy.json");
+        RequestParams params = new RequestParams();
+        params.put("id", id);
+        getClient().post(url, params, handler);
+    }
+
+    public void getFollowers(String screenName, long cursor, int count, TextHttpResponseHandler handler) {
         String url = getApiUrl("followers/list.json");
         // Specify the params
         RequestParams params = new RequestParams();
@@ -118,7 +129,7 @@ public class TwitterClient extends OAuthBaseClient {
         getClient().get(url, params, handler);
     }
 
-    public void getFriends(String screenName, long cursor, int count, AsyncHttpResponseHandler handler) {
+    public void getFriends(String screenName, long cursor, int count, TextHttpResponseHandler handler) {
         String url = getApiUrl("friends/list.json");
         // Specify the params
         RequestParams params = new RequestParams();
@@ -134,7 +145,7 @@ public class TwitterClient extends OAuthBaseClient {
         getClient().get(url, params, handler);
     }
 
-    public void createFriend(String screenName, AsyncHttpResponseHandler handler) {
+    public void createFriend(String screenName, TextHttpResponseHandler handler) {
         String url = getApiUrl("friendships/create.json");
         // Specify the params
         RequestParams params = new RequestParams();
@@ -145,7 +156,7 @@ public class TwitterClient extends OAuthBaseClient {
         getClient().post(url, params, handler);
     }
 
-    public void removeFriend(String screenName, AsyncHttpResponseHandler handler) {
+    public void removeFriend(String screenName, TextHttpResponseHandler handler) {
         String url = getApiUrl("friendships/destroy.json");
         // Specify the params
         RequestParams params = new RequestParams();

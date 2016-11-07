@@ -99,6 +99,14 @@ public class Tweet extends BaseModel {
         this.favorited = favorited;
     }
 
+    public void incFavoriteCount(int increment) {
+        this.favoriteCount += increment;
+    }
+
+    public void incRetweetCount(int increment) {
+        this.retweetCount += increment;
+    }
+
     public boolean hasVideo() {
         return extendedEntity != null && !TextUtils.isEmpty(extendedEntity.getVideoUrl());
     }
