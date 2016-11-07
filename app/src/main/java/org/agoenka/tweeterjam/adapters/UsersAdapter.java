@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide;
 
 import org.agoenka.tweeterjam.R;
 import org.agoenka.tweeterjam.databinding.ItemUserBinding;
+import org.agoenka.tweeterjam.fragments.UsersListFragment;
 import org.agoenka.tweeterjam.models.User;
 
 import java.util.List;
@@ -23,20 +24,24 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
     private final List<User> mUsers;
     private final Context mContext;
-    private View.OnClickListener mProfileListener;
-    private View.OnClickListener mFollowListener;
+    private UsersListFragment.OnProfileSelectedListener mProfileListener;
+    private OnFollowListener mFollowListener;
+
+    public interface OnFollowListener {
+        void onFollow(User user, int position);
+    }
+
+    public void setProfileListener(UsersListFragment.OnProfileSelectedListener profileListener) {
+        this.mProfileListener = profileListener;
+    }
+
+    public void setFollowListener(OnFollowListener followListener) {
+        this.mFollowListener = followListener;
+    }
 
     public UsersAdapter(Context context, List<User> users) {
         mContext = context;
         mUsers = users;
-    }
-
-    public void setProfileListener(View.OnClickListener profileListener) {
-        this.mProfileListener = profileListener;
-    }
-
-    public void setFollowListener(View.OnClickListener followListener) {
-        this.mFollowListener = followListener;
     }
 
     public Context getContext() {
@@ -61,10 +66,10 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
         holder.binding.executePendingBindings();
 
         holder.binding.ivProfileImage.setTag(user);
-        holder.binding.ivProfileImage.setOnClickListener(mProfileListener);
+        holder.binding.ivProfileImage.setOnClickListener(v -> mProfileListener.onProfileSelected((User) v.getTag()));
 
         holder.binding.ibFollowing.setTag(user);
-        holder.binding.ibFollowing.setOnClickListener(mFollowListener);
+        holder.binding.ibFollowing.setOnClickListener(v -> mFollowListener.onFollow((User) v.getTag(), holder.getAdapterPosition()));
     }
 
     @Override
@@ -85,5 +90,10 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
         int currentSize = getItemCount();
         mUsers.addAll(users);
         notifyItemRangeInserted(currentSize, mUsers.size() - currentSize);
+    }
+
+    public void update(User user, int position) {
+        mUsers.set(position, user);
+        notifyItemChanged(position, user);
     }
 }

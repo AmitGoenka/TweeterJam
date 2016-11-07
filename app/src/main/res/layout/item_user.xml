@@ -24,8 +24,8 @@
 
         <ImageView
             android:id="@+id/ivProfileImage"
-            android:layout_width="@dimen/profile_detail_image_width"
-            android:layout_height="@dimen/profile_detail_image_height"
+            android:layout_width="@dimen/profile_image_width"
+            android:layout_height="@dimen/profile_image_height"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"

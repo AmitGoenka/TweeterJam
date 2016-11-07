@@ -48,16 +48,16 @@ public class UsersListFragment extends Fragment {
     private UsersAdapter mAdapter;
     private User mUser;
     private TwitterClient client;
-    private OnProfileSelectedListener profileListener;
     private String mode;
     private long nextCursor = -1;
+    private OnProfileSelectedListener mProfileListener;
 
     public interface OnProfileSelectedListener {
         void onProfileSelected(User user);
     }
 
     public UsersListFragment setProfileListener(OnProfileSelectedListener profileListener) {
-        this.profileListener = profileListener;
+        this.mProfileListener = profileListener;
         return this;
     }
 
@@ -89,8 +89,12 @@ public class UsersListFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         binding.rvUsers.setLayoutManager(layoutManager);
 
-        mAdapter.setProfileListener(v -> profileListener.onProfileSelected((User) v.getTag()));
-        mAdapter.setFollowListener(v -> onFollow((User) v.getTag(), v));
+        mAdapter.setProfileListener(mProfileListener);
+        mAdapter.setFollowListener((user, position) -> {
+            if (position != RecyclerView.NO_POSITION) {
+                onFollow(user, position);
+            }
+        });
 
         binding.rvUsers.addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
@@ -105,15 +109,15 @@ public class UsersListFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void onFollow(User user, View view) {
+    private void onFollow(final User user, final int position) {
         if(isConnected(getContext())) {
             client.createFriend(user.getScreenName(), new TextHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
                     Log.d("DEBUG", responseString);
-                    User user = getGson().fromJson(responseString, User.class);
-                    if (user != null) {
-
+                    User updatedUser = getGson().fromJson(responseString, User.class);
+                    if (updatedUser != null) {
+                        mAdapter.update(updatedUser, position);
                     }
                 }
 
