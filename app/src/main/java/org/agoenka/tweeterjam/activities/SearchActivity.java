@@ -54,6 +54,7 @@ public class SearchActivity extends AppCompatActivity implements
         setSupportActionBar(binding.appbarMain.toolbar);
         assert getSupportActionBar() != null;
         getSupportActionBar().setTitle(String.format(getString(R.string.search_results_for), mQuery));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void loadSearchTimeline() {
