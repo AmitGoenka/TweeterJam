@@ -36,6 +36,7 @@ public abstract class TweetsListFragment extends Fragment {
     private TweetsAdapter mAdapter;
     private OnProfileSelectedListener profileSelectedListener;
     private OnItemSelectedListener itemSelectedListener;
+    protected OnLoadingListener loadingListener;
     private EndlessRecyclerViewScrollListener scrollListener;
     private long currMinId = 0;
 
@@ -45,6 +46,10 @@ public abstract class TweetsListFragment extends Fragment {
 
     public interface OnItemSelectedListener {
         void onItemSelected(Tweet tweet);
+    }
+
+    public interface OnLoadingListener {
+        void onLoad(boolean loading);
     }
 
     // Creation Lifecycle Event
@@ -82,6 +87,8 @@ public abstract class TweetsListFragment extends Fragment {
             profileSelectedListener = (OnProfileSelectedListener) context;
         if(context instanceof OnItemSelectedListener)
             itemSelectedListener = (OnItemSelectedListener) context;
+        if(context instanceof OnLoadingListener)
+            loadingListener = (OnLoadingListener) context;
     }
 
     private void setupViews() {
@@ -94,6 +101,7 @@ public abstract class TweetsListFragment extends Fragment {
         scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemCount, RecyclerView view) {
+                if(loadingListener != null) loadingListener.onLoad(true);
                 currMinId = Tweet.getMinId(mTweets);
                 populateTimeline(currMinId > 0 ? currMinId - 1 : 0, false);
             }

@@ -23,7 +23,7 @@ The following **optional** features are implemented:
 
 * [x] User can view following / followers list through the profile
 * [x] Implements robust error handling, [check if internet is available](http://guides.codepath.com/android/Sending-and-Managing-Network-Requests#checking-for-network-connectivity), handle error cases, network failures
-* [ ] When a network request is sent, user sees an [indeterminate progress indicator](http://guides.codepath.com/android/Handling-ProgressBars#progress-within-actionbar)
+* [x] When a network request is sent, user sees an [indeterminate progress indicator](http://guides.codepath.com/android/Handling-ProgressBars#progress-within-actionbar)
 * [ ] User can **"reply" to any tweet on their home timeline**
   * [ ] The user that wrote the original tweet is automatically "@" replied in compose
 * [ ] User can click on a tweet to be **taken to a "detail view"** of that tweet

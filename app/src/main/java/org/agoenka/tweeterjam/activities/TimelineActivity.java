@@ -33,13 +33,16 @@ import static org.agoenka.tweeterjam.utils.AppUtils.KEY_USER;
 import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
 import static org.agoenka.tweeterjam.utils.GsonUtils.getGson;
 
-public class TimelineActivity extends AppCompatActivity
-        implements TweetsListFragment.OnProfileSelectedListener, TweetsListFragment.OnItemSelectedListener {
+public class TimelineActivity extends AppCompatActivity implements
+        TweetsListFragment.OnProfileSelectedListener,
+        TweetsListFragment.OnItemSelectedListener,
+        TweetsListFragment.OnLoadingListener {
 
     private ActivityTimelineBinding binding;
     private TwitterClient client;
     private TweetsPagerAdapter pagerAdapter;
-    public User loggedInUser;
+    private User loggedInUser;
+    private MenuItem miActionProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +85,12 @@ public class TimelineActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        miActionProgress = menu.findItem(R.id.miActionProgress);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
     public class Handlers {
         public void onCompose(@SuppressWarnings("unused") View view) {
             compose(null, null);
@@ -108,6 +117,11 @@ public class TimelineActivity extends AppCompatActivity
         intent.putExtra(KEY_TWEET, Parcels.wrap(tweet));
         intent.putExtra(KEY_LOGGED_IN_USER, Parcels.wrap(loggedInUser));
         startActivity(intent);
+    }
+
+    @Override
+    public void onLoad(boolean loading) {
+        if (miActionProgress != null) miActionProgress.setVisible(loading);
     }
 
     private void compose(String text, Tweet inReplyTo) {

@@ -47,12 +47,14 @@ public class MentionsTimelineFragment extends TweetsListFragment {
                     List<Tweet> tweets = getGson().fromJson(json, new TypeToken<List<Tweet>>() {}.getType());
                     addAll(tweets, refresh);
                     Tweet.save(tweets);
+                    if(loadingListener != null) loadingListener.onLoad(false);
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                     Log.d("DEBUG", responseString);
                     Log.d("DEBUG", throwable.getLocalizedMessage());
+                    if(loadingListener != null) loadingListener.onLoad(false);
                     Toast.makeText(getContext(), "Unable to retrieve tweets.", Toast.LENGTH_SHORT).show();
                 }
             });

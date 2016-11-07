@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import org.agoenka.tweeterjam.R;
 import org.agoenka.tweeterjam.databinding.ActivityProfileBinding;
@@ -19,11 +21,14 @@ import static org.agoenka.tweeterjam.utils.AppUtils.KEY_MODE;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_TWEET;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_USER;
 
-public class ProfileActivity extends AppCompatActivity
-        implements TweetsListFragment.OnProfileSelectedListener, TweetsListFragment.OnItemSelectedListener {
+public class ProfileActivity extends AppCompatActivity implements
+        TweetsListFragment.OnProfileSelectedListener,
+        TweetsListFragment.OnItemSelectedListener,
+        TweetsListFragment.OnLoadingListener {
 
     private User loggedInUser;
     private User user;
+    private MenuItem miActionProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +76,18 @@ public class ProfileActivity extends AppCompatActivity
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_users, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        miActionProgress = menu.findItem(R.id.miActionProgress);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public void onItemSelected(Tweet tweet) {
         Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra(KEY_TWEET, Parcels.wrap(tweet));
@@ -81,6 +98,11 @@ public class ProfileActivity extends AppCompatActivity
     @Override
     public void onProfileSelected(User user) {
         // Do Nothing since the user does not need to navigate to the same profile again.
+    }
+
+    @Override
+    public void onLoad(boolean loading) {
+        if (miActionProgress != null) miActionProgress.setVisible(loading);
     }
 
     public void onGetUsersList(User user, String mode) {

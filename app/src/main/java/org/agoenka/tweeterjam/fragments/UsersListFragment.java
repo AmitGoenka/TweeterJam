@@ -51,13 +51,23 @@ public class UsersListFragment extends Fragment {
     private String mode;
     private long nextCursor = -1;
     private OnProfileSelectedListener mProfileListener;
+    private OnLoadingListener mLoadingListener;
 
     public interface OnProfileSelectedListener {
         void onProfileSelected(User user);
     }
 
+    public interface OnLoadingListener {
+        void onLoad(boolean loading);
+    }
+
     public UsersListFragment setProfileListener(OnProfileSelectedListener profileListener) {
         this.mProfileListener = profileListener;
+        return this;
+    }
+
+    public UsersListFragment setOnLoadingListener(OnLoadingListener loadingListener) {
+        this.mLoadingListener = loadingListener;
         return this;
     }
 
@@ -115,9 +125,11 @@ public class UsersListFragment extends Fragment {
     private void loadUsers() {
         switch (mode) {
             case KEY_FOLLOWERS:
+                if (mLoadingListener != null) mLoadingListener.onLoad(true);
                 getFollowers();
                 break;
             case KEY_FOLLOWING:
+                if (mLoadingListener != null) mLoadingListener.onLoad(true);
                 getFriends();
                 break;
         }
@@ -130,6 +142,7 @@ public class UsersListFragment extends Fragment {
             nextCursor = users.getNextCursor();
             mAdapter.addAll(users.getUsers());
         }
+        if (mLoadingListener != null) mLoadingListener.onLoad(false);
     }
 
     private void updateUser(String json, int position, boolean unfriend) {
@@ -159,6 +172,7 @@ public class UsersListFragment extends Fragment {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                     handleFailure(responseString, throwable);
+                    if (mLoadingListener != null) mLoadingListener.onLoad(false);
                     Toast.makeText(getContext(), "Unable to retrieve followers at this moment.", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -176,6 +190,7 @@ public class UsersListFragment extends Fragment {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                     handleFailure(responseString, throwable);
+                    if (mLoadingListener != null) mLoadingListener.onLoad(false);
                     Toast.makeText(getContext(), "Unable to retrieve friends at this moment.", Toast.LENGTH_SHORT).show();
                 }
             });
