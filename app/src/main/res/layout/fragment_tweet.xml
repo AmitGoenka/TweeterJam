@@ -122,11 +122,20 @@
                 android:id="@+id/tvRetweetCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{tweet.retweetCount + ' ' + @string/retweets}"
+                android:text="@{tweet.retweetCount}"
                 android:textAllCaps="true"
                 android:textColor="@color/colorSecondaryText"
                 android:textStyle="bold"
-                tools:text="Retweet Count"/>
+                tools:text="133000"/>
+
+            <TextView
+                android:id="@+id/tvRetweetText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/retweets"
+                android:textAllCaps="true"
+                android:textColor="@color/colorSecondaryText"
+                tools:text="  RETWEETS"/>
 
             <TextView
                 android:id="@+id/tvFavoriteCount"
@@ -134,11 +143,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/user_counts_horizontal_margin"
                 android:layout_marginStart="@dimen/user_counts_horizontal_margin"
-                android:text="@{tweet.favoriteCount + ' ' + @string/favorites}"
+                android:text="@{tweet.favoriteCount}"
                 android:textAllCaps="true"
                 android:textColor="@color/colorSecondaryText"
                 android:textStyle="bold"
-                tools:text="Favorite Count"/>
+                tools:text="955686"/>
+
+            <TextView
+                android:id="@+id/tvFavoriteText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/favorites"
+                android:textAllCaps="true"
+                android:textColor="@color/colorSecondaryText"
+                tools:text="  FAVORITES"/>
 
         </LinearLayout>
 

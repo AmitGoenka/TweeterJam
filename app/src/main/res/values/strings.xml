@@ -11,10 +11,10 @@
     <string name="share">Share</string>
     <string name="reply">Reply</string>
     <string name="retweet">Retweet</string>
-    <string name="retweets">Retweets</string>
+    <string name="retweets">"   Retweets"</string>
     <string name="favorite">Favorite</string>
-    <string name="favorites">Favorites</string>
+    <string name="favorites">"   Favorites"</string>
     <string name="followers">Followers</string>
     <string name="following">Following</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading…</string>
 </resources>
