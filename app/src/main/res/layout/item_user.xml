@@ -72,17 +72,17 @@
             tools:text="Tagline"/>
 
         <ImageButton
-            android:id="@+id/ibFollowing"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignRight="@id/ivProfileImage"
-            android:layout_alignEnd="@id/ivProfileImage"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/following"
-            android:src="@{(user.following || user.followRequestSent) ? @drawable/ic_person_added : @drawable/ic_person_add}"/>
+        android:id="@+id/ibFollowing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@id/ivProfileImage"
+        android:layout_alignEnd="@id/ivProfileImage"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/following"
+        android:src="@{(user.following || user.followRequestSent) ? @drawable/ic_person_added : @drawable/ic_person_add}"/>
 
     </RelativeLayout>
 

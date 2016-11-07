@@ -25,10 +25,10 @@
             android:id="@+id/rlUserHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/profile_detail_vertical_margin"
+            android:paddingBottom="@dimen/activity_vertical_margin"
             android:paddingLeft="@dimen/profile_detail_horizontal_margin"
             android:paddingRight="@dimen/profile_detail_horizontal_margin"
-            android:paddingTop="@dimen/profile_detail_vertical_margin">
+            android:paddingTop="@dimen/activity_vertical_margin">
 
             <ImageView
                 android:id="@+id/ivProfileImage"
@@ -57,15 +57,41 @@
                 tools:text="User Name"/>
 
             <TextView
-                android:id="@+id/tvTagline"
+                android:id="@+id/tvUserName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/tvName"
                 android:layout_alignStart="@+id/tvName"
                 android:layout_below="@+id/tvName"
+                android:layout_marginBottom="@dimen/name_vertical_margin"
+                android:text="@{user.screenName}"
+                android:textSize="@dimen/text_size_tagline"
+                tools:text="User Name"/>
+
+            <TextView
+                android:id="@+id/tvTagline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/tvName"
+                android:layout_alignStart="@+id/tvName"
+                android:layout_below="@+id/tvUserName"
                 android:text="@{user.tagline}"
                 android:textSize="@dimen/text_size_tagline"
                 tools:text="Tagline"/>
+
+            <ImageButton
+                android:id="@+id/ibFollowing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@id/tvName"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignRight="@id/tvName"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/following"
+                android:onClick="@{handlers.onFollow}"
+                android:src="@{(user.following || user.followRequestSent) ? @drawable/ic_person_added : @drawable/ic_person_add}"/>
 
         </RelativeLayout>
 
@@ -83,7 +109,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="@{handlers.onFollowers}"
-                android:text="@{user.followersCount + ' ' + @string/followers}"
+                android:text="@{user.followersCount + ' ' + ' ' + ' ' + @string/followers}"
                 android:textAllCaps="true"
                 android:textColor="@color/colorSecondaryText"
                 android:textStyle="bold"
@@ -96,7 +122,7 @@
                 android:layout_marginLeft="@dimen/user_counts_horizontal_margin"
                 android:layout_marginStart="@dimen/user_counts_horizontal_margin"
                 android:onClick="@{handlers.onFollowing}"
-                android:text="@{user.friendsCount + ' ' + @string/following}"
+                android:text="@{user.friendsCount + ' ' + ' ' + ' ' + @string/following}"
                 android:textAllCaps="true"
                 android:textColor="@color/colorSecondaryText"
                 android:textStyle="bold"

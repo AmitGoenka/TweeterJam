@@ -210,7 +210,7 @@ public class UsersListFragment extends Fragment {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                     handleFailure(responseString, throwable);
-                    Toast.makeText(getContext(), "Unable to follow the user at this moment.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Unable to unfriend the user at this moment.", Toast.LENGTH_SHORT).show();
                 }
             });
         }
