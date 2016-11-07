@@ -37,8 +37,8 @@ public class ImageViewBinder {
         if (!TextUtils.isEmpty(url)) {
             Glide.with(view.getContext())
                     .load(url)
-                    .centerCrop()
-                    .bitmapTransform(new RoundedCornersTransformation(view.getContext(), 15, 15))
+                    .fitCenter()
+                    .bitmapTransform(new RoundedCornersTransformation(view.getContext(), 20, 0))
                     .into(view);
             view.setVisibility(View.VISIBLE);
         } else {

@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import org.agoenka.tweeterjam.R;
 import org.agoenka.tweeterjam.databinding.ActivityProfileBinding;
+import org.agoenka.tweeterjam.fragments.ComposeTweetFragment;
 import org.agoenka.tweeterjam.fragments.ProfileFragment;
 import org.agoenka.tweeterjam.fragments.TweetsListFragment;
 import org.agoenka.tweeterjam.fragments.UserTimelineFragment;
@@ -22,8 +24,9 @@ import static org.agoenka.tweeterjam.utils.AppUtils.KEY_TWEET;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_USER;
 
 public class ProfileActivity extends AppCompatActivity implements
-        TweetsListFragment.OnProfileSelectedListener,
         TweetsListFragment.OnItemSelectedListener,
+        TweetsListFragment.OnProfileSelectedListener,
+        TweetsListFragment.OnReplyListener,
         TweetsListFragment.OnLoadingListener {
 
     private User loggedInUser;
@@ -98,6 +101,13 @@ public class ProfileActivity extends AppCompatActivity implements
     @Override
     public void onProfileSelected(User user) {
         // Do Nothing since the user does not need to navigate to the same profile again.
+    }
+
+    @Override
+    public void onReply(Tweet tweet) {
+        ComposeTweetFragment composeDialog = ComposeTweetFragment.newInstance(null, loggedInUser, tweet);
+        composeDialog.setListener(newTweet -> Toast.makeText(this, "Replied Successfully!", Toast.LENGTH_SHORT).show());
+        composeDialog.show(getSupportFragmentManager(), "Compose Tweet");
     }
 
     @Override

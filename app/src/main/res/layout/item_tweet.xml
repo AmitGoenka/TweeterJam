@@ -80,14 +80,13 @@
             android:id="@+id/ivImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxHeight="@dimen/media_image_height"
             android:layout_below="@+id/ltvBody"
-            android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:layout_toEndOf="@+id/ivProfileImage"
             android:layout_toRightOf="@+id/ivProfileImage"
             android:adjustViewBounds="true"
             android:contentDescription="@string/image_description"
+            android:maxHeight="@dimen/media_image_max_height"
             android:visibility="gone"/>
 
         <com.yqritc.scalablevideoview.ScalableVideoView
@@ -101,6 +100,72 @@
             android:layout_toRightOf="@+id/ivProfileImage"
             android:visibility="gone"
             app:scalableType="fitCenter"/>
+
+        <LinearLayout
+            android:id="@+id/llActions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/vvVideo"
+            android:layout_marginBottom="@dimen/fragment_item_margin"
+            android:layout_toEndOf="@+id/ivProfileImage"
+            android:layout_toRightOf="@+id/ivProfileImage"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/ibReply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/actions_horizontal_margin"
+                android:layout_marginRight="@dimen/actions_horizontal_margin"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/reply"
+                android:src="@drawable/ic_action_reply"/>
+
+            <ImageButton
+                android:id="@+id/ibRetweet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/retweet"
+                android:src="@{tweet.retweeted ? @drawable/ic_action_retweet_green : @drawable/ic_action_retweet_grey}"
+                tools:src="@drawable/ic_action_retweet_grey"/>
+
+            <TextView
+                android:id="@+id/tvRetweetCount"
+                android:layout_width="@dimen/actions_count_width"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/actions_horizontal_secondary_margin"
+                android:layout_marginLeft="@dimen/fragment_item_margin"
+                android:layout_marginRight="@dimen/actions_horizontal_secondary_margin"
+                android:layout_marginStart="@dimen/fragment_item_margin"
+                android:text="@{tweet.retweetCount}"
+                android:textColor="@color/colorSecondaryText"
+                android:textStyle="bold"
+                tools:text="99999"/>
+
+            <ImageButton
+                android:id="@+id/ibFavorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/favorite"
+                android:src="@{tweet.favorited ? @drawable/ic_action_favorite_green : @drawable/ic_action_favorite_grey}"
+                tools:src="@drawable/ic_action_favorite_grey"/>
+
+            <TextView
+                android:id="@+id/tvFavoriteCount"
+                android:layout_width="@dimen/actions_count_width"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/fragment_item_margin"
+                android:layout_marginStart="@dimen/fragment_item_margin"
+                android:text="@{tweet.favoriteCount}"
+                android:textColor="@color/colorSecondaryText"
+                android:textStyle="bold"
+                tools:text="99999"/>
+
+        </LinearLayout>
 
     </RelativeLayout>
 

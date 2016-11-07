@@ -27,6 +27,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     private final List<Tweet> mTweets;
     private final Context mContext;
     private View.OnClickListener mProfileListener;
+    private View.OnClickListener mReplyListener;
 
     public TweetsAdapter(Context context, List<Tweet> tweets) {
         mTweets = tweets;
@@ -35,6 +36,10 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
     public void setProfileListener(View.OnClickListener profileListener) {
         mProfileListener = profileListener;
+    }
+
+    public void setReplyListener(View.OnClickListener replyListener) {
+        mReplyListener = replyListener;
     }
 
     private Context getContext() {
@@ -60,6 +65,9 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
         holder.binding.ivProfileImage.setTag(tweet.getUser());
         holder.binding.ivProfileImage.setOnClickListener(mProfileListener);
+
+        holder.binding.ibReply.setTag(tweet);
+        holder.binding.ibReply.setOnClickListener(mReplyListener);
 
         if (tweet.hasVideo()) {
             loadScalableVideo(getContext(), holder.binding.vvVideo, tweet.getExtendedEntity().getVideoUrl());

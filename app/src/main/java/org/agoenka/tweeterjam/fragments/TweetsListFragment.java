@@ -34,18 +34,24 @@ public abstract class TweetsListFragment extends Fragment {
     private FragmentTweetsListBinding binding;
     private List<Tweet> mTweets;
     private TweetsAdapter mAdapter;
-    private OnProfileSelectedListener profileSelectedListener;
+
     private OnItemSelectedListener itemSelectedListener;
+    private OnProfileSelectedListener profileSelectedListener;
+    private OnReplyListener replyListener;
     protected OnLoadingListener loadingListener;
     private EndlessRecyclerViewScrollListener scrollListener;
     private long currMinId = 0;
+
+    public interface OnItemSelectedListener {
+        void onItemSelected(Tweet tweet);
+    }
 
     public interface OnProfileSelectedListener {
         void onProfileSelected(User user);
     }
 
-    public interface OnItemSelectedListener {
-        void onItemSelected(Tweet tweet);
+    public interface OnReplyListener {
+        void onReply(Tweet tweet);
     }
 
     public interface OnLoadingListener {
@@ -83,10 +89,12 @@ public abstract class TweetsListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof OnProfileSelectedListener)
-            profileSelectedListener = (OnProfileSelectedListener) context;
         if(context instanceof OnItemSelectedListener)
             itemSelectedListener = (OnItemSelectedListener) context;
+        if(context instanceof OnProfileSelectedListener)
+            profileSelectedListener = (OnProfileSelectedListener) context;
+        if(context instanceof OnReplyListener)
+            replyListener = (OnReplyListener) context;
         if(context instanceof OnLoadingListener)
             loadingListener = (OnLoadingListener) context;
     }
@@ -97,6 +105,7 @@ public abstract class TweetsListFragment extends Fragment {
 
         ItemClickSupport.addTo(binding.rvTweets).setOnItemClickListener((recyclerView, position, v) -> itemSelectedListener.onItemSelected(mTweets.get(position)));
         mAdapter.setProfileListener(v -> profileSelectedListener.onProfileSelected((User) v.getTag()));
+        mAdapter.setReplyListener(v -> replyListener.onReply((Tweet) v.getTag()));
 
         scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override

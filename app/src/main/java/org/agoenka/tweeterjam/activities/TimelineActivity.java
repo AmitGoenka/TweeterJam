@@ -34,8 +34,9 @@ import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
 import static org.agoenka.tweeterjam.utils.GsonUtils.getGson;
 
 public class TimelineActivity extends AppCompatActivity implements
-        TweetsListFragment.OnProfileSelectedListener,
         TweetsListFragment.OnItemSelectedListener,
+        TweetsListFragment.OnProfileSelectedListener,
+        TweetsListFragment.OnReplyListener,
         TweetsListFragment.OnLoadingListener {
 
     private ActivityTimelineBinding binding;
@@ -89,6 +90,11 @@ public class TimelineActivity extends AppCompatActivity implements
     public boolean onPrepareOptionsMenu(Menu menu) {
         miActionProgress = menu.findItem(R.id.miActionProgress);
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public void onReply(Tweet tweet) {
+        compose(null, tweet);
     }
 
     public class Handlers {
