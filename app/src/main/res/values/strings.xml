@@ -17,4 +17,6 @@
     <string name="followers">Followers</string>
     <string name="following">Following</string>
     <string name="loading">Loading…</string>
+    <string name="search">Search</string>
+    <string name="search_results_for">Search Results for %s</string>
 </resources>

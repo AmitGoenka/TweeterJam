@@ -23,6 +23,5 @@ public class Users {
         return nextCursor;
     }
 
-    public Users() {
-    }
+    public Users() {}
 }

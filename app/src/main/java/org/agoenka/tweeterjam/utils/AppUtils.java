@@ -27,6 +27,7 @@ public class AppUtils {
     public static final String KEY_TEXT = "text";
     public static final String KEY_IN_REPLY_TO = "inReplyTo";
     public static final String KEY_SCREEN_NAME = "screen_name";
+    public static final String KEY_QUERY = "query";
     public static final String KEY_MODE = "MODE";
     public static final String FOLLOWERS = "FOLLOWERS";
     public static final String FOLLOWING = "FOLLOWING";

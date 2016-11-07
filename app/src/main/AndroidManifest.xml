@@ -22,15 +22,12 @@
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
-
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-
                 <data
                     android:host="twitter.agoenka.org"
                     android:scheme="https"/>
@@ -42,9 +39,7 @@
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>
-
                 <category android:name="android.intent.category.DEFAULT"/>
-
                 <data android:mimeType="text/plain"/>
             </intent-filter>
         </activity>
@@ -56,13 +51,16 @@
             android:name=".activities.ProfileActivity"
             android:label="@string/profile"
             android:theme="@style/AppTheme"/>
-
+        <activity
+            android:name=".activities.SearchActivity"
+            android:label="@string/search"
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".activities.TimelineActivity"/>
+        <activity
+            android:name=".activities.UsersActivity"/>
         <meta-data
             android:name="org.agoenka.tweeterjam.utils.GlideConfiguration"
             android:value="GlideModule"/>
-
-        <activity android:name=".activities.UsersActivity">
-        </activity>
     </application>
 
 </manifest>

@@ -4,83 +4,90 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import org.agoenka.tweeterjam.R;
-import org.agoenka.tweeterjam.databinding.ActivityProfileBinding;
+import org.agoenka.tweeterjam.databinding.ActivitySearchBinding;
 import org.agoenka.tweeterjam.fragments.ComposeTweetFragment;
-import org.agoenka.tweeterjam.fragments.ProfileFragment;
+import org.agoenka.tweeterjam.fragments.SearchTimelineFragment;
 import org.agoenka.tweeterjam.fragments.TweetsListFragment;
-import org.agoenka.tweeterjam.fragments.UserTimelineFragment;
 import org.agoenka.tweeterjam.models.Tweet;
 import org.agoenka.tweeterjam.models.User;
 import org.parceler.Parcels;
 
+import static android.support.v4.view.MenuItemCompat.getActionView;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_LOGGED_IN_USER;
-import static org.agoenka.tweeterjam.utils.AppUtils.KEY_MODE;
+import static org.agoenka.tweeterjam.utils.AppUtils.KEY_QUERY;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_TWEET;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_USER;
 
-public class ProfileActivity extends AppCompatActivity implements
+public class SearchActivity extends AppCompatActivity implements
         TweetsListFragment.OnItemSelectedListener,
         TweetsListFragment.OnProfileSelectedListener,
         TweetsListFragment.OnReplyListener,
         TweetsListFragment.OnLoadingListener {
 
     private User loggedInUser;
-    private User user;
+    private String mQuery;
     private MenuItem miActionProgress;
+    private static final String TAG_FRAGMENT_SEARCH = "SEARCH";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         loggedInUser = Parcels.unwrap(getIntent().getParcelableExtra(KEY_LOGGED_IN_USER));
-        user = Parcels.unwrap(getIntent().getParcelableExtra(KEY_USER));
+        mQuery = getIntent().getStringExtra(KEY_QUERY);
         bindViews();
 
         if (savedInstanceState == null) {
-            loadUserProfile();
-            loadUserTimeline();
+            loadSearchTimeline();
         }
     }
 
     private void bindViews() {
-        ActivityProfileBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_profile);
-
-        if (user == null)
-            user = loggedInUser;
+        ActivitySearchBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_search);
 
         setSupportActionBar(binding.appbarMain.toolbar);
         assert getSupportActionBar() != null;
-        getSupportActionBar().setTitle(user.getScreenName());
+        getSupportActionBar().setTitle(String.format(getString(R.string.search_results_for), mQuery));
     }
 
-    private void loadUserProfile() {
-        // Create the user timeline fragment
-        ProfileFragment profileFragment = ProfileFragment
-                .newInstance(user)
-                .setOnGetUsersListListener(this::onGetUsersList);
+    private void loadSearchTimeline() {
+        SearchTimelineFragment timelineFragment = SearchTimelineFragment.newInstance(mQuery);
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.flProfileContainer, profileFragment)
-                .commit();
-    }
-
-    private void loadUserTimeline() {
-        // Create the user timeline fragment
-        UserTimelineFragment timelineFragment = UserTimelineFragment.newInstance(user.getScreenName());
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.flTimelineContainer, timelineFragment)
+                .replace(R.id.flTimelineContainer, timelineFragment, TAG_FRAGMENT_SEARCH)
                 .commit();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_users, menu);
+        getMenuInflater().inflate(R.menu.menu_search, menu);
+        final MenuItem menuItem = menu.findItem(R.id.miActionSearch);
+        final SearchView searchView = (SearchView) getActionView(menuItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                mQuery = query;
+                SearchTimelineFragment fragment = (SearchTimelineFragment) getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT_SEARCH);
+                if (fragment.isAdded() && !fragment.isRemoving()) {
+                    miActionProgress.setVisible(true);
+                    fragment.search(mQuery);
+                }
+                searchView.clearFocus();
+                menuItem.collapseActionView();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -100,7 +107,10 @@ public class ProfileActivity extends AppCompatActivity implements
 
     @Override
     public void onProfileSelected(User user) {
-        // Do Nothing since the user does not need to navigate to the same profile again.
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra(KEY_LOGGED_IN_USER, Parcels.wrap(loggedInUser));
+        intent.putExtra(KEY_USER, Parcels.wrap(user));
+        startActivity(intent);
     }
 
     @Override
@@ -113,13 +123,5 @@ public class ProfileActivity extends AppCompatActivity implements
     @Override
     public void onLoad(boolean loading) {
         if (miActionProgress != null) miActionProgress.setVisible(loading);
-    }
-
-    public void onGetUsersList(User user, String mode) {
-        Intent intent = new Intent(this, UsersActivity.class);
-        intent.putExtra(KEY_USER, Parcels.wrap(user));
-        intent.putExtra(KEY_LOGGED_IN_USER, Parcels.wrap(loggedInUser));
-        intent.putExtra(KEY_MODE, mode);
-        startActivity(intent);
     }
 }

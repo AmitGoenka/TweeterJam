@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,8 +27,10 @@ import org.parceler.Parcels;
 
 import cz.msebera.android.httpclient.Header;
 
+import static android.support.v4.view.MenuItemCompat.getActionView;
 import static org.agoenka.tweeterjam.models.Tweet.getTweetText;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_LOGGED_IN_USER;
+import static org.agoenka.tweeterjam.utils.AppUtils.KEY_QUERY;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_TWEET;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_USER;
 import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
@@ -83,7 +86,23 @@ public class TimelineActivity extends AppCompatActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_timeline, menu);
-        return true;
+        final MenuItem menuItem = menu.findItem(R.id.miActionSearch);
+        final SearchView searchView = (SearchView) getActionView(menuItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus();
+                menuItem.collapseActionView();
+                onSearch(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -97,6 +116,7 @@ public class TimelineActivity extends AppCompatActivity implements
         compose(null, tweet);
     }
 
+
     public class Handlers {
         public void onCompose(@SuppressWarnings("unused") View view) {
             compose(null, null);
@@ -105,6 +125,13 @@ public class TimelineActivity extends AppCompatActivity implements
 
     public void onProfileView(MenuItem item) {
         onProfileSelected(null);
+    }
+
+    public void onSearch(String query) {
+        Intent intent = new Intent(this, SearchActivity.class);
+        intent.putExtra(KEY_LOGGED_IN_USER, Parcels.wrap(loggedInUser));
+        intent.putExtra(KEY_QUERY, query);
+        startActivity(intent);
     }
 
     @Override
