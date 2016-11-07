@@ -35,42 +35,42 @@ public class TwitterClient extends OAuthBaseClient {
         super(context, API_CLASS, BASE_URL, API_KEY, API_SECRET, CALLBACK_URL);
     }
 
-    public void getHomeTimeline(int count, long maxId, long sinceId, AsyncHttpResponseHandler handler) {
+    public void getHomeTimeline(long maxId, long sinceId, int count, AsyncHttpResponseHandler handler) {
         String url = getApiUrl("statuses/home_timeline.json");
         // Specify the params
         RequestParams params = new RequestParams();
-        if (count > 0)
-            params.put("count", count);
         if (maxId > 0)
             params.put("max_id", maxId);
         if (sinceId > 0)
             params.put("since_id", sinceId);
+        if (count > 0)
+            params.put("count", count);
         // Execute the request
         getClient().get(url, params, handler);
     }
 
-    public void getMentionsTimeline(int count, long maxId, TextHttpResponseHandler handler) {
+    public void getMentionsTimeline(long maxId, int count, TextHttpResponseHandler handler) {
         String url = getApiUrl("statuses/mentions_timeline.json");
         // Specify the params
         RequestParams params = new RequestParams();
-        if (count > 0)
-            params.put("count", count);
         if (maxId > 0)
             params.put("max_id", maxId);
+        if (count > 0)
+            params.put("count", count);
         // Execute the request
         getClient().get(url, params, handler);
     }
 
-    public void getUserTimeline(String screenName, int count, long maxId, TextHttpResponseHandler handler) {
+    public void getUserTimeline(String screenName, long maxId, int count, TextHttpResponseHandler handler) {
         String url = getApiUrl("statuses/user_timeline.json");
         // Specify the params
         RequestParams params = new RequestParams();
-        if (count > 0)
-            params.put("count", count);
-        if (maxId > 0)
-            params.put("max_id", maxId);
         if (!TextUtils.isEmpty(screenName))
             params.put("screen_name", screenName);
+        if (maxId > 0)
+            params.put("max_id", maxId);
+        if (count > 0)
+            params.put("count", count);
         // Execute the request
         getClient().get(url, params, handler);
     }
@@ -99,6 +99,49 @@ public class TwitterClient extends OAuthBaseClient {
         String url = getApiUrl("favorites/create.json");
         RequestParams params = new RequestParams();
         params.put("id", id);
+        getClient().post(url, params, handler);
+    }
+
+    public void getFollowers(String screenName, long cursor, int count, AsyncHttpResponseHandler handler) {
+        String url = getApiUrl("followers/list.json");
+        // Specify the params
+        RequestParams params = new RequestParams();
+        if (!TextUtils.isEmpty(screenName))
+            params.put("screen_name", screenName);
+        if (cursor > 0)
+            params.put("cursor", cursor);
+        if (count > 0)
+            params.put("count", count);
+        params.put("skip_status", true);
+        params.put("include_user_entities", false);
+        // Execute the request
+        getClient().get(url, params, handler);
+    }
+
+    public void getFriends(String screenName, long cursor, int count, AsyncHttpResponseHandler handler) {
+        String url = getApiUrl("friends/list.json");
+        // Specify the params
+        RequestParams params = new RequestParams();
+        if (!TextUtils.isEmpty(screenName))
+            params.put("screen_name", screenName);
+        if (cursor > 0)
+            params.put("cursor", cursor);
+        if (count > 0)
+            params.put("count", count);
+        params.put("skip_status", true);
+        params.put("include_user_entities", false);
+        // Execute the request
+        getClient().get(url, params, handler);
+    }
+
+    public void createFriend(String screenName, AsyncHttpResponseHandler handler) {
+        String url = getApiUrl("friendships/create.json");
+        // Specify the params
+        RequestParams params = new RequestParams();
+        if (!TextUtils.isEmpty(screenName))
+            params.put("screen_name", screenName);
+        params.put("follow", true);
+        // Execute the request
         getClient().post(url, params, handler);
     }
 }

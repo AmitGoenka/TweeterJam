@@ -21,7 +21,8 @@ import static org.agoenka.tweeterjam.utils.AppUtils.getPermissionIntent;
 import static org.agoenka.tweeterjam.utils.AppUtils.hasWritePermission;
 import static org.agoenka.tweeterjam.utils.AppUtils.missingWritePermission;
 
-public class DetailActivity extends AppCompatActivity implements DetailFragment.OnProfileSelectedListener, DetailFragment.OnReplyListener, DetailFragment.OnShareListener {
+public class DetailActivity extends AppCompatActivity
+        implements DetailFragment.OnProfileSelectedListener, DetailFragment.OnReplyListener, DetailFragment.OnShareListener {
 
     private Tweet mTweet;
     private User mLoggedInUser;

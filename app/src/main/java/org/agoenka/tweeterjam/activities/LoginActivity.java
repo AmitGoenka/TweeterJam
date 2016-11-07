@@ -21,8 +21,8 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
     // This method launches the primary authenticated activity
     @Override
     public void onLoginSuccess() {
-         Intent i = new Intent(this, TimelineActivity.class);
-         startActivity(i);
+        Intent i = new Intent(this, TimelineActivity.class);
+        startActivity(i);
     }
 
     // Callback to this method implies that OAuth authentication flow failed.

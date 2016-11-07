@@ -40,7 +40,7 @@ public class HomeTimelineFragment extends TweetsListFragment {
     @Override
     public void populateTimeline(final long maxId, final boolean refresh) {
         if (isConnected(getContext())) {
-            client.getHomeTimeline(PAGE_SIZE, maxId, 0, new TextHttpResponseHandler() {
+            client.getHomeTimeline(maxId, 0, PAGE_SIZE, new TextHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String json) {
                     Log.d("DEBUG", json);

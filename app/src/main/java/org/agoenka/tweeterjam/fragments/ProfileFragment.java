@@ -13,6 +13,8 @@ import org.agoenka.tweeterjam.databinding.FragmentProfileBinding;
 import org.agoenka.tweeterjam.models.User;
 import org.parceler.Parcels;
 
+import static org.agoenka.tweeterjam.utils.AppUtils.KEY_FOLLOWERS;
+import static org.agoenka.tweeterjam.utils.AppUtils.KEY_FOLLOWING;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_USER;
 
 /**
@@ -21,6 +23,18 @@ import static org.agoenka.tweeterjam.utils.AppUtils.KEY_USER;
  * Version: ${VERSION}
  */
 public class ProfileFragment extends Fragment {
+
+    private User user;
+    private OnGetUsersListListener getUsersListListener;
+
+    public interface OnGetUsersListListener {
+        void onGetUsersList(User user, String mode);
+    }
+
+    public ProfileFragment setOnGetUsersListListener(OnGetUsersListListener listener) {
+        this.getUsersListListener = listener;
+        return this;
+    }
 
     public static ProfileFragment newInstance(User user) {
         ProfileFragment profileFragment = new ProfileFragment();
@@ -33,9 +47,20 @@ public class ProfileFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        User user = Parcels.unwrap(getArguments().getParcelable(KEY_USER));
+        user = Parcels.unwrap(getArguments().getParcelable(KEY_USER));
         FragmentProfileBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false);
+        binding.setHandlers(new Handlers());
         binding.setUser(user);
         return binding.getRoot();
+    }
+
+    public class Handlers {
+        public void onFollowers(@SuppressWarnings("unused") View view) {
+            getUsersListListener.onGetUsersList(user, KEY_FOLLOWERS);
+        }
+
+        public void onFollowing(@SuppressWarnings("unused") View view) {
+            getUsersListListener.onGetUsersList(user, KEY_FOLLOWING);
+        }
     }
 }

@@ -4,6 +4,12 @@
 
     <data>
 
+        <import type="org.agoenka.tweeterjam.fragments.ProfileFragment.Handlers"/>
+
+        <variable
+            name="handlers"
+            type="Handlers"/>
+
         <variable
             name="user"
             type="org.agoenka.tweeterjam.models.User"/>
@@ -76,6 +82,7 @@
                 android:id="@+id/tvFollowers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="@{handlers.onFollowers}"
                 android:text="@{user.followersCount + ' ' + @string/followers}"
                 android:textAllCaps="true"
                 android:textColor="@color/colorSecondaryText"
@@ -88,6 +95,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/user_counts_horizontal_margin"
                 android:layout_marginStart="@dimen/user_counts_horizontal_margin"
+                android:onClick="@{handlers.onFollowing}"
                 android:text="@{user.friendsCount + ' ' + @string/following}"
                 android:textAllCaps="true"
                 android:textColor="@color/colorSecondaryText"

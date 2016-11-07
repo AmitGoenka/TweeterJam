@@ -33,7 +33,8 @@ import static org.agoenka.tweeterjam.utils.AppUtils.KEY_USER;
 import static org.agoenka.tweeterjam.utils.ConnectivityUtils.isConnected;
 import static org.agoenka.tweeterjam.utils.GsonUtils.getGson;
 
-public class TimelineActivity extends AppCompatActivity implements TweetsListFragment.OnProfileSelectedListener, TweetsListFragment.OnItemSelectedListener {
+public class TimelineActivity extends AppCompatActivity
+        implements TweetsListFragment.OnProfileSelectedListener, TweetsListFragment.OnItemSelectedListener {
 
     private ActivityTimelineBinding binding;
     private TwitterClient client;

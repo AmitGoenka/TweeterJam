@@ -40,7 +40,7 @@ public class MentionsTimelineFragment extends TweetsListFragment {
     @Override
     public void populateTimeline(final long maxId, final boolean refresh) {
         if (isConnected(getContext())) {
-            client.getMentionsTimeline(PAGE_SIZE, maxId, new TextHttpResponseHandler() {
+            client.getMentionsTimeline(maxId, PAGE_SIZE, new TextHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String json) {
                     Log.d("DEBUG", json);

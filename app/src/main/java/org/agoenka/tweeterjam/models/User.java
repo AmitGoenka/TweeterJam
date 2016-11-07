@@ -27,6 +27,8 @@ public class User extends BaseModel {
     @Column String screenName;
     @Column String profileImageUrl;
     @SerializedName("description") @Column String tagline;
+    @Column boolean following;
+    @Column boolean followRequestSent;
     @Column int followersCount;
     @Column int friendsCount;
 
@@ -46,6 +48,14 @@ public class User extends BaseModel {
 
     public String getTagline() {
         return tagline;
+    }
+
+    public boolean isFollowing() {
+        return following;
+    }
+
+    public boolean isFollowRequestSent() {
+        return followRequestSent;
     }
 
     public String getFollowersCount() {

@@ -7,18 +7,20 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.agoenka.tweeterjam.R;
 import org.agoenka.tweeterjam.databinding.ActivityProfileBinding;
-import org.agoenka.tweeterjam.fragments.TweetsListFragment;
 import org.agoenka.tweeterjam.fragments.ProfileFragment;
+import org.agoenka.tweeterjam.fragments.TweetsListFragment;
 import org.agoenka.tweeterjam.fragments.UserTimelineFragment;
 import org.agoenka.tweeterjam.models.Tweet;
 import org.agoenka.tweeterjam.models.User;
 import org.parceler.Parcels;
 
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_LOGGED_IN_USER;
+import static org.agoenka.tweeterjam.utils.AppUtils.KEY_MODE;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_TWEET;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_USER;
 
-public class ProfileActivity extends AppCompatActivity implements TweetsListFragment.OnProfileSelectedListener, TweetsListFragment.OnItemSelectedListener {
+public class ProfileActivity extends AppCompatActivity
+        implements TweetsListFragment.OnProfileSelectedListener, TweetsListFragment.OnItemSelectedListener {
 
     private User loggedInUser;
     private User user;
@@ -50,7 +52,9 @@ public class ProfileActivity extends AppCompatActivity implements TweetsListFrag
 
     private void loadUserProfile() {
         // Create the user timeline fragment
-        ProfileFragment profileFragment = ProfileFragment.newInstance(user);
+        ProfileFragment profileFragment = ProfileFragment
+                .newInstance(user)
+                .setOnGetUsersListListener(this::onGetUsersList);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.flProfileContainer, profileFragment)
@@ -77,5 +81,13 @@ public class ProfileActivity extends AppCompatActivity implements TweetsListFrag
     @Override
     public void onProfileSelected(User user) {
         // Do Nothing since the user does not need to navigate to the same profile again.
+    }
+
+    public void onGetUsersList(User user, String mode) {
+        Intent intent = new Intent(this, UsersActivity.class);
+        intent.putExtra(KEY_USER, Parcels.wrap(user));
+        intent.putExtra(KEY_LOGGED_IN_USER, Parcels.wrap(loggedInUser));
+        intent.putExtra(KEY_MODE, mode);
+        startActivity(intent);
     }
 }
