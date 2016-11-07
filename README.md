@@ -27,8 +27,8 @@ The following **optional** features are implemented:
 * [x] User can **"reply" to any tweet on their home timeline**
   * [x] The user that wrote the original tweet is automatically "@" replied in compose
 * [x] User can click on a tweet to be **taken to a "detail view"** of that tweet
- * [ ] User can take favorite (and unfavorite) or retweet actions on a tweet
-* [ ] Improve the user interface and theme the app to feel twitter branded
+ * [x] User can take favorite (and unfavorite) or retweet actions on a tweet
+* [x] Improve the user interface and theme the app to feel twitter branded
 * [ ] User can **search for tweets matching a particular query** and see results
 * [ ] Usernames and hashtags are styled and clickable within tweets [using clickable spans](http://guides.codepath.com/android/Working-with-the-TextView#creating-clickable-styled-spans)
 
@@ -42,6 +42,7 @@ The following **bonus** features are implemented:
 The following **additional** features are implemented:
 
 * [x] Disabled profile image click navigation on user timeline, since user timeline already shows the same users tweets!
+* [x] User can see videos embedded in the tweets timeline and also in the detail screen.
 
 ## Video Walkthrough
 

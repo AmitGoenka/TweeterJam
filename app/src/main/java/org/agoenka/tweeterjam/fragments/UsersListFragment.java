@@ -102,7 +102,7 @@ public class UsersListFragment extends Fragment {
         mAdapter.setProfileListener(mProfileListener);
         mAdapter.setFollowListener((user, position) -> {
             if (position != RecyclerView.NO_POSITION) {
-                if(user.isFollowing() || user.isFollowRequestSent())
+                if (user.isFollowing() || user.isFollowRequestSent())
                     unfriend(user, position);
                 else
                     friend(user, position);
@@ -133,32 +133,6 @@ public class UsersListFragment extends Fragment {
                 getFriends();
                 break;
         }
-    }
-
-    private void loadUsers(String json) {
-        Log.d("DEBUG", json);
-        Users users = getGson().fromJson(json, Users.class);
-        if (users != null && !isEmpty(users.getUsers())) {
-            nextCursor = users.getNextCursor();
-            mAdapter.addAll(users.getUsers());
-        }
-        if (mLoadingListener != null) mLoadingListener.onLoad(false);
-    }
-
-    private void updateUser(String json, int position, boolean unfriend) {
-        Log.d("DEBUG", json);
-        User updatedUser = getGson().fromJson(json, User.class);
-        if (updatedUser != null) {
-            if (unfriend) {
-                updatedUser.setFollowing(false);
-            }
-            mAdapter.update(updatedUser, position);
-        }
-    }
-
-    private void handleFailure(String response, Throwable t) {
-        Log.d("DEBUG", response);
-        Log.d("DEBUG", t.getLocalizedMessage());
     }
 
     private void getFollowers() {
@@ -198,7 +172,7 @@ public class UsersListFragment extends Fragment {
     }
 
     private void friend(final User user, final int position) {
-        if(isConnected(getContext())) {
+        if (isConnected(getContext())) {
             client.createFriend(user.getScreenName(), new TextHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
@@ -215,7 +189,7 @@ public class UsersListFragment extends Fragment {
     }
 
     private void unfriend(final User user, final int position) {
-        if(isConnected(getContext())) {
+        if (isConnected(getContext())) {
             client.removeFriend(user.getScreenName(), new TextHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String responseString) {
@@ -229,5 +203,31 @@ public class UsersListFragment extends Fragment {
                 }
             });
         }
+    }
+
+    private void loadUsers(String json) {
+        Log.d("DEBUG", json);
+        Users users = getGson().fromJson(json, Users.class);
+        if (users != null && !isEmpty(users.getUsers())) {
+            nextCursor = users.getNextCursor();
+            mAdapter.addAll(users.getUsers());
+        }
+        if (mLoadingListener != null) mLoadingListener.onLoad(false);
+    }
+
+    private void updateUser(String json, int position, boolean unfriend) {
+        Log.d("DEBUG", json);
+        User updatedUser = getGson().fromJson(json, User.class);
+        if (updatedUser != null) {
+            if (unfriend) {
+                updatedUser.setFollowing(false);
+            }
+            mAdapter.update(updatedUser, position);
+        }
+    }
+
+    private void handleFailure(String response, Throwable t) {
+        Log.d("DEBUG", response);
+        Log.d("DEBUG", t.getLocalizedMessage());
     }
 }

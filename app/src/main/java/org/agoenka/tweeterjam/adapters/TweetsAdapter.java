@@ -28,10 +28,15 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     private final Context mContext;
     private View.OnClickListener mProfileListener;
     private View.OnClickListener mReplyListener;
+    private OnRetweetListener mRetweetListener;
+    private OnFavoriteListener mFavoriteListener;
 
-    public TweetsAdapter(Context context, List<Tweet> tweets) {
-        mTweets = tweets;
-        mContext = context;
+    public interface OnRetweetListener {
+        void onRetweet(Tweet tweet, int position);
+    }
+
+    public interface OnFavoriteListener {
+        void onFavorite(Tweet tweet, int position);
     }
 
     public void setProfileListener(View.OnClickListener profileListener) {
@@ -40,6 +45,19 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
     public void setReplyListener(View.OnClickListener replyListener) {
         mReplyListener = replyListener;
+    }
+
+    public void setRetweetListener(OnRetweetListener retweetListener) {
+        this.mRetweetListener = retweetListener;
+    }
+
+    public void setFavoriteListener(OnFavoriteListener favoriteListener) {
+        this.mFavoriteListener = favoriteListener;
+    }
+
+    public TweetsAdapter(Context context, List<Tweet> tweets) {
+        mTweets = tweets;
+        mContext = context;
     }
 
     private Context getContext() {
@@ -69,6 +87,12 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         holder.binding.ibReply.setTag(tweet);
         holder.binding.ibReply.setOnClickListener(mReplyListener);
 
+        holder.binding.ibRetweet.setTag(tweet);
+        holder.binding.ibRetweet.setOnClickListener(v -> mRetweetListener.onRetweet((Tweet) v.getTag(), holder.getAdapterPosition()));
+
+        holder.binding.ibFavorite.setTag(tweet);
+        holder.binding.ibFavorite.setOnClickListener(v -> mFavoriteListener.onFavorite((Tweet) v.getTag(), holder.getAdapterPosition()));
+
         if (tweet.hasVideo()) {
             loadScalableVideo(getContext(), holder.binding.vvVideo, tweet.getExtendedEntity().getVideoUrl());
         } else {
@@ -86,6 +110,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         final ItemTweetBinding binding;
+
         ViewHolder(View itemView) {
             super(itemView);
             binding = ItemTweetBinding.bind(itemView);
@@ -107,5 +132,10 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     public void add(int index, Tweet tweet) {
         mTweets.add(index, tweet);
         notifyItemRangeInserted(index, 1);
+    }
+
+    public void update(Tweet tweet, int position) {
+        mTweets.set(position, tweet);
+        notifyItemChanged(position, tweet);
     }
 }

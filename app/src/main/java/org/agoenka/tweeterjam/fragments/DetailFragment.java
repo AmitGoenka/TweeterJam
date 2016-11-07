@@ -136,35 +136,6 @@ public class DetailFragment extends Fragment {
         }
     }
 
-    private void updateTweet(String json, int action) {
-        Log.d("DEBUG", json);
-        Tweet tweet = binding.getTweet();
-        switch (action) {
-            case ACTION_RETWEET:
-                tweet.setRetweeted(true);
-                tweet.incRetweetCount(1);
-                break;
-            case ACTION_UNRETWEET:
-                tweet.setRetweeted(false);
-                tweet.incRetweetCount(-1);
-                break;
-            case ACTION_FAVORITE:
-                tweet.setFavorited(true);
-                tweet.incFavoriteCount(1);
-                break;
-            case ACTION_UNFAVORITE:
-                tweet.setFavorited(false);
-                tweet.incFavoriteCount(-1);
-                break;
-        }
-        binding.setTweet(tweet);
-    }
-
-    private void handleFailure(String response, Throwable t) {
-        Log.d("DEBUG", response);
-        Log.d("DEBUG", t.getLocalizedMessage());
-    }
-
     private void retweet(long uid) {
         if (isConnected(getContext())) {
             client.retweet(uid, new TextHttpResponseHandler() {
@@ -231,5 +202,34 @@ public class DetailFragment extends Fragment {
                 }
             });
         }
+    }
+
+    private void updateTweet(String json, int action) {
+        Log.d("DEBUG", json);
+        Tweet tweet = binding.getTweet();
+        switch (action) {
+            case ACTION_RETWEET:
+                tweet.setRetweeted(true);
+                tweet.incRetweetCount(1);
+                break;
+            case ACTION_UNRETWEET:
+                tweet.setRetweeted(false);
+                tweet.incRetweetCount(-1);
+                break;
+            case ACTION_FAVORITE:
+                tweet.setFavorited(true);
+                tweet.incFavoriteCount(1);
+                break;
+            case ACTION_UNFAVORITE:
+                tweet.setFavorited(false);
+                tweet.incFavoriteCount(-1);
+                break;
+        }
+        binding.setTweet(tweet);
+    }
+
+    private void handleFailure(String response, Throwable t) {
+        Log.d("DEBUG", response);
+        Log.d("DEBUG", t.getLocalizedMessage());
     }
 }
