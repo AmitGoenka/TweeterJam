@@ -1,33 +1,37 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout
+    <android.support.design.widget.CoordinatorLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/activity_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
         tools:context="org.agoenka.tweeterjam.activities.ProfileActivity">
 
         <include
             android:id="@+id/appbar_main"
             layout="@layout/appbar_main"/>
 
-        <FrameLayout
-            android:id="@+id/flProfileContainer"
+        <RelativeLayout
+            android:id="@+id/rlContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/appbar_main"/>
+            android:layout_below="@id/appbar_main"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <FrameLayout
-            android:id="@+id/flTimelineContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/flProfileContainer"/>
+            <FrameLayout
+                android:id="@+id/flProfileContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-    </RelativeLayout>
+            <FrameLayout
+                android:id="@+id/flTimelineContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/flProfileContainer"/>
+
+        </RelativeLayout>
+
+    </android.support.design.widget.CoordinatorLayout>
 
 </layout>
