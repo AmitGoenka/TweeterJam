@@ -21,4 +21,7 @@
     <string name="search_results_for">Search Results for %s</string>
     <string name="messages">Messages</string>
     <string name="send_message">Send Message</string>
+    <string name="hint_message_send">Start a new message</string>
+    <string name="hint_screen_name">Enter a name</string>
+    <string name="send">Send</string>
 </resources>

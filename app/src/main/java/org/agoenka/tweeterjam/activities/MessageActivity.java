@@ -11,7 +11,7 @@ import android.widget.Toast;
 import org.agoenka.tweeterjam.R;
 import org.agoenka.tweeterjam.databinding.ActivityMessageBinding;
 import org.agoenka.tweeterjam.fragments.MessageListFragment;
-import org.agoenka.tweeterjam.models.Message;
+import org.agoenka.tweeterjam.fragments.SendMessageFragment;
 import org.agoenka.tweeterjam.models.User;
 import org.parceler.Parcels;
 
@@ -70,13 +70,17 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     public void sendMessage(User user) {
-        Toast.makeText(this, "Clicked Send", Toast.LENGTH_SHORT).show();
-
-        MessageListFragment fragment = (MessageListFragment) getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT_MESSAGELIST);
-        if (fragment != null && fragment.isAdded() && !fragment.isRemoving()) {
-            miActionProgress.setVisible(true);
-            fragment.add(0, new Message());
-        }
+        String screenName = user != null ? user.getScreenName() : null;
+        SendMessageFragment messageDialog = SendMessageFragment.newInstance(screenName);
+        messageDialog.setListener(message -> {
+            MessageListFragment fragment = (MessageListFragment) getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT_MESSAGELIST);
+            if (fragment != null && fragment.isAdded() && !fragment.isRemoving()) {
+                miActionProgress.setVisible(true);
+                fragment.add(0, message);
+            }
+            Toast.makeText(this, "Message Sent", Toast.LENGTH_SHORT).show();
+        });
+        messageDialog.show(getSupportFragmentManager(), "Send Message");
     }
 
     private void onProfileSelected(User user) {
