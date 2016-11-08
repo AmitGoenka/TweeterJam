@@ -43,13 +43,13 @@ The following **additional** features are implemented:
 
 * [x] Disabled profile image click navigation on user timeline, since user timeline already shows the same users tweets!
 * [x] User can see videos embedded in the tweets timeline and also in the detail screen.
-* [x] Usernames and hashtags are styled within tweets
+* [x] Usernames and hashtags are styled within tweets (Not Clickable)
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
-![Video Walkthrough](assets/)
+![Video Walkthrough](assets/demo_v2.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
