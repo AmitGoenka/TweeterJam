@@ -1,6 +1,7 @@
 package org.agoenka.tweeterjam.adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +12,10 @@ import com.bumptech.glide.Glide;
 import org.agoenka.tweeterjam.R;
 import org.agoenka.tweeterjam.databinding.ItemTweetBinding;
 import org.agoenka.tweeterjam.models.Tweet;
+import org.agoenka.tweeterjam.views.PatternEditableBuilder;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static org.agoenka.tweeterjam.views.ImageViewBinder.loadMediaImage;
 import static org.agoenka.tweeterjam.views.VideoViewBinder.loadScalableVideo;
@@ -80,6 +83,11 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         Tweet tweet = mTweets.get(position);
         holder.binding.setTweet(tweet);
         holder.binding.executePendingBindings();
+
+        new PatternEditableBuilder().addPattern(
+                Pattern.compile("(@|#)(\\w+)"),
+                ContextCompat.getColor(getContext(), R.color.colorAccent))
+                .into(holder.binding.ltvBody);
 
         holder.binding.ivProfileImage.setTag(tweet.getUser());
         holder.binding.ivProfileImage.setOnClickListener(mProfileListener);
