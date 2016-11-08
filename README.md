@@ -2,7 +2,7 @@
 
 **TweeterJam** is an android app that allows a user to view home and mentions timelines, view user profiles with user timelines, as well as compose and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
 
-Time spent: **10** hours spent in total
+Time spent: **25+** hours spent in total
 
 ## User Stories
 
@@ -43,6 +43,7 @@ The following **additional** features are implemented:
 
 * [x] Disabled profile image click navigation on user timeline, since user timeline already shows the same users tweets!
 * [x] User can see videos embedded in the tweets timeline and also in the detail screen.
+* [x] Usernames and hashtags are styled within tweets
 
 ## Video Walkthrough
 
