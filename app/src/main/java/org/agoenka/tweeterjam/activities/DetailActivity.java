@@ -28,7 +28,6 @@ public class DetailActivity extends AppCompatActivity
     private User mLoggedInUser;
 
     private Intent startingIntent;
-    boolean isPermissionSet = false;
     private static final int WRITE_SETTINGS_PERMISSION = 1;
 
     @Override
@@ -42,7 +41,6 @@ public class DetailActivity extends AppCompatActivity
             if (missingWritePermission(this)) {
                 startActivityForResult(getPermissionIntent(this), WRITE_SETTINGS_PERMISSION);
             } else {
-                isPermissionSet = true;
                 bindViews();
             }
         } else {
@@ -71,7 +69,6 @@ public class DetailActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == WRITE_SETTINGS_PERMISSION && hasWritePermission(this)) {
-            isPermissionSet = true;
             finish();
             startActivity(startingIntent);
         }

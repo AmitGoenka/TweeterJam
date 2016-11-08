@@ -80,7 +80,7 @@ public class ProfileActivity extends AppCompatActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_users, menu);
+        getMenuInflater().inflate(R.menu.menu_profile, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -115,7 +115,7 @@ public class ProfileActivity extends AppCompatActivity implements
         if (miActionProgress != null) miActionProgress.setVisible(loading);
     }
 
-    public void onGetUsersList(User user, String mode) {
+    private void onGetUsersList(User user, String mode) {
         Intent intent = new Intent(this, UsersActivity.class);
         intent.putExtra(KEY_USER, Parcels.wrap(user));
         intent.putExtra(KEY_LOGGED_IN_USER, Parcels.wrap(loggedInUser));

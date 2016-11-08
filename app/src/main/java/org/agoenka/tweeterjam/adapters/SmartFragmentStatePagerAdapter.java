@@ -14,7 +14,7 @@ import android.view.ViewGroup;
  */
 abstract class SmartFragmentStatePagerAdapter<T extends Fragment> extends FragmentStatePagerAdapter {
 
-    private SparseArray<T> registeredFragments = new SparseArray<>();
+    private final SparseArray<T> registeredFragments = new SparseArray<>();
 
     SmartFragmentStatePagerAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);

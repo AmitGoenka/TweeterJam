@@ -46,12 +46,12 @@ public abstract class TweetsListFragment extends Fragment {
     private FragmentTweetsListBinding binding;
     private List<Tweet> mTweets;
     private TweetsAdapter mAdapter;
-    protected TwitterClient client;
+    TwitterClient client;
 
     private OnItemSelectedListener itemSelectedListener;
     private OnProfileSelectedListener profileSelectedListener;
     private OnReplyListener replyListener;
-    protected OnLoadingListener loadingListener;
+    OnLoadingListener loadingListener;
     private EndlessRecyclerViewScrollListener scrollListener;
     private long currMinId = 0;
 
@@ -263,7 +263,7 @@ public abstract class TweetsListFragment extends Fragment {
 
     abstract void clearStaticTimeline();
 
-    public void addAll(List<Tweet> tweets, boolean refresh) {
+    void addAll(List<Tweet> tweets, boolean refresh) {
         mAdapter.addAll(tweets, refresh);
     }
 

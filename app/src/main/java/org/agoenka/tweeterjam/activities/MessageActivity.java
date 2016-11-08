@@ -69,7 +69,7 @@ public class MessageActivity extends AppCompatActivity {
         sendMessage(null);
     }
 
-    public void sendMessage(User user) {
+    private void sendMessage(User user) {
         String screenName = user != null ? user.getScreenName() : null;
         SendMessageFragment messageDialog = SendMessageFragment.newInstance(screenName);
         messageDialog.setListener(message -> {

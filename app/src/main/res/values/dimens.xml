@@ -17,8 +17,6 @@
     <dimen name="media_image_max_height">300dp</dimen>
     <dimen name="media_video_width">500dp</dimen>
     <dimen name="media_video_height">200dp</dimen>
-    <dimen name="tweet_stats_vertical_margin">32dp</dimen>
-    <dimen name="tweet_stats_horizontal_margin">32dp</dimen>
     <dimen name="user_counts_vertical_margin">10dp</dimen>
     <dimen name="user_counts_horizontal_margin">32dp</dimen>
     <dimen name="image_button_horizontal_margin">80dp</dimen>

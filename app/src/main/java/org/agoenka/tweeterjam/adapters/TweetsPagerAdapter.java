@@ -14,7 +14,7 @@ import org.agoenka.tweeterjam.fragments.MentionsTimelineFragment;
 // Return the oder of the fragments in the view pager
 public class TweetsPagerAdapter extends SmartFragmentStatePagerAdapter {
 
-    private String tabTitles[] = {"Home", "Mentions"};
+    private final String tabTitles[] = {"Home", "Mentions"};
 
     // Adapter gets the manager insert or remove fragment from activity
     public TweetsPagerAdapter(FragmentManager fm) {

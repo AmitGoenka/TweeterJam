@@ -132,7 +132,7 @@ public class TimelineActivity extends AppCompatActivity implements
         onProfileSelected(null);
     }
 
-    public void onSearch(String query) {
+    private void onSearch(String query) {
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putExtra(KEY_LOGGED_IN_USER, Parcels.wrap(loggedInUser));
         intent.putExtra(KEY_QUERY, query);

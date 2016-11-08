@@ -34,7 +34,7 @@ public class Message {
         }
     }
 
-    public long getUid() {
+    private long getUid() {
         return uid;
     }
 
