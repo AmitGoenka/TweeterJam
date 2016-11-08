@@ -35,6 +35,8 @@ public class AppUtils {
     public static final int ACTION_UNRETWEET = 2;
     public static final int ACTION_FAVORITE = 3;
     public static final int ACTION_UNFAVORITE = 4;
+    public static final String TAG_FRAGMENT_SEARCH = "SEARCH";
+    public static final String TAG_FRAGMENT_MESSAGELIST = "MESSAGELIST";
 
     public static boolean missingWritePermission(Context context) {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.System.canWrite(context);

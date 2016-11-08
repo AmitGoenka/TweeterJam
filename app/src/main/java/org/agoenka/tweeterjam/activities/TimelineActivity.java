@@ -116,11 +116,16 @@ public class TimelineActivity extends AppCompatActivity implements
         compose(null, tweet);
     }
 
-
     public class Handlers {
         public void onCompose(@SuppressWarnings("unused") View view) {
             compose(null, null);
         }
+    }
+
+    public void onMessageView(MenuItem item) {
+        Intent intent = new Intent(this, MessageActivity.class);
+        intent.putExtra(KEY_LOGGED_IN_USER, Parcels.wrap(loggedInUser));
+        startActivity(intent);
     }
 
     public void onProfileView(MenuItem item) {

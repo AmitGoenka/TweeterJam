@@ -19,4 +19,6 @@
     <string name="loading">Loading…</string>
     <string name="search">Search</string>
     <string name="search_results_for">Search Results for %s</string>
+    <string name="messages">Messages</string>
+    <string name="send_message">Send Message</string>
 </resources>

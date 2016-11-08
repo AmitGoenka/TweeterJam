@@ -34,4 +34,6 @@
     <!-- Text sizes. -->
     <dimen name="text_size_profile_name">16sp</dimen>
     <dimen name="text_size_tagline">12sp</dimen>
+    <dimen name="btn_message_width">24dp</dimen>
+    <dimen name="btn_message_height">24dp</dimen>
 </resources>

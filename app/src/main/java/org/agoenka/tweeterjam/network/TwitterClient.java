@@ -178,4 +178,26 @@ public class TwitterClient extends OAuthBaseClient {
         params.put("result_type", "mixed");
         getClient().get(url, params, handler);
     }
+
+    public void getDirectMessages(long maxId, int count, TextHttpResponseHandler handler) {
+        String url = getApiUrl("direct_messages.json");
+        RequestParams params = new RequestParams();
+        if (maxId > 0)
+            params.put("max_id", maxId);
+        if (count > 0)
+            params.put("count", count);
+        params.put("include_entities", "false");
+        params.put("skip_status", "true");
+        getClient().get(url, params, handler);
+    }
+
+    public void postDirectMessage(String screenName, String text, TextHttpResponseHandler handler) {
+        String url = getApiUrl("direct_messages/new.json");
+        RequestParams params = new RequestParams();
+        if (!TextUtils.isEmpty(screenName))
+            params.put("screen_name", screenName);
+        if (!TextUtils.isEmpty(text))
+            params.put("text", text);
+        getClient().post(url, params, handler);
+    }
 }

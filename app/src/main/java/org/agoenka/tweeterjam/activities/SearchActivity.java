@@ -23,6 +23,7 @@ import static org.agoenka.tweeterjam.utils.AppUtils.KEY_LOGGED_IN_USER;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_QUERY;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_TWEET;
 import static org.agoenka.tweeterjam.utils.AppUtils.KEY_USER;
+import static org.agoenka.tweeterjam.utils.AppUtils.TAG_FRAGMENT_SEARCH;
 
 public class SearchActivity extends AppCompatActivity implements
         TweetsListFragment.OnItemSelectedListener,
@@ -33,7 +34,6 @@ public class SearchActivity extends AppCompatActivity implements
     private User loggedInUser;
     private String mQuery;
     private MenuItem miActionProgress;
-    private static final String TAG_FRAGMENT_SEARCH = "SEARCH";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +75,7 @@ public class SearchActivity extends AppCompatActivity implements
             public boolean onQueryTextSubmit(String query) {
                 mQuery = query;
                 SearchTimelineFragment fragment = (SearchTimelineFragment) getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT_SEARCH);
-                if (fragment.isAdded() && !fragment.isRemoving()) {
+                if (fragment != null && fragment.isAdded() && !fragment.isRemoving()) {
                     miActionProgress.setVisible(true);
                     fragment.search(mQuery);
                 }
